@@ -1,0 +1,21 @@
+{
+  "name": "api",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.30.3",
+    "express": "~4.16.1",
+    "morgan": "~1.9.1",
+    "mysql2": "^3.9.2"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.20.14"
+  },
+  "packageManager": "pnpm@8.15.4+sha1.c85a4305534f76d461407b59277b954bac97b5c4"
+}
