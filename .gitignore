@@ -19,3 +19,13 @@
 
 # Go workspace file
 go.work
+
+
+# Database
+/database
+
+# Enviroment
+.env
+
+# OSX
+.DS_Store
