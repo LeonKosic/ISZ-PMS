@@ -5,6 +5,7 @@ module.exports = {
     extend: {},
     colors: {
       // 
+      transparent: 'transparent',
       'primary': {
         100: '#573636',
         200: '#492a2a',
@@ -14,7 +15,8 @@ module.exports = {
         600: '#2e1313',
         700: '#260c0c',
         800: '#200a0a',
-        900: '#180000'
+        900: '#180000',
+        DEFAULT: '#180000'
       },
       'accent': {
         100: '#fafafa',
@@ -25,7 +27,8 @@ module.exports = {
         700: '#866d6d',
         600: '#694a4a',
         800: '#583535',
-        900: '#492323'
+        900: '#492323',
+        DEFAULT: '#e7e2e2'
       }
     },
     fontFamily: {
