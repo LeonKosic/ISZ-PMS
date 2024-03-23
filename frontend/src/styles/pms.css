@@ -2,28 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  /* font-family: "Taviraj", serif; */
-  
-  /* alternativno, serif: */
-  font-family: "Archivo", sans-serif;
-  font-optical-sizing: auto;
-  
+body {  
   @apply subpixel-antialiased;
-}
-
-.pms-bg-dark {
-  color: #180000;
-}
-
-.pms-bg-light {
-  color: #E7E7E7;
-}
-
-.pms-element-bg-dark {
-  color: #350000;
-}
-
-.pms-element-bg-light {
-  color: #B2A2A2;
 }

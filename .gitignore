@@ -29,8 +29,3 @@ go.work
 
 # OSX
 .DS_Store
-
-### --- ognjenovo --- ###
-frontend/node_modules
-api/
-database/
