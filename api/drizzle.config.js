@@ -1,6 +1,6 @@
 //var dotenv = require("dotenv").config();
 export default {
-  schema: './db/schema/schema.ts',
+  schema: './db/schema/schema.js',
   out: './db/drizzle',
   driver: 'mysql2', 
   dbCredentials: {
