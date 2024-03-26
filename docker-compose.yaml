@@ -19,7 +19,7 @@ services:
   api:
     build: "./api"
     depends_on:
-      - "database"
+      - database
     restart: always
     ports:
       - "3001:3000"
@@ -29,3 +29,11 @@ services:
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME} 
+  frontend:
+    build: "./frontend"
+    ports:
+      - "3000:3000"
+    environment:
+      VITE_API_HOST: ${API_HOST}
+    depends_on:
+      - api
