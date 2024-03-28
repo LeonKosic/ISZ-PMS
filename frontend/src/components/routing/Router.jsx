@@ -1,5 +1,7 @@
 import { Routes, Route } from "@solidjs/router";
-import { Login, Register, Landing, NotFound } from '../../pages'
+import Login from "~/pages/Login.jsx";
+import Landing from "~/pages/Landing.jsx";
+import Register from "~/pages/Register.jsx";
 
 
 export default function RouterMain() {
@@ -12,7 +14,7 @@ export default function RouterMain() {
         {/* za dinamicke rute koristi ':[string]' identifikatore: */}
         {/* <Route path="/users/:id/:repo" component={Repository} /> */}
         
-        <Route path="*" component={NotFound}/>
+        {/* <Route path="*" component={NotFound}/> */}
       </Routes>
   )
 }

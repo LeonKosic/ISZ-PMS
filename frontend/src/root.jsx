@@ -6,7 +6,6 @@ import {
   Meta,
   Scripts,
   Title,
-  Link,
 } from "solid-start";
 
 import "./styles/pms.css";
