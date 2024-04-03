@@ -1,8 +1,6 @@
 import { redirect } from "@solidjs/router"
 import { mergeProps } from "solid-js"
 
-import '../app.css'
-
 const redirectRepository = (url) => {
   redirect(url);
 }
