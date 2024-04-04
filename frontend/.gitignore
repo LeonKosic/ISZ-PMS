@@ -12,6 +12,9 @@ netlify
 .env
 .env*.local
 
+# (dev) json-server
+db.json
+
 # dependencies
 /node_modules
 

@@ -16,6 +16,12 @@ services:
     build: "./frontend"
     ports:
       - "3000:3000"
+      
+      # To avoid the infinite HMR error in console
+      - "3003:3000"
+      
+      # json-server
+      - "3301:3301"
   api:
     build: "./api"
     depends_on:

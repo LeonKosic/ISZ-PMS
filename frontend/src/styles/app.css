@@ -44,9 +44,20 @@ body {
 .user-profile {
   @apply flex flex-row grid-cols-3 justify-between gap-12 mx-8 py-10 z-10;
   
+  .activities {
+    @apply vertical-center w-1/3 rounded-lg grid grid-flow-row gap-4;
+    
+    .recent-activity {
+      @apply bg-accent-800 rounded-lg relative;
+      
+      .activity-entry {
+        @apply text-medium;
+      }
+    }
+  }
 
   .info {
-    @apply  w-full rounded-lg;
+    @apply w-full rounded-lg;
     
     .header {
       @apply bg-accent-800 h-auto rounded-lg flex flex-auto justify-evenly; 
@@ -62,19 +73,19 @@ body {
           @apply w-full;
           
           .username {
-            @apply italic h-2;
+            @apply italic h-2 pb-2;
           }
           
           .full-name { 
-            @apply py-1;
+            @apply py-2;
           }
           
           .role {
-            @apply py-1;
+            @apply py-2;
           }
           
           .biography {
-            @apply py-1;
+            @apply py-2;
           }
         }
       }

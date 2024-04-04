@@ -5,7 +5,7 @@ const redirectRepository = (url) => {
   redirect(url);
 }
 
-export default function ProjectBanner(props) {
+export default function ProfileProjectBanner(props) {
   const defaultProps = {
     title: "<no-name>",
     description: "<no-description>",

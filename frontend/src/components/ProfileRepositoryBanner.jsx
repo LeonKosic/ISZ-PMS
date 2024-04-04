@@ -2,7 +2,7 @@ import { mergeProps } from "solid-js"
 
 export default function ProfileRepositoryBanner(props) {
   const defaultProps = {
-    name: '<no-name>',
+    title: '<no-name>',
     date: '1st January, 2000'
   }
   props = mergeProps(defaultProps, props)
@@ -10,7 +10,7 @@ export default function ProfileRepositoryBanner(props) {
   return (
     <div class="repository-banner inset-padding">
       <div class="repository-name">
-        {props.name}
+        {props.title}
       </div>
       
       <div class="repository-date">
