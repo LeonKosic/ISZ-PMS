@@ -1,8 +1,8 @@
 import { Route, Router } from "@solidjs/router";
-import Login from "~/pages/Login";
-import NotFound from "~/pages/NotFound";
-import Profile from "~/pages/Profile";
-import Register from "~/pages/Register";
+import Login from "../../pages/Login.jsx";
+import Profile from "../../pages/Profile.jsx";
+import Register from "../../pages/Register.jsx";
+import NotFound from "../../pages/NotFound.jsx";
 
 export default function PMSRouter() {
   return (

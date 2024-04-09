@@ -11,6 +11,7 @@ export default function Profile(props) {
   const [user] = createResource(async () => {
     const url = `http://localhost:3301/ogg`;
     // const url = `${VITE_API_HOST}${useLocation().pathname}`;
+    // const response = await api.get(url);
     
     const response = await fetch(url);
     return await response.json();
