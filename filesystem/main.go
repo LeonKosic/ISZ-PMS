@@ -1,19 +1,14 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
-
-	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	router := gin.Default()
-	router.GET("/", response)
-	router.Run()
-}
-
-func response(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"message": "test",
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "TEST")
 	})
+	http.ListenAndServe(":7070", mux)
 }
