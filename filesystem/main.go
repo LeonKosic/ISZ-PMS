@@ -3,12 +3,21 @@ package main
 import (
 	"fmt"
 	"net/http"
+
+	"github.com/rs/cors"
 )
 
 func main() {
+	api := "PMS"
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "TEST")
 	})
-	http.ListenAndServe(":7070", mux)
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{api},
+		AllowCredentials: true,
+		Debug:            true,
+	})
+	handler := c.Handler(mux)
+	http.ListenAndServe(":7070", handler)
 }
