@@ -1,4 +1,4 @@
-module github.com/LeonKosic/ISZ-PMS/filesystem
+module pms/filesystem
 
 go 1.22.2
 

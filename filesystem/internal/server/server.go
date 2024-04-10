@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"fmt"
@@ -7,8 +7,7 @@ import (
 	"github.com/rs/cors"
 )
 
-func main() {
-	api := "PMS"
+func RunServer(api string, port string) {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "TEST")
@@ -19,5 +18,5 @@ func main() {
 		Debug:            true,
 	})
 	handler := c.Handler(mux)
-	http.ListenAndServe(":7070", handler)
+	http.ListenAndServe(port, handler)
 }
