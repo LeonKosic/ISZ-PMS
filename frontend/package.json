@@ -3,14 +3,13 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vinxi build",
-    "start": "vinxi start",
+    "build": "vite build",
+    "start": "vite start",
     "jsonserver": "json-server -p 3301 db.json",
     "all": "run-p jsonserver dev"
   },
   "dependencies": {
     "@solidjs/router": "^0.13.1",
-    "@solidjs/start": "^1.0.0-rc.0",
     "@suid/icons-material": "^0.7.0",
     "@suid/material": "^0.16.0",
     "@suid/vite-plugin": "^0.2.0",
@@ -20,7 +19,6 @@
     "solid-js": "^1.8.16",
     "tailwindcss": "^3.3.3",
     "typescript": "^5.4.5",
-    "vinxi": "^0.3.10",
     "vite": "^5.2.8",
     "vite-plugin-solid": "^2.10.2"
   },
