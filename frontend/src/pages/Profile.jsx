@@ -10,7 +10,7 @@ import { A } from "@solidjs/router";
 export default function Profile(props) {
   const [user] = createResource(async () => {
     // const url = `http://localhost:3301/ogg`;
-    const url = `${VITE_API_HOST}${useLocation().pathname}`;
+    const url = `${import.meta.env.VITE_API_HOST}${useLocation().pathname}`;
     const response = await api.get(url);
     return await response.json();
   });
