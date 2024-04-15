@@ -1,7 +1,7 @@
-import ProfileActivityCard from "~/components/ProfileActivityCard";
-import ProfileHeader from "~/components/ProfileHeader";
-import ProfileProjectBanner from "~/components/ProfileProjectBanner";
-import ProfileRepositoryBanner from "~/components/ProfileRepositoryBanner";
+import ProfileActivityCard from "~/components/profile/ProfileActivityCard";
+import ProfileHeader from "~/components/profile/ProfileHeader";
+import ProfileProjectBanner from "~/components/profile/ProfileProjectBanner";
+import ProfileRepositoryBanner from "~/components/profile/ProfileRepositoryBanner";
 
 import api from "~/api/api";
 import { Show, Suspense, createResource } from "solid-js";
@@ -9,15 +9,11 @@ import { A } from "@solidjs/router";
 
 export default function Profile(props) {
   const [user] = createResource(async () => {
-    const url = `http://localhost:3301/ogg`;
-    // const url = `${VITE_API_HOST}${useLocation().pathname}`;
-    // const response = await api.get(url);
-    
-    const response = await fetch(url);
+    // const url = `http://localhost:3301/ogg`;
+    const url = `${VITE_API_HOST}${useLocation().pathname}`;
+    const response = await api.get(url);
     return await response.json();
   });
-  
-  console.log(user()?.bio);
   
   return (
     <Suspense>  
