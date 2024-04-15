@@ -5,7 +5,7 @@ import ProfileRepositoryBanner from "~/components/profile/ProfileRepositoryBanne
 
 import api from "~/api/api";
 import { Show, Suspense, createResource } from "solid-js";
-import { A } from "@solidjs/router";
+import { A, useLocation } from "@solidjs/router";
 
 export default function Profile(props) {
   const [user] = createResource(async () => {
