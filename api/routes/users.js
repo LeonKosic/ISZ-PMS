@@ -9,11 +9,6 @@ import jwt from 'jsonwebtoken'
 const router = express.Router();
 const jsonParser = bodyParser.json()
 
-router.get('/',async (req, res, next) => {
-    const result = await db.select().from(users);
-    console.log(result);
-    res.status(200).send("Hello world");
-  });
   function generateAccessToken(user) {
   
     const secret = process.env.JWT_KEY;
@@ -28,7 +23,7 @@ function authenticateToken(req, res, next) {
     if (token == null) return res.send(req.headers)
   
     jwt.verify(token, process.env.JWT_KEY, (err, user) => {
-      console.log(err)
+      
   
       if (err) return res.send(token, 403)
      
@@ -64,10 +59,19 @@ router.post('/register',jsonParser,async(req,res)=>{
     password: Joi.string().required(),
     password2: Joi.string().required()
 });
-const { error, value } = schema.validate(req.body);
+const options={
+  errors: {
+    wrap: {
+      label: false
+    }
+  }
+}
+const { error, value } = schema.validate(req.body,options);
+
 if (error) {
-res.send(400,{err:"All fields must be filled"})
-return}
+  res.send(400,{err:error.details})
+  return
+}
 
   const existingUser = await db.select().from(users).where(eq(users.user_name,req.body.user_name));
   if (existingUser.length > 0) {
@@ -87,7 +91,6 @@ return}
     deleted: 0
   }]
 );
-  console.log(req.body)
   
         res.send(200, {message:"Account registered."})
 })
@@ -112,7 +115,7 @@ return}
     });
 
     const { error, value } = schema.validate(req.body);
-    console.log(req.body)
+   
       if(error){
         res.status(200).json({ message: 'Data is not valid.' });
         return
