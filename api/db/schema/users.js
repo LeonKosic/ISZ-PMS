@@ -8,7 +8,7 @@ const users = mysqlTable('users', {
   name: varchar('name', { length: 256 }),
   email: varchar("email", {length: 256}),
   password: varchar("password", {length:256}),
-  deleted: boolean('deleted').default(0),
+  deleted: boolean('deleted'),
   role_id: bigint('role_id', { mode: 'number' }).notNull().references(()=>roles.role_id)
 
 }, (users) => ({

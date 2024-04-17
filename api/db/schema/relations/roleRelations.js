@@ -3,7 +3,5 @@ import { users } from "../users.js";
 import { roles } from "../roles.js";
 
 export const roleRelations = relations(roles,({many})=>({
-   
-    members:many(users),
-    
+    members:many(users), 
 }))

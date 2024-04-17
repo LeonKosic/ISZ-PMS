@@ -8,8 +8,24 @@ import jwt from 'jsonwebtoken'
 const router = express.Router();
 const jsonParser = bodyParser.json()
 
-
-router.post('/create',jsonParser,async(req,res)=>{
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers['authorization']
+    const token = authHeader && authHeader.split(' ')[1]
+  
+    if (token == null) return res.send(req.headers)
+  
+    jwt.verify(token, process.env.JWT_KEY, (err, user) => {
+      
+  
+      if (err) return res.send(token, 403)
+     
+  
+      req.user = user
+  
+      next()
+    })
+  }
+router.post('/create',authenticateToken,jsonParser,async(req,res)=>{
 
     const existingCategory = await db.select().from(category).where(eq(category.category_name,req.body.category_name));
     if (existingCategory.length > 0) {

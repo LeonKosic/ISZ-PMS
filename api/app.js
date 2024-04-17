@@ -17,6 +17,6 @@ app.use(cors())
 
 app.use('/', indexRouter);
 app.use('/users',userRouter)
-app.use('/category',adminRouter);
+app.use('/admin',adminRouter);
 
 export default app;
