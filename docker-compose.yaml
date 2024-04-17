@@ -25,6 +25,7 @@ services:
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME} 
+      JWT_KEY: ${JWT_KEY}
   frontend:
     build: "./frontend"
     ports:
@@ -32,9 +33,6 @@ services:
       
       # To avoid the infinite HMR error in console
       - "3003:3000"
-      
-      # json-server
-      - "3301:3301"
     environment:
       VITE_API_HOST: ${API_HOST}
     depends_on:
