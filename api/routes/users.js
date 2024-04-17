@@ -1,12 +1,13 @@
 import {users} from "../db/schema/users.js"
-import { Name,eq } from 'drizzle-orm';
+import { Name,eq,and} from 'drizzle-orm';
 import {db} from '../db/db.js';
 import express from 'express';
 import bodyParser from 'body-parser';
 import bcrypt from 'bcrypt';
 import Joi from 'joi'
 import jwt from 'jsonwebtoken'
-import {authenticateToken} from "./middleware/auth.js"
+import {authenticateToken} from "../middleware/auth.js"
+import { follow } from "../db/schema/follow.js";
 
 const router = express.Router();
 const jsonParser = bodyParser.json()
@@ -74,7 +75,8 @@ if (error) {
     name: req.body.name,
     email: req.body.email,
     password: hash,
-    deleted: 0
+    deleted: 0,
+    role_id:1 //tu samo dok ne razradimo uloge
   }]
 );
   
@@ -122,6 +124,25 @@ router.get('/details',jsonParser,async(req,res)=>{
   res.send(400,{err:"Username does not exist."})
     return
 
+})
+
+router.post('/follow',jsonParser,authenticateToken,async(req,res)=>{
+  const followingUser=await db.select().from(users).where(eq(users.user_name,req.body.user_name))
+  await db.insert(follow).values(
+    [{follower_id: req.user.id,
+    following_id:followingUser[0].id
+  }])
+  res.status(200).send({message:"Following."})
+
+})
+
+router.put('/unfollow',jsonParser,authenticateToken,async(req,res)=>{
+  const followingUser=await db.select().from(users).where(eq(users.user_name,req.body.user_name))
+  await db.delete(follow).where(and(
+    eq(follow.follower_id, req.user.id),
+    eq(follow.following_id,followingUser[0].id)))
+
+    res.status(200).send({message:"Unfollow."})
 })
 
 export default router;
