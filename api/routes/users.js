@@ -6,6 +6,8 @@ import bodyParser from 'body-parser';
 import bcrypt from 'bcrypt';
 import Joi from 'joi'
 import jwt from 'jsonwebtoken'
+import {authenticateToken} from "./middleware/auth.js"
+
 const router = express.Router();
 const jsonParser = bodyParser.json()
 
@@ -16,23 +18,7 @@ const jsonParser = bodyParser.json()
   
     return jwt.sign(user, secret, options);
   }
-function authenticateToken(req, res, next) {
-    const authHeader = req.headers['authorization']
-    const token = authHeader && authHeader.split(' ')[1]
-  
-    if (token == null) return res.send(req.headers)
-  
-    jwt.verify(token, process.env.JWT_KEY, (err, user) => {
-      
-  
-      if (err) return res.send(token, 403)
-     
-  
-      req.user = user
-  
-      next()
-    })
-  }
+
   router.post('/login',jsonParser, async (req, res) => {
 
   const existingUser = await db.select().from(users).where(eq(users.user_name,req.body.user_name));
