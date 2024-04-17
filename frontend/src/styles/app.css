@@ -149,7 +149,7 @@ body {
       border-left: 2px solid #fefefe;
       
       p {
-        @apply ps-2;
+        @apply ps-2 pb-1;
       }
     }
   }
