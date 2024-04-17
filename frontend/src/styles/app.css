@@ -133,3 +133,39 @@ body {
     }
   }
 }
+
+.ctr-title {
+  @apply text-xl pb-1; 
+}
+
+.admin-panel {
+  @apply flex justify-center items-center pt-10 max-w-screen-2xl mx-auto;
+  
+  .user-req-ctr {
+    @apply rounded-lg w-2/3 h-auto p-5 m-5;
+    border: 1px solid #fefefe;
+    
+    .user-request {
+      border-left: 2px solid #fefefe;
+      
+      p {
+        @apply ps-2;
+      }
+    }
+  }
+  
+  .ban-user-ctr {
+    @apply rounded-lg w-2/3 h-auto p-5 m-5;
+    border: 1px solid #fefefe;
+  }
+  
+  .del-ctg-ctr {
+    @apply rounded-lg w-2/3 h-auto p-5 m-5;
+    border: 1px solid #fefefe;
+  }
+  
+  .add-ctg-ctr {
+    @apply rounded-lg w-2/3 h-auto p-5 m-5;
+    border: 1px solid #fefefe;
+  }
+}

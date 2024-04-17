@@ -2,21 +2,25 @@
   "name": "example-with-tailwindcss",
   "type": "module",
   "scripts": {
-    "dev": "vinxi dev",
-    "build": "vinxi build",
-    "start": "vinxi start",
+    "dev": "vite",
+    "build": "vite build",
+    "start": "vite start",
     "jsonserver": "json-server -p 3301 db.json",
     "all": "run-p jsonserver dev"
   },
   "dependencies": {
     "@solidjs/router": "^0.13.1",
-    "@solidjs/start": "^1.0.0-rc.0",
+    "@suid/icons-material": "^0.7.0",
+    "@suid/material": "^0.16.0",
+    "@suid/vite-plugin": "^0.2.0",
     "autoprefixer": "^10.4.14",
     "axios": "^1.6.8",
     "postcss": "^8.4.26",
     "solid-js": "^1.8.16",
     "tailwindcss": "^3.3.3",
-    "vinxi": "^0.3.10"
+    "typescript": "^5.4.5",
+    "vite": "^5.2.8",
+    "vite-plugin-solid": "^2.10.2"
   },
   "devDependencies": {
     "json-server": "^1.0.0-alpha.23",
