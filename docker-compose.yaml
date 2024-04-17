@@ -33,9 +33,6 @@ services:
       
       # To avoid the infinite HMR error in console
       - "3003:3000"
-      
-      # json-server
-      - "3301:3301"
     environment:
       VITE_API_HOST: ${API_HOST}
     depends_on:
