@@ -24,16 +24,14 @@ module.exports = {
         300: '#ccc2c2',
         400: '#b8a9a9',
         500: '#a49292',
-        700: '#866d6d',
-        600: '#694a4a',
+        600: '#866d6d',
+        700: '#694a4a',
         800: '#583535',
         900: '#492323',
         DEFAULT: '#e7e2e2'
       }
     },
-    fontFamily: {
-      // dogovoriti se
-    }
+    fontFamily: {}
   },
   plugins: []
 };

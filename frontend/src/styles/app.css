@@ -1,0 +1,135 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  @font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(/fonts/Roboto.woff2) format('woff2');
+  }
+}
+
+body {
+  @apply bg-primary-800 text-accent-100 scroll-smooth;
+}
+
+.inset-padding {
+  @apply p-6;
+}
+
+.vertical-center {
+  top: 50%;
+  margin: auto;
+}
+
+.text-huge {
+  @apply text-8xl;
+}
+
+.text-big {
+  @apply text-4xl;
+}
+
+.text-medium {
+  @apply text-xl; 
+}
+
+.text-small {
+  @apply text-base;
+}
+
+.user-profile {
+  @apply flex flex-row grid-cols-3 justify-between gap-12 mx-8 py-10 z-10;
+  
+  .activities {
+    @apply vertical-center w-1/3 rounded-lg grid grid-flow-row gap-4;
+    
+    .recent-activity {
+      @apply bg-accent-800 rounded-lg relative;
+      
+      .activity-entry {
+        @apply text-medium;
+      }
+    }
+  }
+
+  .info {
+    @apply w-full rounded-lg;
+    
+    .header {
+      @apply bg-accent-800 h-auto rounded-lg flex flex-auto justify-evenly; 
+        
+        .avatar {
+          aspect-ratio: 1/1;
+          width: auto;
+          object-fit: cover;
+          @apply rounded-3xl inline px-4;
+        }
+        
+        .basic-description {
+          @apply w-full;
+          
+          .username {
+            @apply italic h-2 pb-2;
+          }
+          
+          .full-name { 
+            @apply py-2;
+          }
+          
+          .role {
+            @apply py-2;
+          }
+          
+          .biography {
+            @apply py-2;
+          }
+        }
+      }
+    
+    .social {
+      @apply grid grid-flow-row grid-cols-2 justify-center my-12 gap-8;
+      
+      .following {
+        @apply inset-padding bg-accent-800 rounded-lg h-auto;
+      }
+      
+      .popular-projects {
+        @apply inset-padding bg-accent-800 rounded-lg h-auto;
+      }
+    }
+    
+    .project-listings {
+      .project-entry {
+        @apply inset-padding bg-accent-800 rounded-lg h-auto text-medium my-12;
+        
+        .project-name {
+          @apply text-big pb-4;
+        }
+        
+        .project-description {
+          @apply italic;
+        }
+      }
+    }
+  }
+  
+  .repositories {
+    @apply vertical-center w-1/3 rounded-lg grid grid-flow-row gap-4;
+    
+    .repository-banner {
+      @apply bg-accent-800 rounded-lg relative;  
+      
+      .repository-name {
+        @apply text-medium;
+      }
+      
+      .repository-date {
+        @apply absolute bottom-1 right-2 italic;
+      }
+    }
+  }
+}
