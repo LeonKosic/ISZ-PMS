@@ -1,3 +1,4 @@
 import { userRelations } from "./userRelations.js"
 import { followRelations } from "./followRelations.js"
-export default {userRelations, followRelations}
+import { roleRelations } from "./roleRelations.js"
+export default {userRelations, followRelations, roleRelations}
