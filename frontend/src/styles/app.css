@@ -138,6 +138,14 @@ body {
   @apply text-xl pb-1; 
 }
 
+.default-form {
+  @apply h-8 p-2 border-accent-300 bg-transparent border-2 border-opacity-50 focus:border-2 focus:border-opacity-100 rounded-lg duration-200 hover:bg-accent-200 hover:bg-opacity-5;
+}
+
+.form-big {
+  @apply h-10;
+}
+
 .admin-panel {
   @apply flex justify-center items-center pt-10 max-w-screen-2xl mx-auto;
   
@@ -152,11 +160,17 @@ body {
         @apply ps-2 pb-1;
       }
     }
+    
+    
   }
   
   .ban-user-ctr {
     @apply rounded-lg w-2/3 h-auto p-5 m-5;
     border: 1px solid #fefefe;
+    
+    .search-users-form { 
+
+    }
   }
   
   .del-ctg-ctr {

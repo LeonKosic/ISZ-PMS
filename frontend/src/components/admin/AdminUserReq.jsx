@@ -11,33 +11,33 @@ const fetchRequests = async () => {
 export default function AdminUserReq(props) {
   const [newRequests] = createResource(fetchRequests);
   
-  
   return (
     <div class="user-req-ctr">
       <Stack spacing={2}>
         <h1 class="ctr-title">Pending user requests</h1>
-        <hr class="my-1" />
+        <hr class="my-2 py-2" />
         
         <Show
           when={newRequests.loading == false}
           fallback={<p class="italic">Loading user requests...</p>}
         >   
+        {/* DEMO, TODO: FIX */}
           <UserRequestInfo/>
-          <Button variant="outlined"
-            class="w-1/5"
-            color="pmsScheme"
-          >
-            Approve
-          </Button>
-          
-          {/* TODO: Fix initial style state (from dark to bright) */}
-          <TextField
-            id="standard-small"
-            label="Search users..."
-            variant="outlined"
-            size="small"
-            color="pmsSchemeFullbright"
-            />
+          <Stack direction={"row"}>
+            <Button variant="outlined"
+              class="w-1/12"
+              color="pmsScheme"
+            >
+              Approve
+            </Button>
+            
+            <Button variant="outlined"
+              class="w-1/12"
+              color="pmsScheme"
+            >
+              Deny
+            </Button>
+          </Stack>
         </Show>
       </Stack>
     </div>
