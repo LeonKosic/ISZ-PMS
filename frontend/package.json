@@ -1,32 +1,32 @@
 {
-  "name": "solid-docker",
-  "scripts": {
-    "dev": "solid-start dev",
-    "build": "solid-start build",
-    "start": "solid-start dev"
-  },
+  "name": "example-with-tailwindcss",
   "type": "module",
-  "devDependencies": {
-    "autoprefixer": "^10.4.15",
-    "eslint": "^8.57.0",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.29.1",
-    "postcss": "^8.4.28",
-    "solid-start-node": "^0.3.8",
-    "tailwindcss": "^3.3.3",
-    "vite": "^4.4.9"
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "start": "vite start",
+    "jsonserver": "json-server -p 3301 db.json",
+    "all": "run-p jsonserver dev"
   },
   "dependencies": {
-    "@solidjs/meta": "^0.28.6",
-    "@solidjs/router": "^0.8.3",
-    "@thisbeyond/solid-dnd": "^0.7.5",
+    "@solidjs/router": "^0.13.1",
+    "@suid/icons-material": "^0.7.0",
+    "@suid/material": "^0.16.0",
+    "@suid/vite-plugin": "^0.2.0",
+    "autoprefixer": "^10.4.14",
     "axios": "^1.6.8",
-    "eslint-plugin-solid": "^0.13.2",
-    "solid-js": "^1.8.3",
-    "solid-start": "^0.3.8",
-    "tsx": "^4.7.1"
+    "postcss": "^8.4.26",
+    "solid-js": "^1.8.16",
+    "tailwindcss": "^3.3.3",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.8",
+    "vite-plugin-solid": "^2.10.2"
+  },
+  "devDependencies": {
+    "json-server": "^1.0.0-alpha.23",
+    "npm-run-all": "^4.1.5"
   },
   "engines": {
-    "node": "18"
+    "node": ">=18"
   }
 }
