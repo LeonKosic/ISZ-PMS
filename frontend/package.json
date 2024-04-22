@@ -19,6 +19,7 @@
   "dependencies": {
     "@solidjs/meta": "^0.28.6",
     "@solidjs/router": "^0.8.3",
+    "@thisbeyond/solid-dnd": "^0.7.5",
     "axios": "^1.6.8",
     "eslint-plugin-solid": "^0.13.2",
     "solid-js": "^1.8.3",
