@@ -23,16 +23,16 @@ export default function AdminUserReq(props) {
         >   
         {/* DEMO, TODO: FIX */}
           <UserRequestInfo/>
-          <Stack direction={"row"}>
+          <Stack direction={"row"} spacing={1}>
             <Button variant="outlined"
-              class="w-1/12"
+              class="w-auto"
               color="pmsScheme"
             >
               Approve
             </Button>
             
             <Button variant="outlined"
-              class="w-1/12"
+              class="w-auto"
               color="pmsScheme"
             >
               Deny

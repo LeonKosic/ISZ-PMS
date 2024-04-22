@@ -22,7 +22,7 @@ export default function AdminDelCategory(props) {
       <Show
         when={categories.loading == false}
         fallback={<p class="italic">Loading categories...</p>}
-      >
+      > 
         <ThemeProvider theme={theme}>
           <For each={categories()}>
             {
