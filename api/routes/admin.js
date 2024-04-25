@@ -7,7 +7,7 @@ import bodyParser from 'body-parser';
 import jwt from 'jsonwebtoken'
 const router = express.Router();
 const jsonParser = bodyParser.json()
-import {authenticateToken} from "./middleware/auth.js"
+import {authenticateToken} from "../middleware/auth.js"
 
 router.post('/create',authenticateToken,jsonParser,async(req,res)=>{
 

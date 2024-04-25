@@ -1,4 +1,12 @@
-function authenticateToken(req, res, next) {
+
+import express from 'express';
+import bodyParser from 'body-parser';
+import jwt from 'jsonwebtoken'
+const router = express.Router();
+const jsonParser = bodyParser.json()
+
+
+export function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization']
     const token = authHeader && authHeader.split(' ')[1]
   
