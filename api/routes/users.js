@@ -76,7 +76,8 @@ if (error) {
     email: req.body.email,
     password: hash,
     deleted: 0,
-    role_id:1 //tu samo dok ne razradimo uloge
+    role_id:1, //tu samo dok ne razradimo uloge
+    is_activ:1
   }]
 );
   
@@ -143,18 +144,6 @@ router.put('/unfollow',jsonParser,authenticateToken,async(req,res)=>{
     eq(follow.following_id,followingUser[0].id)))
 
     res.status(200).send({message:"Unfollow."})
-})
-
-router.get('/search',jsonParser,async(req,res)=>{
-  const existingUser=await db.select().from(users).where(eq(users.user_name,req.body.user_name))
-  if (existingUser.length <= 0) {
-    res.send(400,{err:"Username does not exists."})
-    return
-  }
-  return res.status(200).send({
-    user_name:existingUser[0].user_name,
-    name:existingUser[0].name,
-    email:existingUser[0].email})
 })
 
 export default router;

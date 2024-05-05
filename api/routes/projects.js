@@ -7,6 +7,9 @@ import {authenticateToken} from "../middleware/auth.js"
 import { category } from '../db/schema/category.js';
 import { project } from '../db/schema/project.js';
 import { project_category } from '../db/schema/project_category.js';
+const router = express.Router();
+import bodyParser from 'body-parser';
+const jsonParser = bodyParser.json()
 
 router.post('/category',jsonParser,async(req,res)=>{
     await db.insert(project_category).values(
