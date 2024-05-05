@@ -42,7 +42,7 @@ router.post('/register',jsonParser,async(req,res)=>{
   const schema = Joi.object({
     user_name: Joi.string().required(),
     name: Joi.string().required(),
-    email:Joi.string().email().required(),
+    email:Joi.string().email({ minDomainSegments: 3 }).required().regex(/@unibl/),
     password: Joi.string().required(),
     password2: Joi.string().required()
 });
@@ -143,6 +143,18 @@ router.put('/unfollow',jsonParser,authenticateToken,async(req,res)=>{
     eq(follow.following_id,followingUser[0].id)))
 
     res.status(200).send({message:"Unfollow."})
+})
+
+router.get('/search',jsonParser,async(req,res)=>{
+  const existingUser=await db.select().from(users).where(eq(users.user_name,req.body.user_name))
+  if (existingUser.length <= 0) {
+    res.send(400,{err:"Username does not exists."})
+    return
+  }
+  return res.status(200).send({
+    user_name:existingUser[0].user_name,
+    name:existingUser[0].name,
+    email:existingUser[0].email})
 })
 
 export default router;

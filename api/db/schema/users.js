@@ -9,7 +9,8 @@ const users = mysqlTable('users', {
   email: varchar("email", {length: 256}),
   password: varchar("password", {length:256}),
   deleted: boolean('deleted'),
-  role_id: bigint('role_id', { mode: 'number' }).notNull().references(()=>roles.role_id)
+  role_id: bigint('role_id', { mode: 'number' }).notNull().references(()=>roles.role_id),
+  is_activ:boolean('is_activ')
 
 }, (users) => ({
   nameIdx: index('name_idx').on(users.name),
