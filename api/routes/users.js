@@ -8,6 +8,8 @@ import Joi from 'joi'
 import jwt from 'jsonwebtoken'
 import {authenticateToken} from "../middleware/auth.js"
 import { follow } from "../db/schema/follow.js";
+import { partners } from "../db/partners.js";
+import { requests } from "../db/requests.js";
 
 const router = express.Router();
 const jsonParser = bodyParser.json()
@@ -42,7 +44,7 @@ router.post('/register',jsonParser,async(req,res)=>{
   const schema = Joi.object({
     user_name: Joi.string().required(),
     name: Joi.string().required(),
-    email:Joi.string().email({ minDomainSegments: 3 }).required().regex(/@unibl/),
+    email:Joi.string().email().required(),
     password: Joi.string().required(),
     password2: Joi.string().required()
 });
@@ -70,18 +72,34 @@ if (error) {
     return
   }
   const hash =  await bcrypt.hash(req.body.password,10);
+  var partner=req.body.email.split("@");
+  console.log(partner[1])
+  const existingPartner= await db.select().from(partners).where(eq(partners.domain,partner[1] ));
+  if(existingPartner.length > 0 && partner[1].includes("student")){
   await db.insert(users).values(
     [{user_name: req.body.user_name,
     name: req.body.name,
     email: req.body.email,
     password: hash,
     deleted: 0,
-    role_id:1, //tu samo dok ne razradimo uloge
+    role_id:1,
     is_activ:1
   }]
-);
-  
-        res.send(200, {message:"Account registered."})
+)
+res.send(200, {message:"Account registered."})
+}
+else{
+await db.insert(requests).values(
+  [{user_name: req.body.user_name,
+  name: req.body.name,
+  email: req.body.email,
+  password: hash,
+  deleted: 0,
+  role_id:2,
+  is_activ:0
+}])
+res.send(200, {message:"Request sent."})
+}
 })
 
 
