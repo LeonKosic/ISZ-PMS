@@ -1,10 +1,24 @@
 import { Button, TextField, Stack } from "@suid/material";
 import { Show, createResource } from "solid-js";
 import UserRequestInfo from "./atomic/UserRequestInfo";
+import ApproveRequestBtn from "./atomic/ApproveRequestBtn";
+import DenyRequestBtn from "./atomic/DenyRequestBtn";
 
 const fetchRequests = async () => {
   const url = `${import.meta.env.VITE_API_HOST}/users/requests`;
-  const resource = await fetch(url);
+  const resource = await fetch(url, { method: "GET"});
+  return await resource.json();
+}
+
+const approveRequest = async (username) => {
+  const url = `${import.meta.env.VITE_API_HOST}/users/requests`;
+  const resource = await fetch(url, { method: "PUT", body: { user: username, status: "approved" } })
+  return await resource.json();
+}
+
+const denyRequest = async (username) => {
+  const url = `${import.meta.env.VITE_API_HOST}/users/requests`;
+  const resource = await fetch(url, { method: "PUT", body: { user: username, status: "denied" } })
   return await resource.json();
 }
 
@@ -20,24 +34,29 @@ export default function AdminUserReq(props) {
         <Show
           when={newRequests.loading == false}
           fallback={<p class="italic">Loading user requests...</p>}
-        >   
-        {/* DEMO, TODO: FIX */}
-          <UserRequestInfo/>
-          <Stack direction={"row"} spacing={1}>
-            <Button variant="outlined"
-              class="w-auto"
-              color="pmsScheme"
-            >
-              Approve
-            </Button>
-            
-            <Button variant="outlined"
-              class="w-auto"
-              color="pmsScheme"
-            >
-              Deny
-            </Button>
-          </Stack>
+        >
+          <For each={newRequests()}>
+            {
+              (request, idx) => 
+                <div class="request-ctr">
+                  <UserRequestInfo
+                    fullname={request?.fullname}
+                    username={request?.username}
+                    email={request?.email}
+                  />
+                  
+                  <Stack direction="row" spacing={1}>
+                    <div onClick={() => approveRequest(request?.username)}>
+                      <ApproveRequestBtn />
+                    </div>
+                    
+                    <div onClick={() => denyRequest(request?.username)}>
+                      <DenyRequestBtn/>
+                    </div>
+                  </Stack>
+                </div>
+            }
+          </For>
         </Show>
       </Stack>
     </div>

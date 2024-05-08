@@ -6,8 +6,16 @@ import { For, createResource } from "solid-js";
 
 
 const fetchCategories = async () => {
+  // TODO
   const url = `${import.meta.env.VITE_API_HOST}/api/categories`;
   const response = await fetch(url, { method: "GET" });
+  return await response.json();
+}
+
+const delCategory = async (name) => {
+  // TODO
+  const url = `${import.meta.env.VITE_API_HOST}/api/categories`;
+  const response = await fetch(url, { method: "DELETE", body: JSON.stringify(name) });
   return await response.json();
 }
 
