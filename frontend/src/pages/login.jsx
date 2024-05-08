@@ -1,5 +1,5 @@
 export default function Login(props) {
   return (
-    <>Login</>
+    <h1>Login</h1>
   )
 }

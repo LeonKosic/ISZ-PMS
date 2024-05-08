@@ -1,6 +1,6 @@
 import { redirect } from "@solidjs/router";
 
-export default function NavBar(props) {
+export default function Navbar(props) {
   return (
     <div class="sticky top-0 bg-primary-800 pb-0 z-50">
       
