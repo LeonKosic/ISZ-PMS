@@ -1,5 +1,5 @@
 
-import { Name,eq,and,} from 'drizzle-orm';
+import { Name,eq,and} from 'drizzle-orm';
 import {db} from '../db/db.js';
 import express from 'express';
 import jwt from 'jsonwebtoken'
@@ -72,16 +72,21 @@ router.post('/category',jsonParser,async(req,res)=>{
         res.send(projectNames);
       })
 
-      // router.get('/users_projects',authenticateToken,jsonParser,async(req,res)=>{
-      //   const followingProjectNames = await db.select('project.name').from('project').leftJoinoin('follow', eq(project.owner_id, follow.following_id))
-      // .where(eq('follow.follower_id', req.user.id));
-      // console.log(followingProjectNames)
-      //   if (followingProjectNames.length <= 0) {
-      //     res.send(400,{err:"No projects."})
-      //     return
-      //   }
-      //   const projectNames = followingProjectNames.map(project => project.name);
-      //   res.send(followingProjectNames)
+       router.get('/users_projects',authenticateToken,jsonParser,async(req,res)=>{
+        const followingProjectNames = await db.select().from(project).leftJoin(follow, eq(project.owner_id, follow.following_id))
+      .where(eq(follow.follower_id, req.user.id))
+      if (followingProjectNames.length <= 0) {
+        res.send(400,{err:"No projects."})
+        return
+     }
+      var projectNames = [];
+      for (var i = 0; i < followingProjectNames.length; i++) {
+        const projectName = followingProjectNames[i].project.name;
+        projectNames.push(projectName);
+       
+    }
+      
+        res.send(projectNames)
         
-      // })
+       })
 export default router
