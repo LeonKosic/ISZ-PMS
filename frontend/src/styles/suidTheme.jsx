@@ -7,6 +7,11 @@ const theme = createTheme({
       light: '#fefefe',
       dark: '#371a1a',
       contrastText: '#fefefe'
+    },
+    monochrome: {
+      main: "#212121",
+      light: "#adadad",
+      dark: "#181818"
     }
   }
 })
