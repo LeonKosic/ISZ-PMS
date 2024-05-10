@@ -15,6 +15,7 @@
     "@suid/vite-plugin": "^0.2.0",
     "autoprefixer": "^10.4.14",
     "axios": "^1.6.8",
+    "jwt-decode": "^4.0.0",
     "postcss": "^8.4.26",
     "solid-js": "^1.8.16",
     "tailwindcss": "^3.3.3",

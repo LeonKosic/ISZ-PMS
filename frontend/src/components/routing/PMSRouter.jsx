@@ -4,6 +4,7 @@ import Profile from "../../pages/Profile.jsx";
 import Register from "../../pages/Register.jsx";
 import NotFound from "../../pages/NotFound.jsx";
 import AdminPanel from "../admin/AdminPanel.jsx";
+import EditProfile from "../../pages/EditProfile.jsx";
 
 export default function PMSRouter() {
   return (
@@ -12,7 +13,8 @@ export default function PMSRouter() {
       <Route path="/register" component={Register} />
       <Route path="/profiles/:id" component={Profile} />
       
-      <Route path="/pms-admin" component={AdminPanel}/>
+      <Route path="/pms-admin" component={AdminPanel} />
+      <Route path="/profile/edit" component={EditProfile}/>
       
       <Route path="*" component={NotFound}/>
     </Router>
