@@ -133,3 +133,15 @@ body {
     }
   }
 }
+
+.notfound {
+  @apply flex flex-col justify-center items-center h-screen;
+  
+  h1 {
+    @apply text-huge;
+  }
+  
+  p {
+    @apply text-medium italic; 
+  }
+}
