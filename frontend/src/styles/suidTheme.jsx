@@ -14,5 +14,6 @@ const theme = createTheme({
 export default theme;
 
 // import theme from ".../suidTheme.jsx"
+// koristiti <ThemeProvider theme={theme}>... (slicno kao kontekst)
 // <Button color={theme} />
 // ima detaljnije na mui dokumentaciji
