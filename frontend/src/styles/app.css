@@ -133,3 +133,30 @@ body {
     }
   }
 }
+
+.courses-list-ctr {
+  @apply max-w-screen-xl mx-auto py-16 grid grid-flow-row grid-cols-3 space-y-4 gap-4 justify-between items-center;
+  
+  .course-card {
+    @apply relative
+    p-4 pl-2 w-auto mx-6
+    border-2 rounded-xl border-accent-700 
+    hover:border-accent-100
+    hover:bg-accent-300
+    hover:bg-opacity-10
+    transition-all duration-200
+    cursor-pointer;
+    
+    .title {
+      @apply pl-2 pb-2 text-medium overflow-hidden;
+    }
+    
+    .separator {
+      @apply w-full mx-auto opacity-75 pb-3;
+    }
+    
+    .course-id {
+      @apply absolute right-0 pr-4 bottom-0 text-accent-200;
+    }
+  }
+}
