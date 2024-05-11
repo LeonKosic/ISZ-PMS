@@ -128,9 +128,7 @@ router.get('/details',jsonParser,async(req,res)=>{
 
 })
 router.post('/search', jsonParser ,async(req,res)=>{
-  console.log(req.body)
   const existingUser = await db.select().from(users).where(like(users.user_name,`%${req.body.user_name}%`) && eq(users.deleted,0))
-  
   if(existingUser.length>0){
     existingUser.map((user)=>{
       delete user.password
