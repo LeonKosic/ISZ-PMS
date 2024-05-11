@@ -1,4 +1,5 @@
 import { index, int, mysqlTable, bigint, varchar, tinyint, boolean } from 'drizzle-orm/mysql-core';
+import {roles} from "./roles.js"
 
 
 export const users = mysqlTable('users', {
@@ -7,7 +8,8 @@ export const users = mysqlTable('users', {
   name: varchar('name', { length: 256 }),
   email: varchar("email", {length: 256}),
   password: varchar("password", {length:256}),
-  deleted: boolean('deleted').default(0)
+  deleted: boolean('deleted'),
+  role_id: bigint('role_id', { mode: 'number' }).notNull().references(()=>roles.role_id)
 
 }, (users) => ({
   nameIdx: index('name_idx').on(users.name),

@@ -5,6 +5,7 @@ import cors from 'cors'
 
 import indexRouter from './routes/index.js';
 import userRouter from './routes/users.js';
+import adminRouter from './routes/admin.js';
 
 const app = express();
 
@@ -16,5 +17,6 @@ app.use(cors())
 
 app.use('/', indexRouter);
 app.use('/users',userRouter)
+app.use('/admin',adminRouter);
 
 export default app;
