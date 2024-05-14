@@ -16,6 +16,7 @@ router.get('/', async (req, res, next) => {
 });
 router.post("/", jsonParser,upload.any(), async (req, res, next)=>{
   console.log(req.body)
+  console.log(req.files)
   if(req.body.idk == "hello"){
     res.status(200).send("hello world")
   }
