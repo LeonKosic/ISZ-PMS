@@ -14,64 +14,64 @@ import { follow } from "../db/schema/follow.js";
 const router = express.Router();
 const jsonParser = bodyParser.json()
 
-  function generateAccessToken(user) {
-  
-    const secret = process.env.JWT_KEY;
-    const options = { expiresIn: '1h' };
-  
-    return jwt.sign(user, secret, options);
-  }
+function generateAccessToken(user) {
 
-  router.post('/login',jsonParser, async (req, res) => {
+  const secret = process.env.JWT_KEY;
+  const options = { expiresIn: '1h' };
 
-  const existingUser = await db.select().from(users).where(eq(users.user_name,req.body.user_name));
+  return jwt.sign(user, secret, options);
+}
+
+router.post('/login', jsonParser, async (req, res) => {
+
+  const existingUser = await db.select().from(users).where(eq(users.user_name, req.body.user_name));
   if (existingUser.length <= 0) {
-    res.send(400,{err:"Username does not exists."})
+    res.send(400, { err: "Username does not exists." })
     return
   }
   const passwordMatch = await bcrypt.compare(req.body.password, existingUser[0].password);
 
-        if (passwordMatch) {
-            const accessToken = generateAccessToken(existingUser[0]);
-            return res.status(200).json({ accessToken });
-        }
-    
-    return res.status(401).json({ err:"Wrong password." });
+  if (passwordMatch) {
+    const accessToken = generateAccessToken(existingUser[0]);
+    return res.status(200).json({ accessToken });
+  }
+
+  return res.status(401).json({ err: "Wrong password." });
 });
 
-router.post('/register',jsonParser,async(req,res)=>{
+router.post('/register', jsonParser, async (req, res) => {
 
   const schema = Joi.object({
     user_name: Joi.string().required(),
     name: Joi.string().required(),
-    email:Joi.string().email().required(),
+    email: Joi.string().email().required(),
     password: Joi.string().required(),
     password2: Joi.string().required()
-});
-const options={
-  errors: {
-    wrap: {
-      label: false
+  });
+  const options = {
+    errors: {
+      wrap: {
+        label: false
+      }
     }
   }
-}
-const { error, value } = schema.validate(req.body,options);
+  const { error, value } = schema.validate(req.body, options);
 
-if (error) {
-  res.send(400,{err:error.details})
-  return
-}
+  if (error) {
+    res.send(400, { err: error.details })
+    return
+  }
 
-  const existingUser = await db.select().from(users).where(eq(users.user_name,req.body.user_name));
+  const existingUser = await db.select().from(users).where(eq(users.user_name, req.body.user_name));
   if (existingUser.length > 0) {
-    res.send(400,{err:"Username already exists."})
+    res.send(400, { err: "Username already exists." })
     return
   }
-  if(req.body.password!=req.body.password2){
-    res.send(400,{err:"Passwords do not match."})
+  if (req.body.password != req.body.password2) {
+    res.send(400, { err: "Passwords do not match." })
     return
   }
-  const hash =  await bcrypt.hash(req.body.password,10);
+  const hash = await bcrypt.hash(req.body.password, 10);
   await db.insert(users).values(
     [{user_name: req.body.user_name,
     name: req.body.name,
@@ -86,45 +86,46 @@ if (error) {
 })
 
 
-  router.put('/delete',jsonParser,async(req,res)=>{
-    const existingUser = await db.select().from(users).where(eq(users.user_name,req.body.user_name));
+router.put('/delete', jsonParser, async (req, res) => {
+  const existingUser = await db.select().from(users).where(eq(users.user_name, req.body.user_name));
   if (existingUser.length <= 0) {
-    res.send(400,{err:"Username does not exist."})
+    res.send(400, { err: "Username does not exist." })
     return
   }
-    await db.update(users).set({deleted: '1'}).where(eq(users.user_name,req.body.user_name))
-    res.send(200,{message:"Account deleted."})
+  await db.update(users).set({ deleted: '1' }).where(eq(users.user_name, req.body.user_name))
+  res.send(200, { message: "Account deleted." })
 
-  })
+})
 
-  router.put('/edit', jsonParser, authenticateToken, async (req, res) => {
-    const schema = Joi.object({
-        user_name: Joi.string().optional(),
-        name: Joi.string().optional(),
-        email: Joi.string().email().optional()
-    });
+router.put('/edit', jsonParser, authenticateToken, async (req, res) => {
+  const schema = Joi.object({
+    user_name: Joi.string().optional(),
+    name: Joi.string().optional(),
+    email: Joi.string().email().optional()
+  });
 
-    const { error, value } = schema.validate(req.body);
-   
-      if(error){
-        res.status(200).json({ message: 'Data is not valid.' });
-        return
-      }
-       const result=await db.update(users).set(req.body).where(eq(users.id,req.user.id))
-        return res.status(200).json(result);
+  const { error, value } = schema.validate(req.body);
+
+  if (error) {
+    res.status(200).json({ message: 'Data is not valid.' });
+    return
+  }
+  const result = await db.update(users).set(req.body).where(eq(users.id, req.user.id))
+  return res.status(200).json(result);
 });
 
-router.get('/details',jsonParser,async(req,res)=>{
-  const existingUser = await db.select().from(users).where(eq(users.user_name,req.body.user_name))
-  
-  if(existingUser.length>0){
-    return res.send(200,{
-      user_name:existingUser[0].user_name,
-      name:existingUser[0].name,
-      email:existingUser[0].email})
+router.get('/details', jsonParser, async (req, res) => {
+  const existingUser = await db.select().from(users).where(eq(users.user_name, req.body.user_name))
+
+  if (existingUser.length > 0) {
+    return res.send(200, {
+      user_name: existingUser[0].user_name,
+      name: existingUser[0].name,
+      email: existingUser[0].email
+    })
   }
-  res.send(400,{err:"Username does not exist."})
-    return
+  res.send(400, { err: "Username does not exist." })
+  return
 
 })
 router.post('/search', jsonParser ,async(req,res)=>{

@@ -4,6 +4,7 @@ import Profile from "../../pages/Profile.jsx";
 import Register from "../../pages/Register.jsx";
 import NotFound from "../../pages/NotFound.jsx";
 import AdminPanel from "../admin/AdminPanel.jsx";
+import DevUpload from "../../pages/devUpload.jsx";
 
 export default function PMSRouter() {
   return (
@@ -13,6 +14,9 @@ export default function PMSRouter() {
       <Route path="/profiles/:id" component={Profile} />
       
       <Route path="/pms-admin" component={AdminPanel}/>
+      
+      {/* DEV, TODO: REMOVE AS SOON AS POSSIBLE */}
+      <Route path="/upload" component={DevUpload} />
       
       <Route path="*" component={NotFound}/>
     </Router>
