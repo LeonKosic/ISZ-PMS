@@ -16,7 +16,7 @@ export default function UploadForm(props) {
     <div class="py-10 max-w-screen-2xl mx-auto flex justify-center items-center">
       
       <form
-        action={`${url}`}
+        action={`https://localhost:3001/`}
         method="post"
         enctype="multipart/form-data"
       >

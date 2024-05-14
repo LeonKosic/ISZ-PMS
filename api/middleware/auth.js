@@ -1,4 +1,4 @@
-function authenticateToken(req, res, next) {
+export function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization']
     const token = authHeader && authHeader.split(' ')[1]
   
@@ -14,4 +14,5 @@ function authenticateToken(req, res, next) {
   
       next()
     })
-  }
+}
+  

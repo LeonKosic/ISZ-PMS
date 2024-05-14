@@ -1,7 +1,7 @@
 import { Route, Router } from "@solidjs/router";
-import Login from "../../pages/login.jsx";
-import Profile from "../../pages/profile.jsx";
-import Register from "../../pages/register.jsx";
+import Login from "../../pages/Login.jsx";
+import Profile from "../../pages/Profile.jsx";
+import Register from "../../pages/Register.jsx";
 import NotFound from "../../pages/NotFound.jsx";
 import AdminPanel from "../admin/AdminPanel.jsx";
 import DevUpload from "../../pages/devUpload.jsx";

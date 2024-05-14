@@ -1,5 +1,5 @@
 import "./styles/app.css";
-import NavBar from "./components/navbar";
+import NavBar from "./components/Navbar";
 import PMSRouter from "./components/routing/PMSRouter";
 
 function App() {
