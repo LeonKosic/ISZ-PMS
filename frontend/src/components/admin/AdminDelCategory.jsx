@@ -7,15 +7,15 @@ import { For, createResource } from "solid-js";
 
 const fetchCategories = async () => {
   // TODO
-  const url = `${import.meta.env.VITE_API_HOST}/api/categories`;
+  const url = `${import.meta.env.VITE_API_HOST}/admin/category`;
   const response = await fetch(url, { method: "GET" });
   return await response.json();
 }
 
 const delCategory = async (name) => {
   // TODO
-  const url = `${import.meta.env.VITE_API_HOST}/api/categories`;
-  const response = await fetch(url, { method: "DELETE", body: JSON.stringify(name) });
+  const url = `${import.meta.env.VITE_API_HOST}/admin/category`;
+  const response = await fetch(url, { method: "DELETE", body: { category_name: name } });
   return await response.json();
 }
 
@@ -28,7 +28,7 @@ export default function AdminDelCategory(props) {
       <hr class="my-2 py-2"/>
       
       <Show
-        when={categories.loading == false}
+        when={true}
         fallback={<p class="italic">Loading categories...</p>}
       > 
         <ThemeProvider theme={theme}>
@@ -36,6 +36,7 @@ export default function AdminDelCategory(props) {
             {
               (category, idx) => 
                 <CategoryBanner
+                  onClick={() => delCategory(category.name)}
                   name={category.name}
                   id={category.id} />
             }

@@ -4,20 +4,20 @@ import theme from "../../styles/suidTheme";
 import UserSearchResult from "./atomic/UserSearchResult";
 import { For, createSignal } from "solid-js";
 
-const banUser = async (name) => {
+const banUser = async (username) => {
   // TODO
-  const url = `${import.meta.env.VITE_API_HOST}/api/users`
-  const response = await fetch(url, { method: "POST" }) // post/put?
+  const url = `${import.meta.env.VITE_API_HOST}/admin/ban`
+  const response = await fetch(url, { method: "POST", body: { user_name: username } }) // post/put?
   return await response.json()
 }
 
-const searchUser = async (name) => {
+const searchUser = async (username) => {
   if (name == '')
     return []
   
   // TODO
-  const url = `${import.meta.env.VITE_API_HOST}/api/users`
-  const response = await fetch(url, { method: "GET" })
+  const url = `${import.meta.env.VITE_API_HOST}/users/search`
+  const response = await fetch(url, { method: "POST", body: { user_name: username }})
   return await response.json();
 }
 
@@ -26,6 +26,7 @@ export default function AdminBanUser(props) {
   const [users, setUsers] = createSignal([]);
   
   const handleInputChange = (event) => {
+    setTargetUsername(event.target.value)
     setUsers(searchUser(event.target.value))
   }
   

@@ -3,8 +3,8 @@ import { createSignal } from "solid-js";
 
 const addCategory = async (name) => {
   // TODO
-  const url = `${import.meta.env.VITE_API_HOST}/api/categories`;
-  const response = await fetch(url, { method: "POST", body: JSON.stringify(name) });
+  const url = `${import.meta.env.VITE_API_HOST}/admin/category`;
+  const response = await fetch(url, { method: "POST", body: { category_name: name } });
   return await response.json();
 }
 
