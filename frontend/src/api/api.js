@@ -9,7 +9,7 @@ const api = {
     return axios.get(url, defaultConfig);
   },
   post: (url, data) => {
-
+    return axios.post(url, data, defaultConfig)
   },
   put: (url, data) => {
 
