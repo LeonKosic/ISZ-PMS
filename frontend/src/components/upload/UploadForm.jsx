@@ -5,10 +5,12 @@ import { For, Show, createSignal } from "solid-js";
 
 const uploadFiles = async () => {
   var formData = new FormData();
-  var filelist = document.querySelector("#uploadInput");
-  formData.append("file", filelist.files[0])
+  var fileList = document.querySelector("#uploadInput");
+  Array.from(fileList.files).forEach((file, index) => {
+    formData.append(`file${index}`, file);
+  });
   
-  console.log(filelist)
+  console.log(fileList)
   console.log(formData)
   
   const response = await axios.post("http://localhost:3001/", formData, {
