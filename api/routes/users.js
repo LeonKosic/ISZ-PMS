@@ -1,5 +1,7 @@
 import {users} from "../db/schema/users.js"
-import { Name,eq,and} from 'drizzle-orm';
+
+import { Name,eq, like, and } from 'drizzle-orm';
+
 import {db} from '../db/db.js';
 import express from 'express';
 import bodyParser from 'body-parser';
@@ -124,6 +126,17 @@ router.get('/details',jsonParser,async(req,res)=>{
   res.send(400,{err:"Username does not exist."})
     return
 
+})
+router.post('/search', jsonParser ,async(req,res)=>{
+  const existingUser = await db.select().from(users).where(like(users.user_name,`%${req.body.user_name}%`) && eq(users.deleted,0))
+  if(existingUser.length>0){
+    existingUser.map((user)=>{
+      delete user.password
+    })
+    return res.send(200,existingUser)
+  }
+  res.send(400,req.body)
+    return
 })
 
 router.post('/follow',jsonParser,authenticateToken,async(req,res)=>{
