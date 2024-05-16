@@ -7,8 +7,6 @@ const defaultConfig = {
 
 export const [tokenStore, setTokenStore] = createStore();
 
-// TODO: provjeriti da li treba prosljedjivati sa fronta cijeli url ili samo djelimican endpoint?
-
 const api = {
   get: async (url) => {
     const token = localStorage.getItem('accessToken');
