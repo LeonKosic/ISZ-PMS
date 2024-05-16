@@ -1,22 +1,19 @@
 import { useLocation } from "@solidjs/router";
 import { Dialog, DialogContent, DialogTitle, Button, Stack } from "@suid/material";
 import { createSignal } from "solid-js";
+import api from "../../api/api"
 
 const unenrollCourse = async (id, username) => {
-  // TODO: delete/post? endpoint?
   const url = `${import.meta.env.VITE_API_HOST}/courses/unenroll`;
-  const response = await fetch(url, {
-    method: "POST",
-    body: {
-      course_id: id,
-      user_name: username
-    }
+  const response = await api.post(url, {
+    course_id: id,
+    user_name: username
   })
-  
   return await response.json();
 }
 
 export default function CourseUnenrollBtn(props) {
+  // courseName se prosljedjuje iz parent elementa (Course.jsx stranice)
   const courseName = props.courseName ? props.courseName : "undefined"
   const courseId = useLocation().pathname.split('/')[2];
   
@@ -30,7 +27,6 @@ export default function CourseUnenrollBtn(props) {
   const handleClose = () => {
     setOpen(false)
   }
-  
   
   const handleUnenroll = () => {
     unenrollCourse(courseId)
