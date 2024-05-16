@@ -10,7 +10,6 @@ const getCourses = async (username) => {
 }
 
 export default function Courses(props) {
-  // TODO: role context
   const username = getUsername();
   const [courses] = createResource(async () => getCourses(username));
   
