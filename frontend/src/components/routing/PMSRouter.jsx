@@ -1,6 +1,6 @@
 import { Route, Router } from "@solidjs/router";
 import Login from "../../pages/Login.jsx";
-import Landing from "../../pages/landing.jsx"
+import Landing from "../../pages/Landing.jsx"
 import Profile from "../../pages/Profile.jsx";
 import Register from "../../pages/Register.jsx";
 import NotFound from "../../pages/NotFound.jsx";
