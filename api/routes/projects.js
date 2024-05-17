@@ -22,7 +22,7 @@ router.post('/category', jsonParser, async (req, res) => {
   res.status(200).send({ message: "Project assigned to a category." })
 })
 
-router.put('/delete', jsonParser, async (req, res) => {
+router.delete('/', jsonParser, async (req, res) => {
   const existingProject = await db.select().from(project).where(eq(project.name, req.body.name));
   if (existingProject.length <= 0) {
     res.send(400, { err: "Project with this name does not exist." })
@@ -33,7 +33,7 @@ router.put('/delete', jsonParser, async (req, res) => {
 
 })
 
-router.post('/create', authenticateToken, jsonParser, async (req, res) => {
+router.post('/', authenticateToken, jsonParser, async (req, res) => {
 
   const schema = Joi.object({
     name: Joi.string().required()

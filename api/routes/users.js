@@ -9,7 +9,6 @@ import jwt from 'jsonwebtoken'
 import { authenticateToken } from "../middleware/auth.js"
 import { follow } from "../db/schema/follow.js";
 import { partners } from "../db/schema/partners.js";
-import { requests } from "../db/requests.js";
 
 const router = express.Router();
 const jsonParser = bodyParser.json()
@@ -75,16 +74,17 @@ router.post('/register', jsonParser, async (req, res) => {
   var partner = req.body.email.split("@");
   const Partners = await db.select().from(partners);
   let roleId = 3;
-  let isActiv = 0;
+  let isActive = 0;
 
   for (const partnerData of Partners) {
-    if (partnerData.domain === partner[1]) {
-      if (partnerData.domain.includes("student")) {
+    console.log(partner[1],partnerData.domain)
+    if (partner[1].includes(partnerData.domain)) {
+      if (partner[1].includes("student")) {
         roleId = 1;
-        isActiv = 1;
+        isActive = 1;
       } else {
         roleId = 2;
-        isActiv = 1;
+        isActive = 1;
       }
       break;
     }
@@ -97,7 +97,7 @@ router.post('/register', jsonParser, async (req, res) => {
     password: hash,
     deleted: 0,
     role_id: roleId,
-    is_activ: isActiv
+    is_active: isActive
   }]);
 
   res.send(200, { message: roleId === 3 ? "Request sent." : "Account registered." });
@@ -107,7 +107,7 @@ router.post('/register', jsonParser, async (req, res) => {
 
 
 router.delete('/user', authenticateToken, jsonParser, async (req, res) => {
-  const existingUser = await db.select().from(users).where(eq(users.user_name, req.body.user_name));
+  const existingUser = await db.select().from(users).where(eq(users.user_name, req.user.user_name));
   if (existingUser.length <= 0) {
     res.send(400, { err: "Username does not exist." })
     return
@@ -135,19 +135,24 @@ router.put('/edit', jsonParser, authenticateToken, async (req, res) => {
 });
 
 router.get('/details', authenticateToken, jsonParser, async (req, res) => {
-  const existingUser = await db.select().from(users).where(eq(users.user_name, req.body.user_name))
+  const { user_name } = req.query; 
+
+  if (!user_name) {
+    return res.status(400).send({ err: "Missing username parameter." });
+  }
+
+  const existingUser = await db.select().from(users).where(eq(users.user_name, user_name));
 
   if (existingUser.length > 0) {
-    return res.send(200, {
+    return res.status(200).send({
       user_name: existingUser[0].user_name,
       name: existingUser[0].name,
       email: existingUser[0].email
-    })
+    });
   }
-  res.send(400, { err: "Username does not exist." })
-  return
 
-})
+  return res.status(400).send({ err: "Username does not exist." });
+});
 
 router.post('/follow', jsonParser, authenticateToken, async (req, res) => {
   const followingUser = await db.select().from(users).where(eq(users.user_name, req.body.user_name))

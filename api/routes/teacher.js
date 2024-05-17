@@ -8,11 +8,10 @@ import Joi from 'joi';
 
 import jwt from 'jsonwebtoken'
 const router = express.Router();
-const jsonParser = bodyParser.json()
-import { authenticateTeacher } from "../middleware/authTeacher.js"; 
-import { authenticateToken } from "../middleware/auth.js";
+const jsonParser = bodyParser.json() 
+import { authenticateToken ,authenticateTeacher} from "../middleware/auth.js";
 import { course } from "../db/schema/schema.js";
-router.post('/create_course',authenticateToken,authenticateTeacher,jsonParser,async(req,res)=>{
+router.post('/course',authenticateToken,authenticateTeacher,jsonParser,async(req,res)=>{
 
     const schema = Joi.object({
       name: Joi.string().required(),
