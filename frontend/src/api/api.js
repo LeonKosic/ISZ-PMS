@@ -5,7 +5,10 @@ const defaultConfig = {
   baseURL: `http://${import.meta.env.VITE_API_HOST}`,
 }
 
-export const [userStore, setUserStore] = createStore();
+export const [userStore, setUserStore] = createStore({
+  username: "",
+  id: ""
+});
 
 const api = {
   get: async (url) => {
