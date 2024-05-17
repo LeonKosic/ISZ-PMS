@@ -2,7 +2,7 @@ import { index, int, mysqlTable, bigint, varchar, tinyint, boolean } from 'drizz
 import {roles} from "./roles.js"
 
 
-const users = mysqlTable('users', {
+export const users = mysqlTable('users', {
   id: bigint('id', { mode: 'number' }).primaryKey().autoincrement(),
   user_name: varchar('user_name', { length: 256 }),
   name: varchar('name', { length: 256 }),
@@ -15,5 +15,3 @@ const users = mysqlTable('users', {
 }, (users) => ({
   nameIdx: index('name_idx').on(users.name),
 }));
-
-export {users}
