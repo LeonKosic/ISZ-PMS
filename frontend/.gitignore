@@ -5,10 +5,15 @@ dist
 .vercel
 .netlify
 netlify
+.vinxi
+/dev
 
 # Environment
 .env
 .env*.local
+
+# (dev) json-server
+db.json
 
 # dependencies
 /node_modules

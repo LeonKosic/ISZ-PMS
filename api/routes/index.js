@@ -3,7 +3,6 @@ import {db} from '../db/db.js';
 import {users} from '../db/schema/users.js';
 import bodyParser from 'body-parser';
 
-
 const router = express.Router();
 const jsonParser = bodyParser.json()
 
