@@ -4,14 +4,13 @@ import api from "../api/api";
 import { getUsername } from "../components/PMSUtils";
 import Loading from "../components/placeholders/Loading";
 
-const getCourses = async (username) => {
-  const response = await api.get(`/courses?user_name=${username}`)
+const getCourses = async () => {
+  const response = await api.get(`/courses`)
   return await response.json();
 }
 
 export default function Courses(props) {
-  const username = getUsername();
-  const [courses] = createResource(async () => getCourses(username));
+  const [courses] = createResource(getCourses);
   
   return (
     <Show

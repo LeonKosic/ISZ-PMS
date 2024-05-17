@@ -5,7 +5,7 @@ const defaultConfig = {
   baseURL: `http://${import.meta.env.VITE_API_HOST}`,
 }
 
-export const [tokenStore, setTokenStore] = createStore();
+export const [userStore, setUserStore] = createStore();
 
 const api = {
   get: async (url) => {
@@ -60,18 +60,17 @@ const api = {
   },
 
   // payload => {username, login}
-  // TODO: /users/login prima (payload) ili {username, password}?
   login: async (payload) => {
     return axios
       .post(`${defaultConfig.baseURL}/users/login`, payload)
       .then(response => {
         if (response.status == 200) {
-          setTokenStore(payload.username, tokenStore.array.length, {
-            jwt: response.data.accessToken
-          })
-
           // save the JWT acces token in the local storage
           localStorage.setItem('accessToken', response.data.accessToken)
+
+          // save username and user id from response
+          setUserStore("username", payload.username)
+          setUserStore("id", response.data.id);
 
           return response.data
         } else {
