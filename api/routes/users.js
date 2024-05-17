@@ -73,35 +73,40 @@ router.post('/register', jsonParser, async (req, res) => {
   }
   const hash = await bcrypt.hash(req.body.password, 10);
   var partner = req.body.email.split("@");
-  console.log(partner[1])
-  const existingPartner = await db.select().from(partners).where(eq(partners.domain, partner[1]));
+  const Partners = await db.select().from(partners);
   let roleId = 3;
   let isActiv = 0;
-  
-  if (partner[1].includes("student")) {
-      roleId = 1;
-      isActiv = 1;
-  } else if (existingPartner.length > 0) {
-      roleId = 2;
-      isActiv = 1;
+
+  for (const partnerData of Partners) {
+    if (partnerData.domain === partner[1]) {
+      if (partnerData.domain.includes("student")) {
+        roleId = 1;
+        isActiv = 1;
+      } else {
+        roleId = 2;
+        isActiv = 1;
+      }
+      break;
+    }
   }
-  
+
   await db.insert(users).values([{
-      user_name: req.body.user_name,
-      name: req.body.name,
-      email: req.body.email,
-      password: hash,
-      deleted: 0,
-      role_id: roleId,
-      is_activ: isActiv
+    user_name: req.body.user_name,
+    name: req.body.name,
+    email: req.body.email,
+    password: hash,
+    deleted: 0,
+    role_id: roleId,
+    is_activ: isActiv
   }]);
-  
+
   res.send(200, { message: roleId === 3 ? "Request sent." : "Account registered." });
   return
+
 })
 
 
-router.delete('/user',authenticateToken, jsonParser, async (req, res) => {
+router.delete('/user', authenticateToken, jsonParser, async (req, res) => {
   const existingUser = await db.select().from(users).where(eq(users.user_name, req.body.user_name));
   if (existingUser.length <= 0) {
     res.send(400, { err: "Username does not exist." })
@@ -129,7 +134,7 @@ router.put('/edit', jsonParser, authenticateToken, async (req, res) => {
   return res.status(200).json(result);
 });
 
-router.get('/details', authenticateToken,jsonParser, async (req, res) => {
+router.get('/details', authenticateToken, jsonParser, async (req, res) => {
   const existingUser = await db.select().from(users).where(eq(users.user_name, req.body.user_name))
 
   if (existingUser.length > 0) {
