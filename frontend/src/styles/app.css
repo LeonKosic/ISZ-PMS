@@ -152,15 +152,19 @@ body {
     cursor-pointer;
     
     .title {
-      @apply pl-2 pb-2 text-medium overflow-hidden;
+      @apply pl-2 pb-2 text-medium overflow-hidden grid grid-flow-row grid-cols-1 justify-center place-items-center;
     }
     
     .separator {
       @apply w-full mx-auto opacity-75 pb-3;
     }
     
+    .description {
+      @apply pl-2 pb-2 text-small;
+    }
+    
     .course-id {
-      @apply absolute right-0 pr-4 bottom-0 text-accent-200;
+      @apply absolute right-0 pr-4 mt-10 bottom-0 text-accent-200;
     }
   }
 }
