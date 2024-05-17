@@ -1,10 +1,10 @@
-import { For, Show, createResource } from "solid-js"
-import CourseCard from "../components/course/CourseCard";
+import { Show, createResource } from "solid-js"
 import api from "../api/api";
 import Loading from "../components/placeholders/Loading";
+import CourseList from "../components/course/CourseList";
 
 const getCourses = async () => {
-  const response = await api.get(`/courses`)
+  const response = await api.get(`/courses/my`)
   return await response.json();
 }
 
@@ -16,20 +16,7 @@ export default function Courses(props) {
       when={courses.loading == false}
       fallback={<Loading message="Loading courses, please wait..."/>}
     >
-      <div class="courses-list-ctr">
-        <For each={courses()}>
-        {
-          (course) =>
-            <a href={`/courses/${course.id}`}>
-              <CourseCard
-                class="course-card"
-                name={course.name}
-                id={course.id}
-                />
-            </a>
-        }
-      </For>
-    </div>
+      <CourseList courses={courses()} />
     </Show>
   )
 }

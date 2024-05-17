@@ -66,9 +66,8 @@ const api = {
           // save the JWT acces token in the local storage
           localStorage.setItem('accessToken', response.data.accessToken)
 
-          // save username and user id from response
-          setUserDetails("username", payload.username)
-          setUserDetails("id", response.data.id);
+          // save user details ({username, })
+          setUserDetails("user", response.data.user)
 
           return response.data
         } else {
