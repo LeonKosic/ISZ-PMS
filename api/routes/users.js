@@ -75,47 +75,28 @@ router.post('/register', jsonParser, async (req, res) => {
   var partner = req.body.email.split("@");
   console.log(partner[1])
   const existingPartner = await db.select().from(partners).where(eq(partners.domain, partner[1]));
+  let roleId = 3;
+  let isActiv = 0;
+  
   if (partner[1].includes("student")) {
-    await db.insert(users).values(
-      [{
-        user_name: req.body.user_name,
-        name: req.body.name,
-        email: req.body.email,
-        password: hash,
-        deleted: 0,
-        role_id: 1,
-        is_activ: 1
-      }]
-    )
-    res.send(200, { message: "Account registered." })
-    return
+      roleId = 1;
+      isActiv = 1;
+  } else if (existingPartner.length > 0) {
+      roleId = 2;
+      isActiv = 1;
   }
-  if (existingPartner.length > 0) {
-    await db.insert(users).values(
-      [{
-        user_name: req.body.user_name,
-        name: req.body.name,
-        email: req.body.email,
-        password: hash,
-        deleted: 0,
-        role_id: 2,
-        is_activ: 1
-      }]
-    )
-    res.send(200, { message: "Account registered." })
-    return
-  }
-  await db.insert(users).values(
-    [{
+  
+  await db.insert(users).values([{
       user_name: req.body.user_name,
       name: req.body.name,
       email: req.body.email,
       password: hash,
       deleted: 0,
-      role_id: 3,
-      is_activ: 0
-    }])
-  res.send(200, { message: "Request sent." })
+      role_id: roleId,
+      is_activ: isActiv
+  }]);
+  
+  res.send(200, { message: roleId === 3 ? "Request sent." : "Account registered." });
   return
 })
 
