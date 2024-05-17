@@ -3,7 +3,7 @@ import { mergeProps } from "solid-js";
 export default function CourseCard(props) {
   const merged = mergeProps({
     name: "name_placeholder",
-    id: "2251",
+    id: "1",
     about: "something about this course Lorem ipsum dolor sit amet." 
   }, props)
   

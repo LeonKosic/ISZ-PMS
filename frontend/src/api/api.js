@@ -1,14 +1,9 @@
 import axios from "axios";
-import { createStore } from "solid-js/store";
+import { setUserDetails } from "./stores";
 
 const defaultConfig = {
   baseURL: `http://${import.meta.env.VITE_API_HOST}`,
 }
-
-export const [userStore, setUserStore] = createStore({
-  username: "",
-  id: ""
-});
 
 const api = {
   get: async (url) => {
@@ -72,8 +67,8 @@ const api = {
           localStorage.setItem('accessToken', response.data.accessToken)
 
           // save username and user id from response
-          setUserStore("username", payload.username)
-          setUserStore("id", response.data.id);
+          setUserDetails("username", payload.username)
+          setUserDetails("id", response.data.id);
 
           return response.data
         } else {
