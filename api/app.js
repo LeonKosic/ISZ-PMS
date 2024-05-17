@@ -7,6 +7,7 @@ import indexRouter from './routes/index.js';
 import userRouter from './routes/users.js';
 import adminRouter from './routes/admin.js';
 import projectRouter from './routes/projects.js'
+import teacherRouter from './routes/teacher.js'
 
 const app = express();
 
@@ -19,6 +20,8 @@ app.use(cors())
 app.use('/', indexRouter);
 app.use('/users',userRouter)
 app.use('/admin',adminRouter);
-app.use('/projects',projectRouter)
+app.use('/projects',projectRouter);
+app.use('/teacher',teacherRouter);
+
 
 export default app;

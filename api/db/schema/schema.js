@@ -11,11 +11,10 @@ import { categoryRelations } from "./relations/categoryRelations.js";
 import { project_category } from "./project_category.js";
 import { notification } from "./notification.js";
 import { notificationRelations } from "./relations/notificationRelations.js";
-import { partners } from "../partners.js";
-import {requests} from "../requests.js";
+import { partners } from "./partners.js";
 
 
 
-export {users, follow, roles,category,course,project,notification,partners,requests,notificationRelations,project_category,userRelations, followRelations, roleRelations,categoryRelations}
-export default{users, follow, roles,category,course,project,notification,partners,requests,notificationRelations,project_category, userRelations, followRelations, roleRelations,categoryRelations}
+export {users, follow, roles,category,course,project,notification,partners,notificationRelations,project_category,userRelations, followRelations, roleRelations,categoryRelations}
+export default{users, follow, roles,category,course,project,notification,partners,notificationRelations,project_category, userRelations, followRelations, roleRelations,categoryRelations}
 
