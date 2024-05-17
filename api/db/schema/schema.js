@@ -12,9 +12,12 @@ import { project_category } from "./project_category.js";
 import { notification } from "./notification.js";
 import { notificationRelations } from "./relations/notificationRelations.js";
 import { partners } from "./partners.js";
+import { courseRelations} from "./relations/courseRelations.js";
+import { enrolled } from "./enrolled.js";
+import { course_teachers } from "./course_teachers.js";
+import { course_teachersRelations } from "./relations/course_teachersRelations.js";
 
 
-
-export {users, follow, roles,category,course,project,notification,partners,notificationRelations,project_category,userRelations, followRelations, roleRelations,categoryRelations}
-export default{users, follow, roles,category,course,project,notification,partners,notificationRelations,project_category, userRelations, followRelations, roleRelations,categoryRelations}
+export {users,course_teachers,course_teachersRelations, follow, roles,enrolled,category,course,project,notification,partners,courseRelations,notificationRelations,project_category,userRelations, followRelations, roleRelations,categoryRelations}
+export default{users,course_teachers,course_teachersRelations, follow,enrolled, roles,category,course,project,notification,partners,courseRelations,notificationRelations,project_category, userRelations, followRelations, roleRelations,categoryRelations}
 

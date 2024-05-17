@@ -10,7 +10,7 @@ import jwt from 'jsonwebtoken'
 const router = express.Router();
 const jsonParser = bodyParser.json() 
 import { authenticateToken ,authenticateTeacher} from "../middleware/auth.js";
-import { course } from "../db/schema/schema.js";
+import { course, course_teachers } from "../db/schema/schema.js";
 router.post('/course',authenticateToken,authenticateTeacher,jsonParser,async(req,res)=>{
 
     const schema = Joi.object({
@@ -43,6 +43,7 @@ router.post('/course',authenticateToken,authenticateTeacher,jsonParser,async(req
     const hash =  await bcrypt.hash(req.body.password,10);
     await db.insert(course).values(
       [{name: req.body.name,
+        owner_id:req.user.id,
         password:hash,
         deleted:0
     }]
@@ -60,4 +61,15 @@ router.post('/course',authenticateToken,authenticateTeacher,jsonParser,async(req
     res.status(200).send({message:"Course deleted."})
   })
 
+  router.post('/course/teacher',authenticateToken,authenticateTeacher,jsonParser,async(req,res)=>{
+    const owner = await db.select().from(course).where(eq(course.id,req.body.course_id));
+    if(owner[0].owner_id==req.user.id){
+      await db.insert(course_teachers).values([{
+        course_id:req.body.course_id,
+        teacher_id:req.body.teacher_id
+      }])
+      res.status(200).send({message:"Teacher enrolled."})
+    }
+      res.status(401)
+  })
   export default router;
