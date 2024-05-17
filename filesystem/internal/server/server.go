@@ -32,7 +32,7 @@ func router(mux *http.ServeMux) {
 		projectID := r.PathValue("id")
 		fmt.Fprint(w, projectID)
 	})
-	mux.HandleFunc("POST /createfile", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("POST /file", func(w http.ResponseWriter, r *http.Request) {
 		var file models.File
 		err := json.NewDecoder(r.Body).Decode(&file)
 		if err != nil {
@@ -40,10 +40,14 @@ func router(mux *http.ServeMux) {
 			return
 		}
 		f, err := os.Create(cfg.Files + file.Name)
+		if err != nil {
+			w.WriteHeader(http.StatusExpectationFailed)
+			return
+		}
 		f.Write(file.Content)
 		defer f.Close()
 	})
-	mux.HandleFunc("GET /readfile/{name}", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("GET /file/{name}", func(w http.ResponseWriter, r *http.Request) {
 		name := cfg.Files + r.PathValue("name")
 		// fileBytes, err := os.ReadFile(name)
 		// if err != nil {
