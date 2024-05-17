@@ -63,20 +63,13 @@ const api = {
       .post(`${defaultConfig.baseURL}/users/login`, payload)
       .then(response => {
         if (response.status == 200) {
-          // save the JWT acces token in the local storage
           localStorage.setItem('accessToken', response.data.accessToken)
-
-          // save user details ({username, })
-          setUserDetails("user", response.data.user)
-
-          return response.data
+          setUserDetails(response.data.user)
         } else {
           throw new Error(response.data.err);
         }
       }).catch(err => {
         console.error("Error during login: ", err);
-
-        // TODO
         return response.data;
       })
   }

@@ -1,9 +1,9 @@
 export default function CourseCard(props) {  
   return (
     <div class="course-card">
-      <h1 class="title">{props.name}</h1>
+      <p class="title">{props.name}</p>
       <hr class="separator" />
-      <p class="">{props.about}</p>
+      <p class="about">{props.about}</p>
     </div>
   )
 }

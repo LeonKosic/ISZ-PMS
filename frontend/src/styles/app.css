@@ -159,7 +159,7 @@ body {
       @apply w-full mx-auto opacity-75 pb-3;
     }
     
-    .description {
+    .about {
       @apply pl-2 pb-2 text-small;
     }
     
