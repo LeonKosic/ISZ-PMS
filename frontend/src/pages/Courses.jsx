@@ -9,18 +9,15 @@ const getCourses = async () => {
 }
 
 export default function Courses(props) {
-  // const [courses] = createResource(getCourses);
-  const courses = [{}, {}, {}, {}]
+  const [courses] = createResource(getCourses);
   
   return (
     <Show
-      // when={courses.loading == false}
-      when={true}
+      when={courses.loading == false}
       fallback={<Loading message="Loading courses, please wait..."/>}
     >
       <div class="courses-list-ctr">
-        {/* <For each={courses()}> */}
-        <For each={courses}>
+        <For each={courses()}>
         {
           (course) =>
             <a href={`/courses/${course.id}`}>
