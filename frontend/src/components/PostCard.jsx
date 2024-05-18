@@ -6,7 +6,7 @@ export default function PostCard(props) {
     const [post, setPost] = createSignal(props.data)
   
     const callback = async (id, status) => {
-       await api.post(`/post/like`, {id, isLiked:post().liked == status? 0: status})
+       await api.post(`/post/like`, {id, status:post().liked == status? 0: status})
       setPost({...post(),
         likes: post().liked == status? post().likes - status : 
           post().liked == -status? post().likes + 2 * status : post().likes + status,
