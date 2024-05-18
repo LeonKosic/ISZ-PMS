@@ -2,7 +2,7 @@ import api from "../../api/api";
 import UserList from "../generic/user/UserList";
 
 const unenrollUser = async (userID, courseID) => {
-  const response = await api.put('/courses/unenroll', {
+  const response = await api.put('/course/unenroll', {
     user_id: userID,
     course_id: courseID
   })
@@ -15,12 +15,18 @@ export default function KickParticipantField(props) {
     <div>
       <center class="text-medium">Unenroll users</center>
       
-      <UserList
-        style={"max-h-52 overflow-auto hover:cursor-pointer"}
-        users={props.users}
-        cardStyle={"underline-offset-2 hover:text-xl pl-2 duration-150 hover:cursor-pointer hover:bg-red-300 rounded-sm"}
-        cardClickAction={(userID) => unenrollUser(userID, props.course)}
-      />
+      <div class="max-h-80 overflow-auto">
+        <UserList
+          cardStyle={"hover:cursor-pointer border-2 border-accent-600 rounded-lg my-2 py-2 text-xl"}
+          users={props.users}
+          highlightCard={true}
+          highlightColor={"bg-primary-300"}
+          cardUseMaxWidth={false}
+          cardClickAction={(userID) => unenrollUser(userID, props.courseID)}
+          
+          showRole={true}
+          />
+      </div>
     </div>
   )
 }

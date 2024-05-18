@@ -2,7 +2,7 @@ import { Container } from "@suid/material"
 
 export default function PostCard(props) {
   const displayComments = () => {
-    // TODO
+    // TODO 
   } 
   
   return (

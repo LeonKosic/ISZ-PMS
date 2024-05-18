@@ -12,10 +12,10 @@ import RemoveTeachersField from "../components/course/RemoveTeachersField";
 
 const getCourseInformation = async (id) => {
   // 1: get
-  const response = await api.get(`/courses?id=${id}`)
+  const response = await api.get(`/course?id=${id}`)
   
-  // 2: post -> kako kreirati onda?
-  // const response = await api.post(`/courses`, {
+  // 2: post -> kako kreirati na ovom endpointu?
+  // const response = await api.post(`/course`, {
   //   id: id
   // })
   
@@ -32,88 +32,12 @@ const getTeachers = (participants) => {
   return teachers
 } 
 
-const processParticipants = (participants) => {
-  var participants = []
-  
-  participants.forEach((p) => {
-    participants.push(p.name)
-  })
-  
-  return participants
-}
 
 export default function Course(props) {
   const courseID = useLocation().pathname.split('/')[2]
-  // const [course] = createResource(async () => getCourseInformation(courseID))
+  const [course] = createResource(async () => getCourseInformation(courseID))
   
-  // TODO: replace test store with corresponding store
-  const isOwner = () => course().ownerID == testUserDetails.id;
-  const course = () => {
-    return {
-      ownerID: "1",
-      name: "Kriptografija i racunarska zastita",
-      about: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quis suscipit optio ab repellendus quam quos repudiandae impedit provident?",
-      participants: [
-        { id: "1", username: "username1", name: "John Doe", isTeacher: true },
-        { id: "2", username: "username2", name: "Jane Smith", isTeacher: false },
-        { id: "3", username: "username3", name: "Bob Johnson", isTeacher: true },
-        { id: "4", username: "username4", name: "Alice Williams", isTeacher: false },
-        { id: "5", username: "username5", name: "Tom Brown", isTeacher: true },
-        { id: "6", username: "username6", name: "Jerry Davis", isTeacher: false },
-        { id: "7", username: "username7", name: "Emma Miller", isTeacher: true },
-        { id: "8", username: "username8", name: "Oliver Wilson", isTeacher: false },
-        { id: "9", username: "username9", name: "Sophia Moore", isTeacher: true },
-        { id: "10", username: "username10", name: "Mia Taylor", isTeacher: false },
-        { id: "11", username: "username11", name: "Lucas Anderson", isTeacher: true },
-        { id: "12", username: "username12", name: "Ethan Thomas", isTeacher: false },
-      ],
-      posts: [
-        {
-          title: "test post title",
-          postedBy: "poster",
-          content: "lorem ipsum dolor sit amet"
-        },        {
-          title: "test post title",
-          postedBy: "poster",
-          content: "lorem ipsum dolor sit amet"
-        },        {
-          title: "test post title",
-          postedBy: "poster",
-          content: "lorem ipsum dolor sit amet"
-        },        {
-          title: "test post title",
-          postedBy: "poster",
-          content: "lorem ipsum dolor sit amet"
-        },        {
-          title: "test post title",
-          postedBy: "poster",
-          content: "lorem ipsum dolor sit amet"
-        },        {
-          title: "test post title",
-          postedBy: "poster",
-          content: "lorem ipsum dolor sit amet"
-        },        {
-          title: "test post title",
-          postedBy: "poster",
-          content: "lorem ipsum dolor sit amet"
-        },        {
-          title: "test post title",
-          postedBy: "poster",
-          content: "lorem ipsum dolor sit amet"
-        },
-        {
-          title: "test post title",
-          postedBy: "poster",
-          content: "lorem ipsum dolor sit amet"
-        },
-        {
-          title: "test post title",
-          postedBy: "poster",
-          content: "lorem ipsum dolor sit amet"
-        },
-      ]
-    }
-  }
+  const isOwner = () => course().ownerID == userDetails.id;
   
   // TypeError: undefined (reading 'modals') kada dijalog bude van ove komponente? nmg skontati ndms 3:04 je
   const [editDialogOpen, setEditDialogOpen] = createSignal(false);
@@ -121,7 +45,6 @@ export default function Course(props) {
     setEditDialogOpen(!editDialogOpen())
   }
   
-  // da li ce biti proslijedjen password u tijelu odgovora?
   const [courseName, setCourseName] = createSignal(course().name)
   const [coursePassword, setCoursePassword] = createSignal('')
   const [coursePasswordConfirm, setCoursePasswordConfirm] = createSignal('')
@@ -132,7 +55,7 @@ export default function Course(props) {
     setCoursePasswordConfirm(document.querySelector("#passwordConfirmInput").value)
     
     const response = await api.put(
-      '/courses',
+      '/course',
       {
         id: courseID,
         name: courseName(),
@@ -186,16 +109,16 @@ export default function Course(props) {
                     />
                     
                     <KickParticipantField
-                      course={courseID}
+                      courseID={courseID}
                       users={course().participants}
                     />
                     
                     <AddTeachersField
-                      course={courseID}
+                      courseID={courseID}
                     />
                     
                     <RemoveTeachersField
-                      course={courseID}
+                      courseID={courseID}
                       teachers={getTeachers(course().participants)}
                     />
                     
@@ -233,20 +156,26 @@ export default function Course(props) {
             
             <div class="border-2 border-accent-700 pr-2 py-2 my-2 rounded-lg">
               <p class="text-medium flex flex-row items-center justify-center pb-2"> Teachers </p>
-              <hr class="separator w-2/3 mx-auto opacity-75 pb-3"/>
-              <UserList
-                users={getTeachers(course().participants)}
-                style={"max-h-52 overflow-auto"}
-              />
+              <hr class="separator w-2/3 mx-auto opacity-75 pb-3" />
+              <div class="overflow-auto max-h-52">
+                <UserList
+                  class=""
+                  users={getTeachers(course().participants)}
+                  cardStyle={"overflow-auto max-h-52 my-2 bg-accent-600 bg-opacity-5 border-2 rounded-xl border-accent-600 py-2 text-xl text-slate-200"}
+                  />
+              </div>
             </div>
             
             <div class="border-2 border-accent-700 pr-2 py-2 my-2 rounded-lg">
               <p class="text-medium flex flex-row items-center justify-center pb-2"> Participants </p>
-              <hr class="separator w-2/3 mx-auto opacity-75 pb-3"/>
-              <UserList
-                users={course().participants}
-                style={"max-h-52 overflow-auto"}
-                />
+              <hr class="separator w-2/3 mx-auto opacity-75 pb-3" />
+              <div class="overflow-auto max-h-80">
+                <UserList
+                  users={course().participants}
+                  cardStyle={"my-2 bg-accent-600 bg-opacity-5 border-2 rounded-xl border-accent-600 py-2 text-xl text-slate-200"}
+                  highlightCard={false}
+                  />
+              </div>
             </div>
           </Stack>
         </Container>

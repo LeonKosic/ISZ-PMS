@@ -9,11 +9,18 @@ export default function UserList(props) {
         {
           (user) =>
             <UserCard
-              style={props.cardStyle}
               name={user.name}
               username={user.username}
+              role={user.role}
               userid={user.id}
               clickAction={props.cardClickAction}
+              
+              showRole={true}
+              
+              cardStyle={props.cardStyle}
+              highlightCard={props.highlightCard}
+              highlightColor={props.highlightColor}
+              useMaxWidth={props.cardUseMaxWidth}
             />
         }
       </For>

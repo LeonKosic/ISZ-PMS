@@ -199,26 +199,17 @@ body {
 }
 
 
-.dialog-scroll::-webkit-scrollbar {
-  @apply rounded-xl pr-4 right-4;
-  background: #d3d3d3;
-  opacity: 0.1;
-  width: 6px;
-}
-
 ::-webkit-scrollbar {
   @apply rounded-xl pr-4 right-4;
-  background: #210c0c;
-  opacity: 0.1;
+  background: rgba(121, 100, 121, 0);
   width: 6px;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply rounded-xl bg-accent-300 right-4 pr-4;
- /* background: #212121;  */
+  @apply rounded-xl right-4 pr-4;
+ background: #c5c5c5; 
 }
 
-
-.dialog-scroll::-webkit-scrollbar-thumb {
-  
+.edit-course-usercard {
+  @apply hover:bg-accent-200;
 }

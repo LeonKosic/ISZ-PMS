@@ -6,9 +6,9 @@ import UserList from "../generic/user/UserList"
 
 export default function AddTeachersField(props) {
   const getInput = () => document.querySelector("#teacherName").value
-
+  
   const addTeacher = async (payload) => {
-    const response = await api.post('/courses/teacher/add', {
+    const response = await api.post('/course/teacher', {
       teacher_id: payload.teacherID,
       course_id: payload.courseID
     })
@@ -19,11 +19,9 @@ export default function AddTeachersField(props) {
   const [searchResultVisible, setSearchResultVisible] = createSignal(false)
   const [searchResult, setSearchResult] = createSignal([])
   
-  const handleSearch = (event) => {
-    if (event.key === 'Enter') {
-      setSearchResult(searchUser(event.target.value, false).users)
-      setSearchResultVisible(true)
-    }
+  const handleSearch = () => {
+    setSearchResult(searchUser(getInput(), false))
+    setSearchResultVisible(true)
   }
   
   return (
@@ -31,20 +29,30 @@ export default function AddTeachersField(props) {
       <center class="text-medium"><p>Add teachers</p></center>
       
       <Stack direction="column">
-        <Input
-          class="w-full"
-          id="teacherName"
-          type="text"
-          placeholder="Press Enter to search..."
-          onKeyDown={handleSearch}
-        />
+        <Stack direction="row" spacing={2}>
+          <Input
+            class="w-full"
+            id="teacherName"
+            type="text"
+            placeholder="Search teachers..."
+          />
+          
+          <Button
+            color="monochrome"
+            variant="outlined"
+            onClick={handleSearch}
+          >
+            Search
+          </Button>
+        </Stack>
         
         <Show when={searchResultVisible()}>
-          {/* TODO: provjeriti radi li ovo uopste */}
           <UserList
             style={"max-h-52 overflow-auto hover:cursor-pointer"}
             users={searchResult()}
-            cardStyle={"underline-offset-2 hover:text-xl pl-2 duration-150 hover:cursor-pointer hover:bg-slate-300 rounded-sm"}
+            highlightCard={true}
+            highlightColor={"bg-primary-300"}
+            cardUseMaxWidth={false}
             cardClickAction={(teacherID) => addTeacher(teacherID, props.courseID)}
           />
         </Show>
