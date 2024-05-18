@@ -1,47 +1,51 @@
 import { Button, Stack } from "@suid/material";
-import { createSignal } from "solid-js";
-
-const [result, setResult] = createSignal({status: "OK", reason: "ALL_GOOD" })
-
-const changeFullname = async (fullname, newFullname) => {
-  const url = `${import.meta.env.VITE_API_HOST}/users/edit`
-  const response = await fetch(url, { method: "PUT", body: { name: fullname, new: newFullname } })
-  const json = await response.json()
-  
-  if (json.status != 200)
-    setResult({status: "NOK", reason: "Some reason?"})
-
-  return json
-}
+import { Show, createSignal } from "solid-js";
+import api from "../../../api/api";
+import { userDetails } from "../../../api/stores";
 
 export default function EditFullnameField(props) {
-  const [fullname, setFullname] = createSignal(props.fullname)
+  const [result, setResult] = createSignal({ processed: false, statusCode: 999, message: "" })
+  const getInput = () => document.querySelector("#fullnameTF").value
   
-  const handleInputChange = (event) => {
-    setFullname(event.target.value)
-  } 
+  const submit = async () => {
+    const response = await api.put('/users/edit', { fullname: getInput() })
+    setResult({
+      processed: true,
+      statusCode: response.status,
+      message: response.statusText
+    })
+  }
   
   return (
     <div class="fullname-field">
-      <h1 class="text-big italic my-4 mb-2">Full Name</h1>
+      <p class="py-2 pl-1">Full name</p>
       
-      <Stack direction="row">
-        <input
-          class="default-form form-big mr-2 w-80"
-          type="text"
-          value={fullname()}
-          onChange={handleInputChange}
-          onKeyDown={handleInputChange}
-          placeholder={fullname()}
-          />
-        
-        <div onClick={() => changeFullname(props.fullname, fullname())}>
-          <Button variant="outlined" class="h-full" color="pmsScheme">
-            Change
+      <Stack direction="column" spacing={2}>
+        <Stack direction="row" spacing={2}>
+          <input
+            id="fullnameTF"
+            variant="standard"
+            placeholder={userDetails.name}
+            class="rounded-lg bg-accent-300 bg-opacity-10 w-full ps-2 text-slate-200 text-lg"
+            />
+          
+          <Button
+            class="rounded-xl h-auto"
+            variant="outlined"
+            color="pmsScheme"
+            onClick={() => {submit()}}
+            >
+            Submit
           </Button>
-        </div>
+        </Stack>
         
-        <Show when={result().status != "OK"}> {result().reason} </Show>
+        <Show when={result().processed}>
+          <div class="flex flex-row items-center justify-center ps-4 mx-auto">
+            <p class={`${result().statusCode < 400 ? "" : "text-red-400 "} italic`}>
+              {result().message} ({ result().statusCode })
+            </p>
+          </div>
+        </Show>
       </Stack>
     </div>
   )

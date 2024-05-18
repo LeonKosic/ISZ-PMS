@@ -1,68 +1,63 @@
 import { Button, Stack } from "@suid/material";
 import { createSignal } from "solid-js";
+import api from "../../../api/api";
 
-const [result, setResult] = createSignal({status: "OK", reason: "ALL_GOOD" })
-
-const changePassword = async (password, newPassword) => {
-  const url = `${import.meta.env.VITE_API_HOST}/users/edit`
-  const response = await fetch(url, { method: "PUT", body: { password: password, new: newPassword } })
-  const json = await response.json()
+export default function EditPasswordField(props) {  
+  const [result, setResult] = createSignal({ processed: false, statusCode: 999, message: "" })
+  const getInput = (elementId) => document.querySelector(`#${elementId}`).value
   
-  if (json.status != 200)
-    setResult({status: "NOK", reason: "Some reason?"})
-
-  return json
-}
-
-export default function EditPasswordField(props) {
-  const [password, setPassword] = createSignal('')
-  const [newPassword, setNewPassword] = createSignal('')
-  
-  const handlePassword = (event) => {
-    setPassword(event.target.value)
-  } 
-  
-  const handleNewPassword = (event) => {
-    setNewPassword(event.target.value)
+  const submit = async () => {
+    if (getInput("oldPasswordTF") == '' || getInput("newPasswordTF") == '') {
+      setResult({ processed: "true", statusCode: 420, message: "Please define both passwords." })
+      return
+    }  
+    
+    const response = await api.put('/users/changepassword', {
+      old_password: getInput("oldPasswordTF"),
+      new_password: getInput("newPasswordTF")
+    })
+    setResult({
+      processed: true,
+      statusCode: response.status,
+      message: response.statusText
+    })
   }
   
   return (
     <div class="password-field">
-      <h1 class="text-big italic my-4 mb-2">Password</h1>
-      
-      <Stack direction="column" spacing={1}>  
-      {/* Input password */}
-      <Stack direction="row">
+      <Stack direction="column">  
+        <p class="py-2 pl-1">Change password</p>
+        <p class="py-2 pl-1 text-lg italic">Current password</p>
         <input
-          class="default-form form-big mr-2 w-80 h-10"
-          type="text"
-          value={password()}
-          onChange={handlePassword}
-          onKeyDown={handlePassword}
-          placeholder={"Enter new password..."}
-          />
-      </Stack>
-      
-      {/* Confirm password */}
-      <Stack direction="row">
-        <input
-            class="default-form form-big mr-2 w-80 h-10"
-            type="text"
-            value={newPassword()}
-            onChange={handleNewPassword}
-            onKeyDown={handleNewPassword}
-            placeholder={"Confirm new password..."}
+          type="password"
+          id="oldPasswordTF"
+          class="rounded-lg bg-accent-300 bg-opacity-10 w-full ps-2 text-slate-200 text-lg h-9"
         />
         
-        <div onClick={() => changePassword(password(), newPassword())}>
-          <Button variant="outlined" class="h-full" color="pmsScheme">
-            Change
-          </Button>
-        </div>
-        
-        <Show when={result().status != "OK"}> {result().reason} </Show>
-        </Stack>
+        <p class="py-2 pl-1 text-lg italic">New password</p>
+        <input
+          type="password"
+          id="newPasswordTF"
+          class="rounded-lg bg-accent-300 bg-opacity-10 w-full ps-2 text-slate-200 text-lg h-9"
+        />
       </Stack>
+      
+      <Button
+          class="rounded-xl h-auto mt-2 p-2 w-full"
+          variant="outlined"
+          color="pmsScheme"
+          onClick={() => {submit()}}
+        >
+          Submit
+      </Button>
+      
+      <Show when={result().processed}>
+          <div class="flex flex-row items-center justify-center ps-4 mx-auto">
+            <p class={`${result().statusCode < 400 ? "" : "text-red-400 "} italic`}>
+              {result().message} ({ result().statusCode })
+            </p>
+          </div>
+        </Show>
     </div>
   )
 }

@@ -168,3 +168,12 @@ body {
     }
   }
 }
+
+.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: rgba(235, 235, 235, 0.85);
+}
+
+.MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline {
+  @apply rounded-lg border-2;
+    border-color: rgba(235, 235, 235, 0.35);
+}
