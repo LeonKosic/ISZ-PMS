@@ -1,5 +1,5 @@
 import api from "../../api/api";
-import UserList from "../user/UserList";
+import UserList from "../generic/user/UserList";
 
 const unenrollUser = async (userID, courseID) => {
   const response = await api.put('/courses/unenroll', {

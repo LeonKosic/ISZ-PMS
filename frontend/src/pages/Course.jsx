@@ -2,7 +2,7 @@ import { useLocation } from "@solidjs/router"
 import api from "../api/api"
 import { createResource, createSignal } from "solid-js";
 import CourseCard from "../components/generic/course/CourseCard";
-import UserList from "../components/user/UserList"
+import UserList from "../components/generic/user/UserList"
 import PostList from "../components/generic/post/PostList";
 import { Button, Container, Dialog, DialogContent, DialogTitle, Input, Stack } from "@suid/material";
 import { testUserDetails, userDetails } from "../api/stores";

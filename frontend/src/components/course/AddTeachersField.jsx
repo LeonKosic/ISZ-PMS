@@ -2,7 +2,7 @@ import { Button, Input, Stack } from "@suid/material"
 import api from "../../api/api"
 import { searchUser } from "../../api/searchUser"
 import { createSignal } from "solid-js"
-import UserList from "../user/UserList"
+import UserList from "../generic/user/UserList"
 
 export default function AddTeachersField(props) {
   const getInput = () => document.querySelector("#teacherName").value

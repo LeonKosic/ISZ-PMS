@@ -1,4 +1,4 @@
-import UserList from "../components/user/UserList";
+import UserList from "../components/generic/user/UserList";
 import api from "./api"
 
 export const searchUser = async (username, toUserList = false) => {
