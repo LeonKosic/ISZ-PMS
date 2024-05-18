@@ -192,24 +192,6 @@ router.put('/unfollow', jsonParser, authenticateToken, async (req, res) => {
 
   res.status(200).send({ message: "Unfollow." })
 })
-router.post('/enroll',authenticateToken,jsonParser,async(req,res)=>{
-      
-      const existingCourse= await db.select().from(course).where(eq(course.id,req.body.id))
-      const passwordMatch = await bcrypt.compare(req.body.password, existingCourse[0].password);
-      if(!passwordMatch){
-        return res.status(400).send({message:"Wrong password."})
-      }
-      await db.insert(enrolled).values(
-        [{ 
-          student_id: req.user.id,
-          course_id: existingCourse[0].id
-        }])
-      res.status(200).send({ message: "Enrolled." })
-})
- router.delete('/unenroll',authenticateToken,jsonParser,async(req,res)=>{
-  await db.delete(enrolled).where(and(eq(enrolled.student_id, req.user.id),eq(enrolled.course_id, req.body.id)))
-  res.status(200).send({ message: "Unenrolled." })
 
- })
 
 export default router;
