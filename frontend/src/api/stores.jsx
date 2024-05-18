@@ -5,3 +5,9 @@ export const [userDetails, setUserDetails] = createStore({
   username: "",
   name: ""
 })
+
+export const [testUserDetails, setTestUserDetails] = createStore({
+  id: "1",
+  username: "testusername",
+  name: "testname"
+})
