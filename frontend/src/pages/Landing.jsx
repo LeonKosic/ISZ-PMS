@@ -9,8 +9,6 @@ export default function Landing(props) {
   //  return await response.json();
   //});
 
-  //console.log(posts)
-
 const posts = [{
     title: 'title',
     body: 'texts',

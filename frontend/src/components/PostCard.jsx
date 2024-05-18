@@ -14,8 +14,6 @@ export default function PostCard(props) {
       })
     }
 
-    console.log(post())
-
     return (
         <div class="w-full p-6 bg-primary-300 border border-accent-600 rounded-lg shadow">
         <a href={"/posts/"+post().id}>
