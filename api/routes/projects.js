@@ -6,37 +6,88 @@ import jwt from 'jsonwebtoken'
 import { authenticateToken } from "../middleware/auth.js"
 import { category } from '../db/schema/category.js';
 import { project } from '../db/schema/project.js';
-import { project_category } from '../db/schema/project_category.js';
+import { post_category } from '../db/schema/post_category.js';
 const router = express.Router();
 import bodyParser from 'body-parser';
 const jsonParser = bodyParser.json();
 import Joi from 'joi'
 import { follow } from '../db/schema/follow.js';
+import { post } from '../db/schema/post.js';
+import { board } from '../db/schema/board.js';
+import { checkIfTeamMember } from '../middleware/project.js';
 
 router.post('/category', jsonParser, async (req, res) => {
-  await db.insert(project_category).values(
+  await db.insert(post_category).values(
     [{
       category_id: req.body.category_id,
-      project_id: req.body.project_id
+      post_id: req.body.project_id
     }])
   res.status(200).send({ message: "Project assigned to a category." })
 })
 
 router.delete('/', jsonParser, async (req, res) => {
-  const existingProject = await db.select().from(project).where(eq(project.name, req.body.name));
+  const existingProject = await db.select().from(post).where(eq(post.id, req.body.id));
   if (existingProject.length <= 0) {
     res.send(400, { err: "Project with this name does not exist." })
     return
   }
-  await db.update(project).set({ deleted: '1' }).where(eq(project.name, req.body.name))
+  await db.update(post).set({ deleted: '1' }).where(eq(post.id, req.body.id))
   res.send(200, { message: "Project deleted." })
-
 })
 
 router.post('/', authenticateToken, jsonParser, async (req, res) => {
 
   const schema = Joi.object({
-    name: Joi.string().required()
+    title: Joi.string().required(),
+    body: Joi.string().optional(),
+  })
+  const options = {
+    errors: {
+      wrap: {
+        label: false
+      }
+    }
+  }
+  console.log(req.body)
+  const { error, value } = schema.validate(req.body, options);
+
+  if (error) {
+    res.send(400, { err: error.details })
+    return
+  }
+  const newBoard = await db.insert(board).values({})
+  const newPost = await db.insert(post).values(
+    [{
+      ...req.body,
+      deleted: 0,
+      category_id:1,
+      owner_id: req.user.id,
+      type:1,
+      board_id: newBoard[0].insertId
+    }]
+  );
+  await db.insert(project).values([{id:newPost[0].insertId}])
+  res.status(200).send({ message: "Project made." });
+})
+
+router.get('/my', authenticateToken, jsonParser, async (req, res) => {
+  const projects = await db.select().from(post).where(eq(post.owner_id, req.user.id) && eq(post.type,1));
+
+  res.status(200).json(projects)
+})
+
+router.get('/following', authenticateToken, jsonParser, async (req, res) => {
+  const followingProjectNames = await db.select().from(post).leftJoin(follow, eq(post.owner_id, follow.following_id))
+    .where(eq(follow.follower_id, req.user.id) && eq(post.type,1))
+  res.status(200).send(followingProjectNames)
+
+})
+
+router.post('board/post', authenticateToken, jsonParser, checkIfTeamMember, async (req, res) => {
+  const schema = Joi.object({
+    title: Joi.string().required(),
+    body: Joi.string().optional(),
+    board_id: Joi.number().required()
   })
   const options = {
     errors: {
@@ -51,45 +102,21 @@ router.post('/', authenticateToken, jsonParser, async (req, res) => {
     res.send(400, { err: error.details })
     return
   }
-  const existingProject = await db.select().from(project).where(eq(project.name, req.body.name));
-  if (existingProject.length > 0) {
-    res.status(400).send({ err: "Project with this name already exists." })
-    return
-  }
-  await db.insert(project).values(
+  const project = await db.select().from(project).where(eq(project.id, req.body.project_id))
+  const newPost = await db.insert(post).values(
     [{
-      name: req.body.name,
-      deleted: 0
+      ...req.body,
+      deleted: 0,
+      owner_id: req.user.id,
+      type:0,
+      parent_id:project[0].board_id
     }]
   );
-  res.status(200).send({ message: "Project made." });
+  res.status(200).send({ message: "Post made." });
+})
+router.get('/board/:id', authenticateToken, jsonParser, checkIfTeamMember, async (req, res) => {
+  const posts = await db.select().from(post).where(eq(post.board_id, req.params.id));
+  res.status(200).json(posts)
 })
 
-router.get('/my', authenticateToken, jsonParser, async (req, res) => {
-  const projects = await db.select().from(project).where(eq(project.owner_id, req.user.id));
-  if (projects.length <= 0) {
-    res.send(400, { err: "User does not have any projects." })
-    return
-  }
-  const projectNames = projects.map(project => project.name);
-  res.send(projectNames);
-})
-
-router.get('/following', authenticateToken, jsonParser, async (req, res) => {
-  const followingProjectNames = await db.select().from(project).leftJoin(follow, eq(project.owner_id, follow.following_id))
-    .where(eq(follow.follower_id, req.user.id))
-  if (followingProjectNames.length <= 0) {
-    res.send(400, { err: "No projects." })
-    return
-  }
-  var projectNames = [];
-  for (var i = 0; i < followingProjectNames.length; i++) {
-    const projectName = followingProjectNames[i].project.name;
-    projectNames.push(projectName);
-
-  }
-
-  res.send(projectNames)
-
-})
 export default router

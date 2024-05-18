@@ -158,31 +158,16 @@ router.get('/details', authenticateToken, jsonParser, async (req, res) => {
   return res.status(400).send({ err: "Username does not exist." });
 });
 router.post('/search', jsonParser ,async(req,res)=>{
-  const existingUser = await db.select().from(users).where(like(users.username,`%${req.body.username}%`) && eq(users.deleted,0))
+  const existingUser = await db.select().from(users).where(like(users.username,`%${req.body.username}%`) && eq(users.deleted,0) && eq(users.is_active,1));
   if(existingUser.length>0){
     existingUser.map((user)=>{
       delete user.password
     })
-    return res.send(200,existingUser)
+    
   }
-  res.send(400,req.body)
-    return
+  return res.send(200,existingUser)
 })
 
-router.post('/follow', jsonParser, authenticateToken, async (req, res) => {
-  const followingUser = await db.select().from(users).where(eq(users.id, req.body.id))
-  if(followingUser.length<=0){
-    res.status(400).send({message:"User does not exist."})
-    return
-  }
-  await db.insert(follow).values(
-    [{
-      follower_id: req.user.id,
-      following_id: followingUser[0].id
-    }])
-  res.status(200).send({ message: "Following." })
-
-})
 
 router.put('/unfollow', jsonParser, authenticateToken, async (req, res) => {
   const followingUser = await db.select().from(users).where(eq(users.username, req.body.username))

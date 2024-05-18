@@ -10,7 +10,8 @@ import jwt from 'jsonwebtoken'
 const router = express.Router();
 const jsonParser = bodyParser.json()
 import { authenticateToken, authenticateTeacher } from "../middleware/auth.js";
-import { course } from "../db/schema/schema.js";
+import { board, course, course_teachers, users } from "../db/schema/schema.js";
+import { enrolled, post } from "../db/schema/schema.js";
 
 
 router.post('/', authenticateToken, authenticateTeacher, jsonParser, async (req, res) => {
@@ -33,21 +34,20 @@ router.post('/', authenticateToken, authenticateTeacher, jsonParser, async (req,
         res.send(400, { err: error.details })
         return
     }
-    const existingCourse = await db.select().from(course).where(eq(course.name, req.body.name));
-    if (existingCourse.length > 0) {
-        res.status(400).send({ err: "Course already exists." })
-        return
-    }
     if (req.body.password != req.body.password2) {
         res.send(400, { err: "Passwords do not match." })
         return
     }
+    const newBoard = await db.insert(board).values({})
+    console.log(newBoard)
     const hash = await bcrypt.hash(req.body.password, 10);
     await db.insert(course).values(
         [{
             name: req.body.name,
             password: hash,
-            deleted: 0
+            deleted: 0,
+            board_id: newBoard[0].insertId,
+            owner_id: req.user.id
         }]
     );
     res.status(200).send({ message: "Course made." });
@@ -82,6 +82,46 @@ router.delete('/unenroll', authenticateToken, jsonParser, async (req, res) => {
     await db.delete(enrolled).where(and(eq(enrolled.student_id, req.user.id), eq(enrolled.course_id, req.body.id)))
     res.status(200).send({ message: "Unenrolled." })
 
+})
+
+router.get('/:id', authenticateToken, jsonParser, async (req, res) => {
+    const existingCourse = await db.select().from(course).where(eq(course.id, req.params.id));
+    const isEnrolled = await db.select().from(enrolled).where(eq(enrolled.student_id, req.user.id) && eq(enrolled.course_id, req.params.id))
+    const teachers = await db.select().from(course_teachers).innerJoin(users, eq(users.id, course_teachers.teacher_id)).where(eq(course_teachers.course_id, req.params.id))
+    if (existingCourse.length <= 0) {
+        res.status(400).send({ err: "Course does not exist." })
+        return
+    }
+    if (!(isEnrolled.length > 0 || existingCourse[0].owner_id == req.user.id || teachers.some(teacher=>teacher.teacher_id == req.user.id))) {
+        res.status(400).send({ message: "Not enrolled." })
+        return
+    }
+    teachers.forEach(t => delete t.users.password)
+    delete existingCourse[0].password
+    const content = await db.select().from(post).where(eq(post.parent_id, existingCourse[0].board_id))
+    res.status(200).send({...existingCourse[0],teachers:teachers.map(t=>t.users), isTeacher: teachers.some(teacher=>teacher.teacher_id == req.user.id), content})
+})
+router.post("/post", authenticateToken, jsonParser, async (req, res) => {
+    const existingCourse = await db.select().from(course).where(eq(course.id, req.body.course_id));
+    if (existingCourse.length <= 0) {
+        res.status(400).send({ err: "Course does not exist." })
+        return
+    }
+    const teachers = await db.select().from(course_teachers).innerJoin(users, eq(users.id, course_teachers.teacher_id)).where(eq(course_teachers.course_id, req.body.course_id))
+    if(!(teachers.some(teacher=>teacher.teacher_id == req.user.id) || existingCourse[0].owner_id == req.user.id)){
+        res.status(400).send({err:"Not a teacher in this course."})
+        return
+    }
+    const newPost = await db.insert(post).values(
+        [{
+            ...req.body,
+            deleted: 0,
+            owner_id: req.user.id,
+            type: 0,
+            parent_id: existingCourse[0].board_id
+        }]
+    );
+    res.status(200).send({ message: "Post made." });
 })
 
 export default router;

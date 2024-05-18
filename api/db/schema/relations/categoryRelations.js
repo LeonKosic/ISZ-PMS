@@ -1,10 +1,10 @@
 import { relations } from "drizzle-orm";
 import { category } from "../category.js";
-import { project } from "../project.js";
-import { project_category } from "../project_category.js";
+import { post } from "../post.js";
+import { post_category } from "../post_category.js";
 
-export const categoryRelations = relations(project_category,({many})=>({
-    category_id:many(category, {fields:[project_category.category_id],references:[category.id]}),
-    project_id:many(project, {fields:[project_category.project_id],references:[project.id]})
+export const categoryRelations = relations(post_category,({many})=>({
+    category_id:many(category, {fields:[post_category.category_id],references:[category.id]}),
+    post_id:many(post, {fields:[post_category.post_id],references:[post.id]})
 
 }));
