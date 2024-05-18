@@ -25,7 +25,7 @@ function generateAccessToken(user) {
 
 router.post('/login', jsonParser, async (req, res) => {
 
-  const existingUser = await db.select().from(users).where(eq(users.user_name, req.body.user_name));
+  const existingUser = await db.select().from(users).where(eq(users.username, req.body.username));
   if (existingUser.length <= 0) {
     res.send(400, { err: "Username does not exists." })
     return
@@ -43,7 +43,7 @@ router.post('/login', jsonParser, async (req, res) => {
 router.post('/register', jsonParser, async (req, res) => {
 
   const schema = Joi.object({
-    user_name: Joi.string().required(),
+    username: Joi.string().required(),
     name: Joi.string().required(),
     email: Joi.string().email().required(),
     password: Joi.string().required(),
@@ -63,7 +63,7 @@ router.post('/register', jsonParser, async (req, res) => {
     return
   }
 
-  const existingUser = await db.select().from(users).where(eq(users.user_name, req.body.user_name));
+  const existingUser = await db.select().from(users).where(eq(users.username, req.body.username));
   if (existingUser.length > 0) {
     res.send(400, { err: "Username already exists." })
     return
@@ -93,7 +93,7 @@ router.post('/register', jsonParser, async (req, res) => {
   }
 
   await db.insert(users).values([{
-    user_name: req.body.user_name,
+    username: req.body.username,
     name: req.body.name,
     email: req.body.email,
     password: hash,
@@ -109,19 +109,19 @@ router.post('/register', jsonParser, async (req, res) => {
 
 
 router.delete('/user', authenticateToken, jsonParser, async (req, res) => {
-  const existingUser = await db.select().from(users).where(eq(users.user_name, req.user.user_name));
+  const existingUser = await db.select().from(users).where(eq(users.username, req.user.username));
   if (existingUser.length <= 0) {
     res.send(400, { err: "Username does not exist." })
     return
   }
-  await db.update(users).set({ deleted: '1' }).where(eq(users.user_name, req.body.user_name))
+  await db.update(users).set({ deleted: '1' }).where(eq(users.username, req.body.username))
   res.send(200, { message: "Account deleted." })
 
 })
 
 router.put('/edit', jsonParser, authenticateToken, async (req, res) => {
   const schema = Joi.object({
-    user_name: Joi.string().optional(),
+    username: Joi.string().optional(),
     name: Joi.string().optional(),
     email: Joi.string().email().optional()
   });
@@ -137,17 +137,17 @@ router.put('/edit', jsonParser, authenticateToken, async (req, res) => {
 });
 
 router.get('/details', authenticateToken, jsonParser, async (req, res) => {
-  const { user_name } = req.query; 
+  const { username } = req.query; 
 
-  if (!user_name) {
+  if (!username) {
     return res.status(400).send({ err: "Missing username parameter." });
   }
 
-  const existingUser = await db.select().from(users).where(eq(users.user_name, user_name));
+  const existingUser = await db.select().from(users).where(eq(users.username, username));
 
   if (existingUser.length > 0) {
     return res.status(200).send({
-      user_name: existingUser[0].user_name,
+      username: existingUser[0].username,
       name: existingUser[0].name,
       email: existingUser[0].email
     });
@@ -156,7 +156,7 @@ router.get('/details', authenticateToken, jsonParser, async (req, res) => {
   return res.status(400).send({ err: "Username does not exist." });
 });
 router.post('/search', jsonParser ,async(req,res)=>{
-  const existingUser = await db.select().from(users).where(like(users.user_name,`%${req.body.user_name}%`) && eq(users.deleted,0))
+  const existingUser = await db.select().from(users).where(like(users.username,`%${req.body.username}%`) && eq(users.deleted,0))
   if(existingUser.length>0){
     existingUser.map((user)=>{
       delete user.password
@@ -168,7 +168,11 @@ router.post('/search', jsonParser ,async(req,res)=>{
 })
 
 router.post('/follow', jsonParser, authenticateToken, async (req, res) => {
-  const followingUser = await db.select().from(users).where(eq(users.user_name, req.body.user_name))
+  const followingUser = await db.select().from(users).where(eq(users.id, req.body.id))
+  if(followingUser.length<=0){
+    res.status(400).send({message:"User does not exist."})
+    return
+  }
   await db.insert(follow).values(
     [{
       follower_id: req.user.id,
@@ -179,7 +183,7 @@ router.post('/follow', jsonParser, authenticateToken, async (req, res) => {
 })
 
 router.put('/unfollow', jsonParser, authenticateToken, async (req, res) => {
-  const followingUser = await db.select().from(users).where(eq(users.user_name, req.body.user_name))
+  const followingUser = await db.select().from(users).where(eq(users.username, req.body.username))
   await db.delete(follow).where(and(
     eq(follow.follower_id, req.user.id),
     eq(follow.following_id, followingUser[0].id)))

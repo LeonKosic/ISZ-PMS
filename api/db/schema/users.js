@@ -4,7 +4,7 @@ import {roles} from "./roles.js"
 
 export const users = mysqlTable('users', {
   id: bigint('id', { mode: 'number' }).primaryKey().autoincrement(),
-  user_name: varchar('user_name', { length: 256 }),
+  username: varchar('username', { length: 256 }),
   name: varchar('name', { length: 256 }),
   email: varchar("email", {length: 256}),
   password: varchar("password", {length:256}),

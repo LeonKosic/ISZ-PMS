@@ -44,7 +44,7 @@ if (error) {
   
 
   router.delete('/category',authenticateToken,authenticateAdmin,jsonParser,async(req,res)=>{
-    const existingCategory = await db.select().from(category).where(eq(category.name,req.body.name));
+    const existingCategory = await db.select().from(category).where(eq(category.id,req.body.id));
   if (existingCategory.length <= 0) {
     res.status(400).send({err:"Category does not exist."})
     return
