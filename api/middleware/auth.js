@@ -19,12 +19,17 @@ export function authenticateToken(req, res, next) {
   })
 }
 export function authenticateAdmin(req, res, next) {
-  if(req.user.role_id==0) next()
+  if(req.user.role_id==0) {next()}
+  else{
   res.sendStatus(401);
+  }
 }
 export function authenticateTeacher(req, res, next) {
-  
-  if(req.user.role_id==2) next()
+  console.log(req.user.role_id)
+  if(req.user.role_id==2){ next()}
+  else{
     res.sendStatus(401);
+
+  }
 }
 
