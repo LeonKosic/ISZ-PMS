@@ -4,7 +4,6 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // 
         transparent: 'transparent',
         'primary': {
           100: '#573636',

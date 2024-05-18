@@ -9,7 +9,7 @@
     "all": "run-p jsonserver dev"
   },
   "dependencies": {
-    "@solidjs/router": "^0.13.1",
+    "@solidjs/router": "^0.13.3",
     "@suid/icons-material": "^0.7.0",
     "@suid/material": "^0.16.0",
     "@suid/vite-plugin": "^0.2.0",
