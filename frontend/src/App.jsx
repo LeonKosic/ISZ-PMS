@@ -7,12 +7,12 @@ import theme from "./styles/suidTheme"
 
 function App() {
   return (
-    <>
+    <>  
       <ThemeProvider theme={theme}>
 	      <Navbar/>
 	      <PMSRouter />
       </ThemeProvider>
-	</>
+    </>
   );
 }
 
