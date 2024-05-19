@@ -20,10 +20,19 @@ export default function FileList(props) {
                 name={file.name}
                 onClick={() => {
                   if (file.type === 'dir')
+                    // TODO: redirect? folderi?
                     console.log("directory - open in another folder")
-                  else {
+                  else if (file.readable) {
                     dialogHandler()
                     setActiveFile(file)
+                  } else {
+                    // TODO: download file? odakle?
+                    let a = document.createElement('a');
+                    a.href = file.url;
+                    a.download = file.name;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a)
                   }
                 }}
                 />

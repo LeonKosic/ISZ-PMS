@@ -136,6 +136,7 @@ services:
           </div>
           
           {/* project files */}
+          {/* TODO: parse paths from received response */}
           <div class="h-auto border-2 border-accent-600 rounded-xl p-4">
             <FileList
               data={sortedFiles}

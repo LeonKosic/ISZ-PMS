@@ -57,6 +57,18 @@ const api = {
       });
   },
 
+  upload: async (url, files) => {
+    // files: dropzone-provided
+    return await axios.post(url, files, {
+      ...defaultConfig,
+      headers: {
+        ...defaultConfig.headers,
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        "Content-Type": "multipart/form-data"
+      }
+    })
+  },
+
   // payload => {username, login}
   login: async (payload) => {
     return axios
