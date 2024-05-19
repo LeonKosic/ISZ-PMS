@@ -53,13 +53,13 @@ router.post('/', authenticateToken, authenticateTeacher, jsonParser, async (req,
     res.status(200).send({ message: "Course made." });
 })
 
-router.delete('/', authenticateToken, authenticateTeacher, jsonParser, async (req, res) => {
-    const existingCourse = await db.select().from(course).where(eq(course.id, req.body.id));
+router.delete('/:id', authenticateToken, authenticateTeacher, async (req, res) => {
+    const existingCourse = await db.select().from(course).where(eq(course.id, req.params.id));
     if (existingCourse.length <= 0) {
         res.status(400).send({ err: "Course does not exist." })
         return
     }
-    await db.update(course).set({ deleted: '1' }).where(eq(course.name, req.body.name))
+    await db.update(course).set({ deleted: '1' }).where(eq(course.id, req.params.id))
     res.status(200).send({ message: "Course deleted." })
 })
 
@@ -78,8 +78,8 @@ router.post('/enroll', authenticateToken, jsonParser, async (req, res) => {
     res.status(200).send({ message: "Enrolled." })
 })
 
-router.delete('/unenroll', authenticateToken, jsonParser, async (req, res) => {
-    await db.delete(enrolled).where(and(eq(enrolled.student_id, req.user.id), eq(enrolled.course_id, req.body.id)))
+router.delete('/unenroll/:id', authenticateToken, async (req, res) => {
+    await db.delete(enrolled).where(and(eq(enrolled.student_id, req.user.id), eq(enrolled.course_id, req.params.id)))
     res.status(200).send({ message: "Unenrolled." })
 
 })

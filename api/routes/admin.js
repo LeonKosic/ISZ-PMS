@@ -45,13 +45,13 @@ router.post('/category', authenticateToken, authenticateAdmin, jsonParser, async
 })
 
 
-router.delete('/category', authenticateToken, authenticateAdmin, jsonParser, async (req, res) => {
-  const existingCategory = await db.select().from(category).where(eq(category.id, req.body.id));
+router.delete('/category/:id', authenticateToken, authenticateAdmin, async (req, res) => {
+  const existingCategory = await db.select().from(category).where(eq(category.id, req.params.id));
   if (existingCategory.length <= 0) {
     res.status(400).send({ err: "Category does not exist." })
     return
   }
-  await db.update(category).set({ deleted: '1' }).where(eq(category.name, req.body.name))
+  await db.update(category).set({ deleted: '1' }).where(eq(category.id, req.params.id))
   res.status(200).send({ message: "Category deleted." })
 
 })

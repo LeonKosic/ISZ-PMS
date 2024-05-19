@@ -19,13 +19,13 @@ import { project_members } from '../db/schema/project_members.js';
 import { request } from '../db/schema/request.js';
 
 
-router.delete('/', jsonParser, async (req, res) => {
-  const existingProject = await db.select().from(post).where(eq(post.id, req.body.id));
+router.delete('/:id', jsonParser, async (req, res) => {
+  const existingProject = await db.select().from(post).where(eq(post.id, req.params.id));
   if (existingProject.length <= 0) {
     res.send(400, { err: "Request with this name does not exist." })
     return
   }
-  await db.update(post).set({ deleted: '1' }).where(eq(post.id, req.body.id))
+  await db.update(post).set({ deleted: '1' }).where(eq(post.id, req.params.id))
   res.send(200, { message: "Request deleted." })
 })
 
@@ -72,49 +72,6 @@ router.get('/following', authenticateToken, jsonParser, async (req, res) => {
   const followingProjectNames = await db.select().from(post).leftJoin(follow, eq(post.owner_id, follow.following_id))
     .where(eq(follow.follower_id, req.user.id) && eq(post.type,2))
   res.status(200).send(followingProjectNames)
-
-})
-
-router.post('board/post', authenticateToken, jsonParser, checkIfTeamMember, async (req, res) => {
-  const schema = Joi.object({
-    title: Joi.string().required(),
-    body: Joi.string().optional(),
-    board_id: Joi.number().required()
-  })
-  const options = {
-    errors: {
-      wrap: {
-        label: false
-      }
-    }
-  }
-  const { error, value } = schema.validate(req.body, options);
-
-  if (error) {
-    res.send(400, { err: error.details })
-    return
-  }
-  const project = await db.select().from(project).where(eq(project.id, req.body.project_id))
-  const newPost = await db.insert(post).values(
-    [{
-      ...req.body,
-      deleted: 0,
-      owner_id: req.user.id,
-      type:0,
-      parent_id:project[0].board_id
-    }]
-  );
-  res.status(200).send({ message: "Post made." });
-})
-router.get('/board/:id', authenticateToken, jsonParser, checkIfTeamMember, async (req, res) => {
-  const posts = await db.select().from(post).where(eq(post.board_id, req.params.id));
-  res.status(200).json(posts)
-})
-router.post('/register', authenticateToken, jsonParser, checkIfTeamMember, async (req, res) => {
-    await db.insert(project_members).values({
-      project:req.body.project_id,
-      user:req.body.user_id
-    })
 })
 
 export default router

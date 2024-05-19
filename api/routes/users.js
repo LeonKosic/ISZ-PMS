@@ -111,12 +111,12 @@ router.post('/register', jsonParser, async (req, res) => {
 
 
 router.delete('/user', authenticateToken, jsonParser, async (req, res) => {
-  const existingUser = await db.select().from(users).where(eq(users.username, req.user.username));
+  const existingUser = await db.select().from(users).where(eq(users.id, req.user.id));
   if (existingUser.length <= 0) {
     res.send(400, { err: "Username does not exist." })
     return
   }
-  await db.update(users).set({ deleted: '1' }).where(eq(users.username, req.body.username))
+  await db.update(users).set({ deleted: '1' }).where(eq(users.username, req.user.id))
   res.send(200, { message: "Account deleted." })
 
 })
