@@ -8,6 +8,7 @@ import userRouter from './routes/users.js';
 import adminRouter from './routes/admin.js';
 import projectRouter from './routes/projects.js'
 import courseRouter from "./routes/course.js"
+import postRouter from "./routes/post.js"
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use('/users',userRouter)
 app.use('/admin',adminRouter);
 app.use('/projects',projectRouter);
 app.use('/course',courseRouter)
+app.use("/post",postRouter)
 
 
 export default app;

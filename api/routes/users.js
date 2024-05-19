@@ -36,7 +36,7 @@ router.post('/login', jsonParser, async (req, res) => {
 
   if (passwordMatch) {
     const accessToken = generateAccessToken(existingUser[0]);
-    return res.status(200).json({ accessToken });
+    return res.status(200).json({ accessToken: accessToken, username: existingUser[0].username, role_id: existingUser[0].role_id, name: existingUser[0].name});
   }
 
   return res.status(401).json({ err: "Wrong password." });
@@ -111,12 +111,12 @@ router.post('/register', jsonParser, async (req, res) => {
 
 
 router.delete('/user', authenticateToken, jsonParser, async (req, res) => {
-  const existingUser = await db.select().from(users).where(eq(users.username, req.user.username));
+  const existingUser = await db.select().from(users).where(eq(users.id, req.user.id));
   if (existingUser.length <= 0) {
     res.send(400, { err: "Username does not exist." })
     return
   }
-  await db.update(users).set({ deleted: '1' }).where(eq(users.username, req.body.username))
+  await db.update(users).set({ deleted: '1' }).where(eq(users.username, req.user.id))
   res.send(200, { message: "Account deleted." })
 
 })
@@ -158,31 +158,15 @@ router.get('/details', authenticateToken, jsonParser, async (req, res) => {
   return res.status(400).send({ err: "Username does not exist." });
 });
 router.post('/search', jsonParser ,async(req,res)=>{
-  const existingUser = await db.select().from(users).where(like(users.username,`%${req.body.username}%`) && eq(users.deleted,0))
+  const existingUser = await db.select().from(users).where(like(users.username,`%${req.body.username}%`) && eq(users.deleted,0) && eq(users.is_active,1));
   if(existingUser.length>0){
     existingUser.map((user)=>{
       delete user.password
     })
-    return res.send(200,existingUser)
   }
-  res.send(400,req.body)
-    return
+  return res.send(200,existingUser)
 })
 
-router.post('/follow', jsonParser, authenticateToken, async (req, res) => {
-  const followingUser = await db.select().from(users).where(eq(users.id, req.body.id))
-  if(followingUser.length<=0){
-    res.status(400).send({message:"User does not exist."})
-    return
-  }
-  await db.insert(follow).values(
-    [{
-      follower_id: req.user.id,
-      following_id: followingUser[0].id
-    }])
-  res.status(200).send({ message: "Following." })
-
-})
 
 router.put('/unfollow', jsonParser, authenticateToken, async (req, res) => {
   const followingUser = await db.select().from(users).where(eq(users.username, req.body.username))
