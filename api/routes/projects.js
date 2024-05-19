@@ -26,13 +26,13 @@ router.post('/category', jsonParser, async (req, res) => {
   res.status(200).send({ message: "Project assigned to a category." })
 })
 
-router.delete('/', jsonParser, async (req, res) => {
-  const existingProject = await db.select().from(post).where(eq(post.id, req.body.id));
+router.delete('/:id', jsonParser, async (req, res) => {
+  const existingProject = await db.select().from(post).where(eq(post.id, req.params.id));
   if (existingProject.length <= 0) {
     res.send(400, { err: "Project with this name does not exist." })
     return
   }
-  await db.update(post).set({ deleted: '1' }).where(eq(post.id, req.body.id))
+  await db.update(post).set({ deleted: '1' }).where(eq(post.id, req.params.id))
   res.send(200, { message: "Project deleted." })
 })
 
