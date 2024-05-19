@@ -16,6 +16,7 @@ export default function PMSRouter() {
       <Route path="/courses" component={Courses} />
       <Route path="/courses/:id" component={Course} />
       
+      
       <Route path="*" component={NotFound}/>
     </Router>
   )

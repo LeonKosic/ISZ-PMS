@@ -11,9 +11,7 @@ export default function NavbarIcons(props) {
   
   return (
     <div class="h-auto py-2 px-4 border-2 border-accent-600 rounded-full w-auto">
-      <div class="flex flex-row justify-center items-center gap-4">
-        <SearchBar/>
-        
+      <div class="flex flex-row justify-center items-center gap-4">        
         <Icon
           iconID="fa-solid fa-book"
           clickAction={() => { redirect('/courses') }}
@@ -42,7 +40,7 @@ export default function NavbarIcons(props) {
             MenuListProps={{ "aria-labelledby": "basic-button" }}
           >
             <MenuItem><a href={`/profiles/${userDetails.id}`}>View profile</a></MenuItem>
-            <MenuItem><a href="/users/edit">Edit profile</a></MenuItem>
+            <MenuItem><a href="/users/edit">Edit profile</a></MenuItem> 
             
             {/* TODO: logout (strahinjino) */}
             <MenuItem onClick={() => {console.log('logout')}}>Logout</MenuItem>

@@ -9,7 +9,8 @@ export default function Navbar(props) {
   return (
     <div class="sticky top-0 bg-primary-800 pb-0 z-50 py-2">
       <div class="flex flex-row justify-between items-center ml-2 mr-6">
-        <Banner/>
+        <Banner />
+        <SearchBar/>
         <NavbarIcons/>
       </div>
       
