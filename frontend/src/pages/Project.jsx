@@ -8,13 +8,16 @@ import FileList from "../components/generic/file/FileList"
 import ProjectMaintainers from "../components/project/ProjectMaintainers"
 import ProjectOwner from "../components/project/ProjectOwner"
 
+
+let projectID;
+
 const getProjectInfo = async () => {
-  const projectID = useLocation().pathname.split('/')[2]
-  const response = await api.get(`/projects/${id}`)
+  const response = await api.get(`/projects/${projectID}`)
   return response.data
 }
 
 export default function Project(props) {
+  projectID = useLocation().pathname.split('/')[2];
   // const [projectInfo] = createResource(getProjectInfo)
   const projectInfo = () => ({
     name: "Project Management System",
@@ -105,9 +108,9 @@ services:
     return 0;
   }})
   
-  const onDrop = (acceptedFiles) => {
-    // TODO: send acceptedFiles to fs via backend api
+  const onDrop = async (acceptedFiles) => {
     console.log(acceptedFiles)
+    return await api.upload(`/upload/projects/${projectID}`)
   }
   
   const dropzone = createDropzone({ onDrop })
