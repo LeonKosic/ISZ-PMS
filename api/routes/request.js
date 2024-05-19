@@ -16,24 +16,17 @@ import { post } from '../db/schema/post.js';
 import { board } from '../db/schema/board.js';
 import { checkIfTeamMember } from '../middleware/project.js';
 import { project_members } from '../db/schema/project_members.js';
+import { request } from '../db/schema/request.js';
 
-router.post('/category', jsonParser, async (req, res) => {
-  await db.insert(post_category).values(
-    [{
-      category_id: req.body.category_id,
-      post_id: req.body.project_id
-    }])
-  res.status(200).send({ message: "Project assigned to a category." })
-})
 
 router.delete('/', jsonParser, async (req, res) => {
   const existingProject = await db.select().from(post).where(eq(post.id, req.body.id));
   if (existingProject.length <= 0) {
-    res.send(400, { err: "Project with this name does not exist." })
+    res.send(400, { err: "Request with this name does not exist." })
     return
   }
   await db.update(post).set({ deleted: '1' }).where(eq(post.id, req.body.id))
-  res.send(200, { message: "Project deleted." })
+  res.send(200, { message: "Request deleted." })
 })
 
 router.post('/', authenticateToken, jsonParser, async (req, res) => {
@@ -56,7 +49,6 @@ router.post('/', authenticateToken, jsonParser, async (req, res) => {
     res.send(400, { err: error.details })
     return
   }
-  const newBoard = await db.insert(board).values({})
   const newPost = await db.insert(post).values(
     [{
       ...req.body,
@@ -64,22 +56,21 @@ router.post('/', authenticateToken, jsonParser, async (req, res) => {
       category_id:1,
       owner_id: req.user.id,
       type:1,
-      board_id: newBoard[0].insertId
     }]
   );
-  await db.insert(project).values([{id:newPost[0].insertId}])
+  await db.insert(request).values([{id:newPost[0].insertId}])
   res.status(200).send({ message: "Project made." });
 })
 
 router.get('/my', authenticateToken, jsonParser, async (req, res) => {
-  const projects = await db.select().from(post).where(eq(post.owner_id, req.user.id) && eq(post.type,1));
+  const projects = await db.select().from(post).where(eq(post.owner_id, req.user.id) && eq(post.type,2));
 
   res.status(200).json(projects)
 })
 
 router.get('/following', authenticateToken, jsonParser, async (req, res) => {
   const followingProjectNames = await db.select().from(post).leftJoin(follow, eq(post.owner_id, follow.following_id))
-    .where(eq(follow.follower_id, req.user.id) && eq(post.type,1))
+    .where(eq(follow.follower_id, req.user.id) && eq(post.type,2))
   res.status(200).send(followingProjectNames)
 
 })

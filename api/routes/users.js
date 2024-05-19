@@ -163,7 +163,6 @@ router.post('/search', jsonParser ,async(req,res)=>{
     existingUser.map((user)=>{
       delete user.password
     })
-    
   }
   return res.send(200,existingUser)
 })
