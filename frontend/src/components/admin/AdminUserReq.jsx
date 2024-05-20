@@ -1,31 +1,28 @@
-import { Button, TextField, Stack } from "@suid/material";
-import { Show, createResource } from "solid-js";
+import { Button, Stack } from "@suid/material";
+import { For, Show, createResource } from "solid-js";
 import UserRequestInfo from "./atomic/UserRequestInfo";
-import ApproveRequestBtn from "./atomic/ApproveRequestBtn";
-import DenyRequestBtn from "./atomic/DenyRequestBtn";
+import api from "../../api/api";
 
 // TODO: api endpoints
 
 const fetchRequests = async () => {
-  const url = `${import.meta.env.VITE_API_HOST}/admin/request`;
-  const resource = await fetch(url, { method: "GET"});
-  return await resource.json();
+  const response = await api.get('/admin/requests')
+  return response.data
 }
 
-const approveRequest = async (username) => {
-  const url = `${import.meta.env.VITE_API_HOST}/admin/approve`;
-  const resource = await fetch(url, { method: "POST", body: { user: username } })
-  return await resource.json();
+const approveRequest = async (id) => {
+  const response = await api.post('/admin/requests/approve', { id: id })
+  return response.data
 }
 
-const denyRequest = async (username) => {
-  const url = `${import.meta.env.VITE_API_HOST}/admin/reject`;
-  const resource = await fetch(url, { method: "POST", body: { user: username } })
-  return await resource.json();
+const denyRequest = async (id) => {
+  const response = await api.post('/admin/requests/deny', { id: id })
+  return response.data
 }
 
 export default function AdminUserReq(props) {
   const [newRequests] = createResource(fetchRequests);
+  const requests = [{}, {}, {}, {}, {}, {}]
   
   return (
     <div class="user-req-ctr">
@@ -38,46 +35,47 @@ export default function AdminUserReq(props) {
           when={true}
           fallback={<p class="italic">Loading user requests...</p>}
         >
-          <div class="request-ctr">
-              <UserRequestInfo
-                fullname={"test"}
-                username={"test"}
-                email={"test"}
-              />
-              
-              <Stack direction="row" spacing={1}>
-                <div onClick={() => approveRequest("test")}>
-                  <ApproveRequestBtn />
-                </div>
-                
-                <div onClick={() => denyRequest(request?.username)}>
-                  <DenyRequestBtn/>
-                </div>
-              </Stack>
-          </div>
-          
-          <For each={newRequests()}>
-            {
-              (request, idx) => 
-                <div class="request-ctr">
-                  <UserRequestInfo
-                    fullname={request?.fullname}
-                    username={request?.username}
-                    email={request?.email}
-                  />
-                  
-                  <Stack direction="row" spacing={1}>
-                    <div onClick={() => approveRequest(request?.username)}>
-                      <ApproveRequestBtn />
+          <div class="request-ctr h-80 overflow-y-scroll">
+            <For each={requests}>
+              {
+                (req) => (
+                  <div class="flex flex-row items-center justify-center">
+                    <div class="mr-4 w-min rounded-md hover:bg-blue-400 transition-all duration-500">
+                      <Button
+                        variant="outlined"
+                        color="pmsScheme"
+                        onClick={() => denyRequest(req.id)}
+                        >
+                        <i class="fa-solid fa-check"/>
+                      </Button>  
                     </div>
                     
-                    <div onClick={() => denyRequest(request?.username)}>
-                      <DenyRequestBtn/>
+                    <UserRequestInfo
+                      fullname={"test"}
+                      username={"test"}
+                      email={"test"}
+                      id={""}
+                    />
+                    
+                    <div class="flex flex-row items-center justify-center">
+                      <div class="ml-4 w-min rounded-md hover:bg-red-400 transition-all duration-500">
+                        <Button
+                          variant="outlined"
+                          color="pmsScheme"
+                          onClick={() => denyRequest(req.id)}
+                        >
+                          <i class="fa-solid fa-xmark"/>
+                        </Button> 
+                      </div>
                     </div>
-                  </Stack>
-                </div>
-            }
-          </For>
+                  </div>
+                )
+              }
+            </For>
+              
+              <Stack direction="row" spacing={1}>
+              </Stack>
+          </div>
         </Show>
       </Stack>
     </div>

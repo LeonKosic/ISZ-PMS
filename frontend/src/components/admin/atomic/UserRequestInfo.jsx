@@ -1,28 +1,28 @@
 import { Stack } from "@suid/material";
 import { mergeProps } from "solid-js";
+import UserCard from "../../generic/user/UserCard";
 
 export default function UserRequestInfo(props) {
   const merged = mergeProps({
-    fullname: "<no-fullname>",
+    id: "-1",
     username: "<no-username>",
-    email: "<no-email>"
+    name: "<no-fullname>",
+    email: "<no-email>",
+    role: "<no-role>"
   }, props);
   
   return (
-    <div class="user-request">
-      <Stack direction="column">
-        <p class="fullname-field">
-          Full name: {merged.fullname}
-        </p>
+    <div class="flex flex-row items-center justify-center py-2">
+      <UserCard
+        userid={merged.id}
+        name={merged.name}
+        username={merged.username}
+        role={merged.role}
         
-        <p class="username-field">
-          Username: {merged.username}
-        </p>
-        
-        <p class="email-field">
-          E-mail: {merged.email}
-        </p>
-      </Stack>
+        showRole={true}
+        showUsername={true}
+        cardStyle={"border-2 border-accent-600 rounded-lg w-80 h-20 flex flex-row justify-around text-md"}
+        />
     </div>
   )
 }

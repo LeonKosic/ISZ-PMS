@@ -2,25 +2,32 @@ import { Button, ThemeProvider } from "@suid/material";
 import theme from "../../styles/suidTheme";
 import api from "../../api/api"
 import CategoryBanner from "./atomic/CategoryBanner";
-import { For, createResource } from "solid-js";
+import { For, createResource, createSignal } from "solid-js";
 
 
 const fetchCategories = async () => {
-  // TODO
-  const url = `${import.meta.env.VITE_API_HOST}/admin/category`;
-  const response = await fetch(url, { method: "GET" });
-  return await response.json();
+  const response = await api.get('/categories')
+  return response.data
 }
 
-const delCategory = async (name) => {
-  // TODO
-  const url = `${import.meta.env.VITE_API_HOST}/admin/category`;
-  const response = await fetch(url, { method: "DELETE", body: { category_name: name } });
-  return await response.json();
+const delCategory = async (id) => {
+  const response = await api.delete(`/admin/category/${id}`)
+  return response
 }
 
 export default function AdminDelCategory(props) {
-  const [categories] = createResource(fetchCategories);
+  // const [categories] = createResource(fetchCategories);
+  const categories = () => [
+    { id: "1", name: "category" },
+    { id: "1", name: "politics-and-science" },
+    { id: "1", name: "cat1" },
+    { id: "1", name: "cat1" },
+    { id: "1", name: "cat1" },
+    { id: "1", name: "cat1" },
+  ]
+  
+  const [cats, setCats] = createSignal(categories())
+  const [warning, setWarning] = createSignal('')
   
   return (
     <div class="del-ctg-ctr">
@@ -31,17 +38,25 @@ export default function AdminDelCategory(props) {
         when={true}
         fallback={<p class="italic">Loading categories...</p>}
       > 
-        <ThemeProvider theme={theme}>
-          <For each={categories()}>
-            {
-              (category, idx) => 
-                <CategoryBanner
-                  onClick={() => delCategory(category.name)}
-                  name={category.name}
-                  id={category.id} />
-            }
-          </For>
-        </ThemeProvider>
+        <Show 
+          when={warning() != ''}
+        >
+          <p class="text-red-400">{ warning()}</p> 
+        </Show>
+        
+        <For each={categories()}>
+          {
+            (category, idx) => 
+              <CategoryBanner
+                onClick={() => {
+                  const res = delCategory(category.id);
+                  if (res.status == 200) setCats(cats().filter(val => val.id === category.id))
+                  else { setWarning(res.statusText); }
+                }}
+                name={category.name}
+                id={category.id} />
+          }
+        </For>
       </Show>
     </div>
   )

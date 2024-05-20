@@ -1,11 +1,11 @@
 import { Button, Stack } from "@suid/material";
 import { createSignal } from "solid-js";
+import api from "../../api/api";
 
 const addCategory = async (name) => {
-  // TODO
-  const url = `${import.meta.env.VITE_API_HOST}/admin/category`;
-  const response = await fetch(url, { method: "POST", body: { category_name: name } });
-  return await response.json();
+  console.log(name)
+  const response = await api.post('/admin/category', { name: name })
+  return response.data
 }
 
 export default function AdminAddCategory(props) {

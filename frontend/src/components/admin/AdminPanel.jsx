@@ -9,12 +9,19 @@ import AdminDelCategory from "./AdminDelCategory";
 export default function AdminPanel() {
   return (
     <ThemeProvider theme={theme}>
-      <Stack direction="column" class="admin-panel">
-        <AdminUserReq />
-        <AdminBanUser />
-        <AdminAddCategory />
-        <AdminDelCategory/>
-      </Stack>
+      <div class="max-w-screen-2xl mx-auto">
+        <Stack direction="column" class="admin-panel">
+          <div class="flex flex-row justify-around w-full">
+            <AdminUserReq />
+            <AdminBanUser />
+          </div>
+          
+          <div class="flex flex-col items-center w-full">
+            <AdminAddCategory />
+            <AdminDelCategory/>
+          </div>
+        </Stack>
+      </div>
     </ThemeProvider>
   )
 }

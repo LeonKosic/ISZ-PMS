@@ -1,24 +1,31 @@
-import { TextField, Stack,   } from "@suid/material";
-import { darkColors } from "@suid/material/styles/createPalette";
-import theme from "../../styles/suidTheme";
-import UserSearchResult from "./atomic/UserSearchResult";
-import { For, createSignal } from "solid-js";
+import { Stack } from "@suid/material";
+import { createSignal } from "solid-js";
+import UserList from '../generic/user/UserList'
 
-const banUser = async (username) => {
-  // TODO
-  const url = `${import.meta.env.VITE_API_HOST}/admin/ban`
-  const response = await fetch(url, { method: "POST", body: { user_name: username } }) // post/put?
-  return await response.json()
+const banUser = async (id) => {
+  const response = await api.post('/admin/ban', { id: id })
+  return response.data;
 }
 
-const searchUser = async (username) => {
+const _searchUser = async (username) => {
   if (name == '')
     return []
   
-  // TODO
-  const url = `${import.meta.env.VITE_API_HOST}/users/search`
-  const response = await fetch(url, { method: "POST", body: { user_name: username }})
-  return await response.json();
+  const response = await api.post('/users/search', { username: username })
+  return response.data;
+}
+
+const searchUser = (foo) => {
+  return ([
+    { id: "1", username: "testuser1", name: "ratko mladic" },
+    { id: "1", username: "testuser1", name: "ratko mladic" },
+    { id: "1", username: "testuser1", name: "ratko mladic" },
+    { id: "1", username: "testuser1", name: "ratko mladic" },
+    { id: "1", username: "testuser1", name: "ratko mladic" },
+    { id: "1", username: "testuser1", name: "ratko mladic" },
+    { id: "1", username: "testuser1", name: "ratko mladic" },
+    { id: "1", username: "testuser1", name: "ratko mladic" },
+  ])
 }
 
 export default function AdminBanUser(props) {
@@ -31,7 +38,7 @@ export default function AdminBanUser(props) {
   }
   
   return (
-    <div class="ban-user-ctr">
+    <div class="ban-user-ctr h-80">
       <h1 class="ctr-title">Ban user</h1>
       <hr class="my-2 py-2"/>
       
@@ -46,15 +53,17 @@ export default function AdminBanUser(props) {
       </Stack>
       
       <Show when={users().length > 0}>
-        <For each={users()}>
-          {
-            (user) => 
-              // TODO: mzd ce trebati koristiti samo user, vidjeti poslije
-              <div onClick={() => banUser(user.username)}>
-                <UserSearchResult username={user.username}/>
-              </div>
-          }
-        </For>
+        <div class="h-80 overflow-y-scroll">
+          <UserList
+            users={users()}
+            style={"flex flex-col items-center justify-center mt-2"}
+            cardStyle={"border-2 border-accent-600 rounded-xl p-2 w-80 my-1 text-xl cursor-pointer bg-opacity-0 hover:bg-opacity-10 hover:bg-red-500 transition-opacity duration-1000"}
+            cardClickAction={(id) => { banUser(id) }}
+            showRole={false}
+            cardUseMaxWidth={false}
+            showUsername={false}
+            />
+        </div>
       </Show>
     </div>
   )

@@ -5,8 +5,6 @@ const defaultConfig = {
   baseURL: `http://${import.meta.env.VITE_API_HOST}`,
 }
 
-const store = createStore();
-
 const api = {
   get: async (url) => {
     const token = localStorage.getItem('accessToken');
@@ -75,7 +73,6 @@ const api = {
         return response.data;
       })
   }
-
 }
 
 
