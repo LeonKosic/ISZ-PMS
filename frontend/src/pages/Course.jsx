@@ -26,7 +26,7 @@ const getTeachers = (participants) => {
   var teachers = []
   
   participants.forEach(p => {
-    if (p.isTeacher == true) teachers.push({ name: p.name })
+    if (p.isTeacher == true) teachers.push({ name: p.name, id: p.id, role: p.role})
   })
   
   return teachers
@@ -35,7 +35,55 @@ const getTeachers = (participants) => {
 
 export default function Course(props) {
   const courseID = useLocation().pathname.split('/')[2]
-  const [course] = createResource(async () => getCourseInformation(courseID))
+  // const [course] = createResource(async () => getCourseInformation(courseID))
+  const course = () => ({
+    name: "Baze Podataka",
+    about: "Kurs o bazama podataka",
+    id: "2261",
+    password: "testpass",
+    ownerID: "1",
+    participants: [
+      { name: "p1", id: "1", isTeacher: true, role: "student" },
+      { name: "p1", id: "1", isTeacher: true, role: "student" },
+      { name: "p1", id: "1", isTeacher: true, role: "student" },
+      { name: "p1", id: "1", isTeacher: true, role: "student" },
+      { name: "p1", id: "1", isTeacher: true, role: "student" },
+      { name: "p1", id: "1", isTeacher: true, role: "student" },
+    ],
+    posts: [
+      {
+        id: "1",
+        title: "title1",
+        author: { id: "1", username: "p2" },
+        body: "some body lorem ipsum dolor sit amet",
+        liked: "1"
+      },{
+        id: "1",
+        title: "title1",
+        author: { id: "1", username: "p2" },
+        body: "some body lorem ipsum dolor sit amet",
+        liked: "1"
+      },{
+        id: "1",
+        title: "title1",
+        author: { id: "1", username: "p2" },
+        body: "some body lorem ipsum dolor sit amet",
+        liked: "1"
+      },{
+        id: "1",
+        title: "title1",
+        author: { id: "1", username: "p2" },
+        body: "some body lorem ipsum dolor sit amet",
+        liked: "1"
+      },{
+        id: "1",
+        title: "title1",
+        author: { id: "1", username: "p2" },
+        body: "some body lorem ipsum dolor sit amet",
+        liked: "1"
+      },
+    ]
+  })
   
   const isOwner = () => course().ownerID == userDetails.id;
   
@@ -67,93 +115,109 @@ export default function Course(props) {
   
   return (
     <div class="max-w-screen-xl mx-auto mt-8">
-      <Stack direction="row">
-        <Container class="mt-2 pt-1">
-          <Stack direction="column" spacing={2}>
+      <div class="flex flex-row justify-evenly">
+        <div class="mt-2 pt-1 pr-8" style={{width: '48%'}}>
+          <div class="flex flex-col gap-3">
+            <div>
               <CourseCard
                 name={course().name}
                 about={course().about}
-                style={"border-2 border-accent-700 rounded-lg max-w-2 py-3"}
-              />
-              
-            <Show when={isOwner()} class="py-2">
+                style={"border-2 border-accent-700 rounded-lg py-3"}
+                />
+            </div>
+            
+            <Stack
+              class="justify-around"
+              direction="row"
+              spacing={2}
+            >
               <Button
                 color="pmsScheme"
                 class="h-auto"
-                onClick={editDialogHandler}
+                onClick={() => {console.log('placeholder')}}
               >
-                Edit course
+                Unenroll placeholder
               </Button>
               
-              <Dialog open={editDialogOpen()} class="bg-primary-300 bg-opacity-50">
-                <DialogTitle>{course().name}</DialogTitle>
+              <Show when={isOwner()} class="py-2">
+                <Button
+                  color="pmsScheme"
+                  class="h-auto"
+                  onClick={editDialogHandler}
+                  >
+                  Edit course
+                </Button>
                 
-                <DialogContent>
-                  <Stack direction="column" gap={2}>
-                    <Input 
-                      placeholder={courseName()}
-                      type="text"
-                      id="nameInput"
-                    />
-                    
-                    <Input 
-                      placeholder="New password..."
-                      type="text"
-                      id="passwordInput"
-                    />
-                    
-                    <Input 
-                      placeholder="Confirm password..."
-                      type="text"
-                      id="passwordConfirmInput"
-                    />
-                    
-                    <KickParticipantField
-                      courseID={courseID}
-                      users={course().participants}
-                    />
-                    
-                    <AddTeachersField
-                      courseID={courseID}
-                    />
-                    
-                    <RemoveTeachersField
-                      courseID={courseID}
-                      teachers={getTeachers(course().participants)}
-                    />
-                    
-                    <Stack
-                      direction="row"
-                      spacing={2}
-                      class="flex flex-row items-center justify-center"
-                    >
-                      <Button
-                        color="monochrome"
-                        onClick={() =>
-                          {
-                            submitCourseChanges({
-                              name: courseName(),
-                              password1: coursePassword(),
-                              password2: coursePasswordConfirm()
-                            })
-                          }
-                        }
-                      >
-                        Confirm
-                      </Button>
+                <Dialog open={editDialogOpen()} class="bg-primary-300 bg-opacity-50">
+                  <DialogTitle>{course().name}</DialogTitle>
+                  
+                  <DialogContent>
+                    <Stack direction="column" gap={2}>
+                      <Input 
+                        placeholder={courseName()}
+                        type="text"
+                        id="nameInput"
+                        />
                       
-                      <Button
-                        color="monochrome"
-                        onClick={editDialogHandler}
+                      <Input 
+                        
+                        placeholder="New password..."
+                        type="text"
+                        id="passwordInput"
+                      />
+                      
+                      <Input 
+                        placeholder="Confirm password..."
+                        type="text"
+                        id="passwordConfirmInput"
+                      />
+                      
+                      <KickParticipantField
+                        courseID={courseID}
+                        users={course().participants}
+                      />
+                      
+                      <AddTeachersField
+                        courseID={courseID}
+                      />
+                      
+                      <RemoveTeachersField
+                        courseID={courseID}
+                        teachers={getTeachers(course().participants)}
+                      />
+                      
+                      <Stack
+                        direction="row"
+                        spacing={2}
+                        class="flex flex-row items-center justify-center"
                       >
-                        Close
-                      </Button>
+                        <Button
+                          color="monochrome"
+                          onClick={() =>
+                            {
+                              submitCourseChanges({
+                                name: courseName(),
+                                password1: coursePassword(),
+                                password2: coursePasswordConfirm()
+                              })
+                            }
+                          }
+                        >
+                          Confirm
+                        </Button>
+                        
+                        <Button
+                          color="monochrome"
+                          onClick={editDialogHandler}
+                        >
+                          Close
+                        </Button>
+                      </Stack>
                     </Stack>
-                  </Stack>
-                </DialogContent>
-              </Dialog>
-            </Show>
-            
+                  </DialogContent>
+                </Dialog>
+              </Show>
+            </Stack>
             <div class="border-2 border-accent-700 pr-2 py-2 my-2 rounded-lg">
               <p class="text-medium flex flex-row items-center justify-center pb-2"> Teachers </p>
               <hr class="separator w-2/3 mx-auto opacity-75 pb-3" />
@@ -177,15 +241,16 @@ export default function Course(props) {
                   />
               </div>
             </div>
-          </Stack>
-        </Container>
-      
-        <PostList
-          posts={course().posts}
-          style=""
-          cardStyle="border-2 border-accent-700 rounded-lg my-3"
-        />
-      </Stack>
+          </div>
+        </div>
+        
+        <div style={{width: "100%"}}>
+          <PostList
+            // class="w-full"
+            data={course().posts}
+            />
+        </div>
+      </div>
     </div>
   )
 }

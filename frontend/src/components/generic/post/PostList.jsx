@@ -1,20 +1,14 @@
-import PostCard from "./PostCard";
-import { Container } from "@suid/material"
+import {For} from "solid-js"
+import PostCard from "./PostCard"
 
-export default function PostList(props) {
+export default function PostList(props){
   return (
-    <Container class={props?.style}>
-      <For each={props?.posts}>
+    <div class="grid grid-cols-1 gap-3 bg-primary-900 mt-3 h-full">
+      <For each={props.data}>
         {
-          (post) =>
-          <PostCard
-            title={post.title}
-            postedBy={post.postedBy}
-            content={post.content}
-            style={props.cardStyle}  
-          />
+          (post) => (<PostCard data={post} />)
         }
       </For>
-    </Container>
+    </div>
   )
 }
