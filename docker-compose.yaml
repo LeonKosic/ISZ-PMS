@@ -1,7 +1,6 @@
 version: '3.8'
 services:
   database:
-    command: --default-authentication-plugin=mysql_native_password
     image: mysql:latest
     ports:
       - "3308:3306"
@@ -37,3 +36,7 @@ services:
       VITE_API_HOST: ${API_HOST}
     depends_on:
       - api
+  filesystem:
+    build: "./filesystem"
+    ports:
+    - "7070:7070"

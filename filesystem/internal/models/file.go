@@ -1,8 +1,10 @@
 package models
 
 type File struct {
-	Id      int
-	Creator int
-	Name    string
-	Path    string
+	Fieldname    string `json:"fieldname"`
+	Originalname string `json:"originalname"`
+	Encoding     string `json:"encoding"`
+	Mimetype     string `json:"mimetype"`
+	Buffer       []byte `json:"buffer"`
+	Size         int    `json:"size"`
 }
