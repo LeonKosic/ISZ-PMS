@@ -1,4 +1,4 @@
-FROM golang:1.22.2
+FROM golang:1.22.2-alpine3.19 as builder
 
 RUN apk add git
 
@@ -26,7 +26,7 @@ RUN mkdir /fs
 
 WORKDIR /fs
 
-COPY --from=builder /app/main .
+COPY --from=builder /fs/main .
 
 EXPOSE 7070
 
