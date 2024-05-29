@@ -3,6 +3,7 @@ import {db} from '../db/db.js';
 import {users} from '../db/schema/users.js';
 import bodyParser from 'body-parser';
 import multer from 'multer';
+import axios from 'axios';
 
 const router = express.Router();
 const jsonParser = bodyParser.json()
@@ -17,6 +18,7 @@ router.get('/', async (req, res, next) => {
 router.post("/", jsonParser,upload.any(), async (req, res, next)=>{
   console.log(req.body)
   console.log(req.files)
+  axios.post("http://localhost:7070/upload", req.files)
   if(req.body.idk == "hello"){
     res.status(200).send("hello world")
   }
