@@ -28,7 +28,7 @@ func RunServer() {
 	})
 	mux.HandleFunc("POST /upload", uploadFile)
 	c := cors.New(cors.Options{
-		AllowedOrigins:   []string{cfg.Host},
+		AllowedOrigins:   []string{"*"},
 		AllowedHeaders:   []string{"*"},
 		AllowCredentials: true,
 		Debug:            true,
