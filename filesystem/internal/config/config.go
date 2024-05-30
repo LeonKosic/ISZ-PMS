@@ -7,7 +7,7 @@ type Config struct {
 
 func DefaultConfig() *Config {
 	return &Config{
-		Host: "PMS",
+		Host: "localhost",
 		Port: ":7070",
 	}
 }

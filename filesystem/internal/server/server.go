@@ -20,15 +20,16 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func RunServer(api string, port string) {
+func RunServer() {
 	cfg := config.DefaultConfig()
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "TEST")
 	})
-	mux.HandleFunc("POST /upload/", uploadFile)
+	mux.HandleFunc("POST /upload", uploadFile)
 	c := cors.New(cors.Options{
 		AllowedOrigins:   []string{cfg.Host},
+		AllowedHeaders:   []string{"*"},
 		AllowCredentials: true,
 		Debug:            true,
 	})
