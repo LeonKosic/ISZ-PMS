@@ -1,13 +1,16 @@
 import { createSignal } from "solid-js";
-import { A } from "@solidjs/router";
+import { A, useNavigate } from "@solidjs/router";
+import api from "../api/api"
 
 export default function RegisterPage() {
   const [formData, setFormData] = createSignal({ username: "", email: "", password: "", name: "", surname: "" });
+  const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const { username, email, password, name, surname } = formData();
-    // Registration logic here
+    api.post("/users/register", { username, email, password, name, surname })
+    navigate("/login");
   };
 
   return (
