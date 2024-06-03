@@ -9,12 +9,14 @@
     "all": "run-p jsonserver dev"
   },
   "dependencies": {
-    "@solidjs/router": "^0.13.1",
+    "@solidjs/router": "^0.13.3",
+    "@soorria/solid-dropzone": "^1.0.0",
     "@suid/icons-material": "^0.7.0",
     "@suid/material": "^0.16.0",
     "@suid/vite-plugin": "^0.2.0",
     "autoprefixer": "^10.4.14",
     "axios": "^1.6.8",
+    "jwt-decode": "^4.0.0",
     "postcss": "^8.4.26",
     "solid-js": "^1.8.16",
     "tailwindcss": "^3.3.3",
