@@ -1,9 +1,9 @@
-import ProfileActivityCard from "~/components/profile/ProfileActivityCard";
-import ProfileHeader from "~/components/profile/ProfileHeader";
-import ProfileProjectBanner from "~/components/profile/ProfileProjectBanner";
-import ProfileRepositoryBanner from "~/components/profile/ProfileRepositoryBanner";
+import ProfileActivityCard from "../components/profile/ProfileActivityCard";
+import ProfileHeader from "../components/profile/ProfileHeader";
+import ProfileProjectBanner from "../components/profile/ProfileProjectBanner";
+import ProfileRepositoryBanner from "../components/profile/ProfileRepositoryBanner";
 
-import api from "~/api/api";
+import api from "../api/api";
 import { Show, Suspense, createResource } from "solid-js";
 import { A, useLocation } from "@solidjs/router";
 
