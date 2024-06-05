@@ -2,22 +2,30 @@ package server
 
 import (
 	"fmt"
+	"io"
 	"net/http"
+	"os"
 	"pms/filesystem/internal/config"
-
-	"github.com/rs/cors"
 )
 
 func uploadFile(w http.ResponseWriter, r *http.Request) {
-	r.ParseMultipartForm(5 << 20) //5MB
-	multipartFormData := r.MultipartForm
 
-	for _, v := range multipartFormData.File["attachments"] {
-		fmt.Println(v.Filename, ":", v.Size)
-		uploadedFile, _ := v.Open()
-		uploadedFile.Read([]byte{})
-		uploadedFile.Close()
+	//r.ParseMultipartForm(5 << 20) //5MB
+	//multipartFormData := r.MultipartForm
+	//fmt.Fprint(w, multipartFormData)
+	//	for _, v := range multipartFormData.File["attachments"] {
+	//		fmt.Println(v.Filename, ":", v.Size)
+	//		uploadedFile, _ := v.Open()
+	//		uploadedFile.Read([]byte{})
+	//		uploadedFile.Close()
+	//	}
+	bytedata, err := io.ReadAll(r.Body)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, err.Error())
 	}
+	reqBodyString := string(bytedata)
+	os.Stderr.WriteString(reqBodyString)
+	fmt.Fprintf(w, reqBodyString)
 }
 
 func RunServer() {
@@ -27,13 +35,13 @@ func RunServer() {
 		fmt.Fprintf(w, "TEST")
 	})
 	mux.HandleFunc("POST /upload", uploadFile)
-	c := cors.New(cors.Options{
-		AllowedOrigins:   []string{"*"},
-		AllowedHeaders:   []string{"*"},
-		AllowCredentials: true,
-		Debug:            true,
-	})
-
-	handler := c.Handler(mux)
-	http.ListenAndServe(cfg.Port, handler)
+	//c := cors.New(cors.Options{
+	//	AllowedOrigins:   []string{"*"},
+	//	AllowedHeaders:   []string{"*"},
+	//	AllowCredentials: true,
+	//	Debug:            true,
+	//})
+	//handler := c.Handler(mux)
+	//http.ListenAndServe(cfg.Port, handler)
+	http.ListenAndServe(cfg.Port, mux)
 }

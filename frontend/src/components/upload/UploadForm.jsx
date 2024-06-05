@@ -50,7 +50,7 @@ export default function UploadForm(props) {
         <form id="uploadForm" encType="multipart/form-data">
           <input id="uploadInput" type="file" multiple onChange={updateFileList} />
           <Button
-            type="submit"
+            type="button"
             variant="contained"
             onClick={() => uploadFiles(files())}
             >
