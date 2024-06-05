@@ -8,9 +8,12 @@ import FileList from "../components/generic/file/FileList"
 import ProjectMaintainers from "../components/project/ProjectMaintainers"
 import ProjectOwner from "../components/project/ProjectOwner"
 import { projectInfo } from "../assets/projectContent"
+import { createStore } from "solid-js/store"
 
 
 let projectID;
+
+export const [currentPath] = createStore('');
 
 const getProjectInfo = async () => {
   const response = await api.get(`/projects/${projectID}`)
@@ -32,8 +35,7 @@ export default function Project(props) {
   }})
   
   const onDrop = async (acceptedFiles) => {
-    console.log(acceptedFiles)
-    return await api.upload(`/upload/projects/${projectID}`)
+    return await api.upload(`/upload/projects/${projectID}`, {files: acceptedFiles, currentPath: })
   }
   
   const dropzone = createDropzone({ onDrop })

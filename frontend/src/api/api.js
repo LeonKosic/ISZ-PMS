@@ -57,16 +57,28 @@ const api = {
       });
   },
 
-  upload: async (url, files) => {
+  upload: async (url, payload) => {
     // files: dropzone-provided
-    return await axios.post(url, files, {
-      ...defaultConfig,
-      headers: {
-        ...defaultConfig.headers,
-        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-        "Content-Type": "multipart/form-data"
+    var formData = new FormData();
+    Array.from(payload.files).forEach((file, index) => {
+      formData.append(index, file);
+    });
+
+
+    return await axios.post(url,
+      {
+        data: formData,
+        currentPath: payload.currentPath
+      },
+      {
+        ...defaultConfig,
+        headers: {
+          ...defaultConfig.headers,
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          "Content-Type": "multipart/form-data"
+        }
       }
-    })
+    )
   },
 
   // payload => {username, login}
