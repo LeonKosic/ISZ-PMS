@@ -6,27 +6,27 @@ import { isReadable } from "../../../assets/readableMIMETypes";
 import { mockApi } from "../../../assets/mockApi";
 
 // da ne koristim window.location.href mrtvi
-let currentPath = '';
+const [currentPath, setCurrentPath] = createSignal('');
 
 const directoryContent = async (dirname) => {
-  const data = await mockApi.get(`${currentPath}/${dirname}/`)
-  console.log(data.files)
-  return data.files
+  return await mockApi.get(`${currentPath()}/${dirname}/`)
   // return await api.get(`${currentPath}/${dirname}/`).data
 } 
 
 export default function FileList(props) {
   const [rootPath, _] = createSignal(useLocation().pathname);
-  currentPath = rootPath()
+  const [activeData, setActiveData] = createSignal(props.data)
+  
+  setCurrentPath(rootPath())
   
   return (
     <div>
-      <Show when={currentPath != rootPath()}>
+      <Show when={currentPath() != rootPath()}>
         <div
           class="pl-4 pr-4 py-2 rounded-xl mb-2 block w-28 hover:cursor-pointer hover:bg-accent-600 bg-opacity-5 duration-500"
           onClick={() => {
-            const previousURL = currentPath.substring(0, currentPath.lastIndexOf('/'));
-            window.location.replace(previousURL)
+            const previousURL = currentPath().substring(0, currentPath().lastIndexOf('/'));
+            setCurrentPath(previousURL)
           }}
           >
           <p class="text-lg italic text-accent-300">
@@ -35,7 +35,7 @@ export default function FileList(props) {
         </div>
       </Show>
       <hr class="w-full mb-1 border-accent-600 "/>
-      <For each={props.data}>
+      <For each={activeData()}>
         {
           (file) =>
             <div class="cursor-pointer">
@@ -46,7 +46,7 @@ export default function FileList(props) {
                   if (file.isDirectory) {
                     // replace contents of current FileList.props.data with the result
                     props.data = directoryContent(file.name);
-                    currentPath = `${currentPath}/${file.name}`
+                    setCurrentPath(`${currentPath()}/${file.name}`)
                   }
                   
                   else if (isReadable(file.mimeType)) {
@@ -55,7 +55,7 @@ export default function FileList(props) {
                     // kako?
                   }
                   
-                  else api.download(`${currentPath}/${file.name}`)
+                  else api.download(`${currentPath()}/${file.name}`)
                 }}
                 />
             </div>

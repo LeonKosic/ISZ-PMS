@@ -21,7 +21,6 @@ export default function Project(props) {
   projectID = useLocation().pathname.split('/')[2];
   // const [projectInfo] = createResource(getProjectInfo)
   
-  
   const sortedFiles = projectInfo().files.sort((a, b) => {{
     if (a.isDirectory && !b.isDirectory) {
       return -1;
