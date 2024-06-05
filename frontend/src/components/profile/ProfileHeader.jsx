@@ -6,7 +6,6 @@ export default function ProfileHeader(props) {
     name: '<no-name>',
     role: '<no-role>',
     bio: '<no-bio>',
-    avatarUrl: '../../public/avatar.png'
   }
   
   props = mergeProps(defaultProps, props)
@@ -15,25 +14,14 @@ export default function ProfileHeader(props) {
     props.bio = props.bio.substring(0, 100) + '...'
   
   return (
-    <div class="header inset-padding">
-      {/* Slika/container se mora izobliciti nekako kada tekst u .biography overflowuje */}
-      <img class="avatar" src={props.avatarUrl} />
-    
-      <div class="basic-description">
-        <div class="username text-medium">
-          {props.username}
+    <div class="border-2 rounded-lg p-4 w-full mx-auto">
+      <div>
+        <div class="text-3xl pb-2 flex flex-auto items-center justify-center">
+          {props.username} | {props.name}
         </div>
         
-        <div class="full-name text-huge">
-          {props.name}
-        </div>
-        
-        <div class="role text-big">
-          {props.role}
-        </div>
-        
-        <div class="biography text-medium">
-          {props.bio}
+        <div class="text-lg flex flex-auto items-center justify-center">
+          {props.role} | {props.bio}
         </div>
       </div>
     </div>
