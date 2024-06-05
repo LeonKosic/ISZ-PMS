@@ -9,7 +9,6 @@ import { useLocation } from "@solidjs/router";
 export default function Profile(props) {
   const [user] = createResource(async () => {
     const id = useLocation().pathname.split('/')[2];
-    console.log(id);
     const response = await api.get(`/users/${id}`);
     return response.data;
   });
