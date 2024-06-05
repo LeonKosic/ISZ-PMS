@@ -106,12 +106,11 @@ services:
       return 1;
     }
     return 0;
-  }})
+  }})  
   
   const onDrop = async (acceptedFiles) => {
     console.log(acceptedFiles)
-    return await axios.post("http://localhost:3001/",acceptedFiles)
-    //return await api.upload(`/upload/projects/${projectID}`)
+    return await api.upload("http://localhost:3001/",acceptedFiles)
   }
   
   const dropzone = createDropzone({ onDrop })
