@@ -9,3 +9,9 @@ export const [userDetails, setUserDetails] = createStore({
 export const [currentPathStore, setCurrentPathStore] = createStore({
   path: ''
 });
+
+export const [selectedFile, setSelectedFile] = createStore({
+  name: '',
+  data: '',
+  hidden: true
+})

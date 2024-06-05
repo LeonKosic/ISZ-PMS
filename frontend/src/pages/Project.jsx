@@ -8,9 +8,10 @@ import ProjectOwner from "../components/project/ProjectOwner"
 import api from "../api/api"
 import sortFiles from "../components/generic/file/sortFiles"
 
+
 // mock/test data
 import { projectInfo } from "../assets/projectContent"
-import { currentPathStore } from "../api/stores"
+import { currentPathStore, selectedFile, setSelectedFile } from "../api/stores"
 
 
 let projectID;
@@ -54,6 +55,23 @@ export default function Project(props) {
             </div>
           </div>
           
+          {/* file content display */}
+          <Show when={!selectedFile.hidden}>
+            <div class="relative h-auto border-2 border-accent-600 rounded-xl p-4 mb-4">
+              <div class="pb-2">
+                <div
+                  class="absolute right-0 top-0 m-3 mr-3 pl-2 pr-2 py-1 hover:bg-accent-700 bg-opacity-25 rounded-lg duration-500 hover:cursor-pointer"
+                  onClick={() => { setSelectedFile("hidden", true) }}
+                >
+                  <i class="fa-solid fa-x"/>
+                </div>
+                <p class="text-xl">Displaying contents of {selectedFile.name}</p>
+              </div>
+              <hr/>
+              <code>{selectedFile.data}</code>
+            </div>
+          </Show>
+          
           {/* project files */}
           <div class="h-auto border-2 border-accent-600 rounded-xl p-4">
             <FileList
@@ -81,6 +99,11 @@ export default function Project(props) {
             <p>
               {projectInfo().about}
             </p>
+          </div>
+          
+          {/* messageboard */}
+          <div class="border-2 border-accent-600 rounded-xl h-auto p-4 mt-2">
+            {/* PostList */}
           </div>
         </div>
       </div>     
