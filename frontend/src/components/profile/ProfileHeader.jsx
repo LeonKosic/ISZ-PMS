@@ -14,7 +14,7 @@ export default function ProfileHeader(props) {
     props.bio = props.bio.substring(0, 100) + '...'
   
   return (
-    <div class="border-2 rounded-lg p-4 w-full mx-auto">
+    <div class="border-2 rounded-lg border-accent-600 p-4 w-full mx-auto">
       <div>
         <div class="text-3xl pb-2 flex flex-auto items-center justify-center">
           {props.username} | {props.name}

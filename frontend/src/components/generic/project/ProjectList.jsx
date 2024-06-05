@@ -1,4 +1,5 @@
 import { For, mergeProps } from "solid-js";
+import ProjectCard from "./ProjectCard";
 
 export default function ProjectList(props) {
   const merged = mergeProps({
@@ -11,9 +12,7 @@ export default function ProjectList(props) {
         {
           (project) =>
             <ProjectCard
-              title={project.name}
-              projectname={project.projectname}
-              role={project.role}
+              title={project.title}
               projectid={project.id}
               
               clickAction={merged.cardClickAction}
@@ -21,7 +20,6 @@ export default function ProjectList(props) {
               cardStyle={props.cardStyle}
               highlightCard={props.highlightCard}
               highlightColor={props.highlightColor}
-              useMaxWidth={props.cardUseMaxWidth}
             />
         }
       </For>
