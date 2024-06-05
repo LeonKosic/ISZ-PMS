@@ -2,7 +2,7 @@ import { useLocation } from "@solidjs/router"
 import { Box, Container, Stack } from "@suid/material"
 import { For, createResource } from "solid-js"
 import api from "../api/api"
-
+import axios from "axios";
 import { createDropzone } from "@soorria/solid-dropzone"
 import FileList from "../components/generic/file/FileList"
 import ProjectMaintainers from "../components/project/ProjectMaintainers"
@@ -110,7 +110,8 @@ services:
   
   const onDrop = async (acceptedFiles) => {
     console.log(acceptedFiles)
-    return await api.upload(`/upload/projects/${projectID}`)
+    return await axios.post("http://localhost:3001/",acceptedFiles) //TODO REMOVE, TESTING
+    //return await api.upload(`/upload/projects/${projectID}`)
   }
   
   const dropzone = createDropzone({ onDrop })
