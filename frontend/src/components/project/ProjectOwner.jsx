@@ -1,4 +1,4 @@
-import UserList from "../generic/file/user/UserList";
+import UserList from "../generic/user/UserList";
 
 export default function ProjectOwner(props) {
   return (

@@ -9,12 +9,10 @@ export default function FileCard(props) {
   }, props)
   
   let iconType;
-  if (props.type === "dir")
+  if (props.isDirectory)
     iconType = "fa-solid fa-folder"
-  else if (props.type === "file")
+  else
     iconType = "fa-solid fa-file"
-  else if (props.type === "img") 
-    iconType = "fa-solid fa-image"
   
   return (
     <div>

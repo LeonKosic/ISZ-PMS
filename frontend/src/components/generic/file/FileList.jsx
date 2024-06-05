@@ -1,13 +1,21 @@
 import { For, createSignal } from "solid-js";
 import FileCard from "./FileCard";
 import { Dialog, DialogTitle, DialogContent, Container, Button } from "@suid/material";
+import { useLocation } from "@solidjs/router";
+import api from "../../../api/api";
 
 const [open, setOpen] = createSignal(false)
 const [activeFile, setActiveFile] = createSignal({})
 const dialogHandler = () => { setOpen(!open()) }
 
+const directoryContent = async (dirname) => {
+  // replace contents of current FileList.props.data with the result
+  return await api.get(`${useLocation().pathname}/${dirname}/`).data
+} 
 
 export default function FileList(props) {
+  const [currentPath, setCurrentPath] = createSignal(useLocation().pathname);
+  
   return (
     <div>
       <hr class="w-full mb-1 border-accent-600 "/>
@@ -16,24 +24,16 @@ export default function FileList(props) {
           (file) =>
             <div class="cursor-pointer">
               <FileCard
-                type={file.type}
+                isDirectory={file.isDirectory}
                 name={file.name}
                 onClick={() => {
-                  if (file.type === 'dir')
-                    // TODO: redirect? folderi?
-                    console.log("directory - open in another folder")
-                  else if (file.readable) {
-                    dialogHandler()
-                    setActiveFile(file)
-                  } else {
-                    // TODO: download file? odakle?
-                    let a = document.createElement('a');
-                    a.href = file.url;
-                    a.download = file.name;
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a)
+                  // if isDirectory: navigate
+                  if (file.isDirectory) {
+                    props.data = directoryContent(file.name);
+                    setCurrentPath(`${currentPath()}/${file.name}`)
                   }
+                  // else if isReadable(mimeType) == true: view
+                  // else: download
                 }}
                 />
             </div>

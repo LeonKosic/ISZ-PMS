@@ -34,75 +34,24 @@ export default function Project(props) {
       { id: "5", username: "testuser5", name: "fullname5" },
     ],
     files: [
-      { name: "dir1", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "dir" },
-      { name: "file2.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "file" },
-      { name: "file3.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "file" },
-      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "file" },
-      { name: "dir2", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "dir" },
-      { name: "docker_compose.yaml", data: `version: '3.8'
-services:
-  database:
-    image: mysql:latest
-    ports:
-      - "3308:3306"
-    expose:
-      - 3306
-    volumes:
-      - ./database:/var/lib/mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: test
-      MYSQL_DATABASE: test
-  api:
-    build: "./api"
-    depends_on:
-      - database
-    restart: always
-    ports:
-      - "3001:3000"
-    environment:
-      DB_HOST: test
-      DB_PORT: test
-      DB_USER: test
-      DB_PASSWORD: test
-      DB_NAME: test 
-      JWT_KEY: test
-  frontend:
-    build: "./frontend"
-    ports:
-      - "3000:3000"
-      
-      # To avoid the infinite HMR error in console
-      - "3003:3000"
-    environment:
-      VITE_API_HOST: test
-    depends_on:
-      - api`, type: "file"
-      },
-      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "file" },
-      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "file" },
-      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "file" },
-      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "file" },
-      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "file" },
-      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "file" },
-      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "file" },
-      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "file" },
-      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "file" },
-      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "file" },
-      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "file" },
-      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "file" },
-      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "file" },
-      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "file" },
-      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "file" },
-      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "file" },
-                                                                                                            { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "file" },
+      { name: "dir1", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", isDirectory: true },
+      { name: "file2.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", isDirectory: false },
+      { name: "file3.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", isDirectory: false },
+      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", isDirectory: false },
+      { name: "dir2", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", isDirectory: true },
+      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", isDirectory: false },
+      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", isDirectory: false },
+      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", isDirectory: false },
+      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", isDirectory: false },
+      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", isDirectory: false },
     ]
   })
   
   const sortedFiles = projectInfo().files.sort((a, b) => {{
-    if (a.type === 'dir' && b.type !== 'dir') {
+    if (a.isDirectory && !b.isDirectory) {
       return -1;
     }
-    if (a.type !== 'dir' && b.type === 'dir') {
+    if (!a.isDirectory && b.isDirectory) {
       return 1;
     }
     return 0;
