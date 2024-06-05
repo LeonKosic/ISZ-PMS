@@ -4,29 +4,58 @@ import { useLocation } from "@solidjs/router";
 import api from "../../../api/api";
 import { isReadable } from "../../../assets/readableMIMETypes";
 import { mockApi } from "../../../assets/mockApi";
+import sortFiles from "./sortFiles";
+import { currentPathStore, setCurrentPathStore } from "../../../api/stores";
 
-// da ne koristim window.location.href mrtvi
-const [currentPath, setCurrentPath] = createSignal('');
+// sadrzaj trenutnog direktorijuma
+const [activeData, setActiveData] = createSignal([]);
 
-const directoryContent = async (dirname) => {
-  return await mockApi.get(`${currentPath()}/${dirname}/`)
-  // return await api.get(`${currentPath}/${dirname}/`).data
-} 
+// sadrzaj otvorenog fajla
+const [selectedFile, setSelectedFile] = createSignal(null);
+
+const getDirectoryContent = async (dirpath) => {
+  const dirInfo = await mockApi.get(dirpath)
+  return dirInfo.files;
+}
+
+const updateCurrentPath = (path) => {
+  setCurrentPathStore("path", path);
+}
+
+const updateActiveData = (dirData) => {
+  dirData = sortFiles(dirData)
+  setActiveData(dirData)
+}
+
 
 export default function FileList(props) {
-  const [rootPath, _] = createSignal(useLocation().pathname);
-  const [activeData, setActiveData] = createSignal(props.data)
+  const [rootPath, _] = createSignal(
+    useLocation().pathname.endsWith('/')
+      ? useLocation().pathname.substring(0, useLocation().pathname.length - 1)
+      : useLocation().pathname);
   
-  setCurrentPath(rootPath())
+  setActiveData(props.data)
+  setCurrentPathStore("path", rootPath())
   
   return (
     <div>
-      <Show when={currentPath() != rootPath()}>
+      <div>
+        <Show when={selectedFile() != null}>
+          <p>Displaying contents of {selectedFile().name}</p>
+          <hr/>
+          <code>{selectedFile().originalname}</code>
+        </Show>
+      </div>
+      
+      <Show when={currentPathStore.path != rootPath()}>
         <div
           class="pl-4 pr-4 py-2 rounded-xl mb-2 block w-28 hover:cursor-pointer hover:bg-accent-600 bg-opacity-5 duration-500"
-          onClick={() => {
-            const previousURL = currentPath().substring(0, currentPath().lastIndexOf('/'));
-            setCurrentPath(previousURL)
+          onClick={async () => {
+            const previousURL = currentPathStore.path.substring(0, currentPathStore.path.lastIndexOf('/'));
+            updateCurrentPath(previousURL)
+            
+            const data = await getDirectoryContent(previousURL)
+            updateActiveData(data)
           }}
           >
           <p class="text-lg italic text-accent-300">
@@ -42,20 +71,20 @@ export default function FileList(props) {
               <FileCard
                 isDirectory={file.isDirectory}
                 name={file.name}
-                onClick={() => {
+                onClick={async () => {
                   if (file.isDirectory) {
-                    // replace contents of current FileList.props.data with the result
-                    props.data = directoryContent(file.name);
-                    setCurrentPath(`${currentPath()}/${file.name}`)
+                    const targetPath = `${currentPathStore.path}/${file.name}`
+                    updateCurrentPath(targetPath)
+                    
+                    const data = await getDirectoryContent(targetPath)
+                    updateActiveData(data)
                   }
                   
                   else if (isReadable(file.mimeType)) {
-                    // 1. redirect to a display page with the provided content
-                    // 2. display the file content
-                    // kako?
+                    setSelectedFile(file)
                   }
                   
-                  else api.download(`${currentPath()}/${file.name}`)
+                  else api.download(`${currentPathStore.path}/${file.name}`)
                 }}
                 />
             </div>

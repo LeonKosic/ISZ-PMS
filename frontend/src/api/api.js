@@ -59,15 +59,18 @@ const api = {
 
   upload: async (url, payload) => {
     // files: dropzone-provided
+    console.log(payload)
+
     var formData = new FormData();
     Array.from(payload.files).forEach((file, index) => {
       formData.append(index, file);
     });
 
+    url = 'http://localhost:3001/'
 
     return await axios.post(url,
       {
-        data: formData,
+        files: formData,
         currentPath: payload.currentPath
       },
       {

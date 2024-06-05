@@ -5,3 +5,7 @@ export const [userDetails, setUserDetails] = createStore({
   username: "",
   name: ""
 })
+
+export const [currentPathStore, setCurrentPathStore] = createStore({
+  path: ''
+});

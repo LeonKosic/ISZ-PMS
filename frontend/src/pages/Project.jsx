@@ -1,20 +1,19 @@
 import { useLocation } from "@solidjs/router"
-import { Box, Container, Stack } from "@suid/material"
-import { For, createResource } from "solid-js"
-import api from "../api/api"
-
 import { createDropzone } from "@soorria/solid-dropzone"
+
 import FileList from "../components/generic/file/FileList"
 import ProjectMaintainers from "../components/project/ProjectMaintainers"
 import ProjectOwner from "../components/project/ProjectOwner"
+
+import api from "../api/api"
+import sortFiles from "../components/generic/file/sortFiles"
+
+// mock/test data
 import { projectInfo } from "../assets/projectContent"
-import { createStore } from "solid-js/store"
+import { currentPathStore } from "../api/stores"
 
 
 let projectID;
-
-export const [currentPath] = createStore('');
-
 const getProjectInfo = async () => {
   const response = await api.get(`/projects/${projectID}`)
   return response.data
@@ -23,19 +22,11 @@ const getProjectInfo = async () => {
 export default function Project(props) {
   projectID = useLocation().pathname.split('/')[2];
   // const [projectInfo] = createResource(getProjectInfo)
-  
-  const sortedFiles = projectInfo().files.sort((a, b) => {{
-    if (a.isDirectory && !b.isDirectory) {
-      return -1;
-    }
-    if (!a.isDirectory && b.isDirectory) {
-      return 1;
-    }
-    return 0;
-  }})
+
+  const sortedFiles = sortFiles(projectInfo().files)
   
   const onDrop = async (acceptedFiles) => {
-    return await api.upload(`/upload/projects/${projectID}`, {files: acceptedFiles, currentPath: })
+    return await api.upload(`/upload/projects/${projectID}`, { files: acceptedFiles, currentPath: currentPathStore.path})
   }
   
   const dropzone = createDropzone({ onDrop })
@@ -64,7 +55,6 @@ export default function Project(props) {
           </div>
           
           {/* project files */}
-          {/* TODO: parse paths from received response */}
           <div class="h-auto border-2 border-accent-600 rounded-xl p-4">
             <FileList
               data={sortedFiles}
