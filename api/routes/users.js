@@ -193,5 +193,14 @@ router.put('/unfollow', jsonParser, authenticateToken, async (req, res) => {
   res.status(200).send({ message: "Unfollow." })
 })
 
+router.get("/:id", authenticateToken, async (req, res) => {
+  const user = await db.select().from(users).where(eq(users.id, req.params.id));
+  if (user.length <= 0) {
+    res.status(400).send({ err: "User does not exist." })
+    return
+  }
+  res.status(200).send(user[0])
+});
+
 
 export default router;
