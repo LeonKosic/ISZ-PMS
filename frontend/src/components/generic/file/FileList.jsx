@@ -1,23 +1,39 @@
 import { For, createSignal } from "solid-js";
 import FileCard from "./FileCard";
-import { Dialog, DialogTitle, DialogContent, Container, Button } from "@suid/material";
 import { useLocation } from "@solidjs/router";
 import api from "../../../api/api";
+import { isReadable } from "../../../assets/readableMIMETypes";
+import { mockApi } from "../../../assets/mockApi";
 
-const [open, setOpen] = createSignal(false)
-const [activeFile, setActiveFile] = createSignal({})
-const dialogHandler = () => { setOpen(!open()) }
+// da ne koristim window.location.href mrtvi
+let currentPath = '';
 
 const directoryContent = async (dirname) => {
-  // replace contents of current FileList.props.data with the result
-  return await api.get(`${useLocation().pathname}/${dirname}/`).data
+  const data = await mockApi.get(`${currentPath}/${dirname}/`)
+  console.log(data.files)
+  return data.files
+  // return await api.get(`${currentPath}/${dirname}/`).data
 } 
 
 export default function FileList(props) {
-  const [currentPath, setCurrentPath] = createSignal(useLocation().pathname);
+  const [rootPath, _] = createSignal(useLocation().pathname);
+  currentPath = rootPath()
   
   return (
     <div>
+      <Show when={currentPath != rootPath()}>
+        <div
+          class="pl-4 pr-4 py-2 rounded-xl mb-2 block w-28 hover:cursor-pointer hover:bg-accent-600 bg-opacity-5 duration-500"
+          onClick={() => {
+            const previousURL = currentPath.substring(0, currentPath.lastIndexOf('/'));
+            window.location.replace(previousURL)
+          }}
+          >
+          <p class="text-lg italic text-accent-300">
+            <i class="fa-solid fa-arrow-left mr-2"/> Back
+          </p>
+        </div>
+      </Show>
       <hr class="w-full mb-1 border-accent-600 "/>
       <For each={props.data}>
         {
@@ -27,43 +43,24 @@ export default function FileList(props) {
                 isDirectory={file.isDirectory}
                 name={file.name}
                 onClick={() => {
-                  // if isDirectory: navigate
                   if (file.isDirectory) {
+                    // replace contents of current FileList.props.data with the result
                     props.data = directoryContent(file.name);
-                    setCurrentPath(`${currentPath()}/${file.name}`)
+                    currentPath = `${currentPath}/${file.name}`
                   }
-                  // else if isReadable(mimeType) == true: view
-                  // else: download
+                  
+                  else if (isReadable(file.mimeType)) {
+                    // 1. redirect to a display page with the provided content
+                    // 2. display the file content
+                    // kako?
+                  }
+                  
+                  else api.download(`${currentPath}/${file.name}`)
                 }}
                 />
             </div>
         }
       </For>
-      
-      <Dialog
-        open={open()}
-        class="bg-primary-300 bg-opacity-50"
-      >
-        <DialogTitle>Contents of {activeFile().name}</DialogTitle>
-          <DialogContent>
-            <Container class="border-2 rounded-xl py-2 bg-accent-800 text-accent-200">
-              <code class="">
-                {activeFile().data}
-              </code>  
-            </Container>
-            
-          <div class="relative pt-4 pb-2">
-            <Button
-              class="absolute right-0 bottom-0"
-              variant="outlined"
-              color="monochrome"
-              onClick={dialogHandler}
-              >
-              Close
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   )
 }

@@ -7,6 +7,7 @@ import { createDropzone } from "@soorria/solid-dropzone"
 import FileList from "../components/generic/file/FileList"
 import ProjectMaintainers from "../components/project/ProjectMaintainers"
 import ProjectOwner from "../components/project/ProjectOwner"
+import { projectInfo } from "../assets/projectContent"
 
 
 let projectID;
@@ -19,33 +20,7 @@ const getProjectInfo = async () => {
 export default function Project(props) {
   projectID = useLocation().pathname.split('/')[2];
   // const [projectInfo] = createResource(getProjectInfo)
-  const projectInfo = () => ({
-    name: "Project Management System",
-    about: "Projektni zadatak iz inzenjeringa softverskih zahtjeva, project management service",
-    owner: {
-      id: "1",
-      username: "oggnjen",
-      name: "Ognjen Komadina"
-    },
-    collaborators: [
-      { id: "2", username: "testuser2", name: "fullname2" },
-      { id: "3", username: "testuser3", name: "fullname3" },
-      { id: "4", username: "testuser4", name: "fullname4" },
-      { id: "5", username: "testuser5", name: "fullname5" },
-    ],
-    files: [
-      { name: "dir1", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", isDirectory: true },
-      { name: "file2.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", isDirectory: false },
-      { name: "file3.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", isDirectory: false },
-      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", isDirectory: false },
-      { name: "dir2", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", isDirectory: true },
-      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", isDirectory: false },
-      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", isDirectory: false },
-      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", isDirectory: false },
-      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", isDirectory: false },
-      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", isDirectory: false },
-    ]
-  })
+  
   
   const sortedFiles = projectInfo().files.sort((a, b) => {{
     if (a.isDirectory && !b.isDirectory) {
