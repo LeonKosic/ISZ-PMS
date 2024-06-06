@@ -14,4 +14,5 @@ export const post=mysqlTable('post',{
     type: int('type',{mode:'number'}).notNull().default(0),
     parent_id: bigint('parent_id',{mode:'number'}).references(()=>board.id),
     board_id: bigint('board_id',{mode:'number'}).references(()=>board.id),
+    isFeatureRequest: boolean('isFeatureRequest').default(false),
 })
