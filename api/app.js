@@ -9,6 +9,7 @@ import adminRouter from './routes/admin.js';
 import projectRouter from './routes/projects.js'
 import courseRouter from "./routes/course.js"
 import postRouter from "./routes/post.js"
+import requestRouter from "./routes/request.js"
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use('/admin',adminRouter);
 app.use('/projects',projectRouter);
 app.use('/course',courseRouter)
 app.use("/post",postRouter)
+app.use("/request",requestRouter)
 
 
 export default app;
