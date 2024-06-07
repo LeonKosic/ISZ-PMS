@@ -14,13 +14,13 @@ export default function NavbarIcons(props) {
       <div class="flex flex-row justify-center items-center gap-4">
         <Icon
           iconID="fa-solid fa-book"
-          clickAction={() => { redirect('/courses') }}
+          clickAction={() => { window.location.href = '/courses' }}
           iconClass={"p-1 opacity-75 hover:cursor-pointer hover:opacity-100 transition-all duration-500 text-3xl"}
         />
 
         <Icon
           iconID="fa-solid fa-folder-open"
-          clickAction={() => { redirect('/projects') }}
+          clickAction={() => { window.location.href = '/projects' }}
           iconClass={"p-1 opacity-75 hover:cursor-pointer hover:opacity-100 transition-all duration-500 text-3xl"}
         />
 
