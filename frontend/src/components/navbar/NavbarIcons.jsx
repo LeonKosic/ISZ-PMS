@@ -3,7 +3,6 @@ import Icon from "./Icon";
 import { redirect } from "@solidjs/router";
 import { createSignal } from "solid-js";
 import { userDetails } from "../../api/stores";
-import SearchBar from "./SearchBar";
 import api from "../../api/api";
 
 export default function NavbarIcons(props) {
