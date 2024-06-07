@@ -25,14 +25,14 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME} 
       JWT_KEY: ${JWT_KEY}
-  frontend:
-    build: "./frontend"
-    ports:
-      - "3000:3000"
+  # frontend:
+  #   build: "./frontend"
+  #   ports:
+  #     - "3000:3000"
       
-      # To avoid the infinite HMR error in console
-      - "3003:3000"
-    environment:
-      VITE_API_HOST: ${API_HOST}
-    depends_on:
-      - api
+  #     # To avoid the infinite HMR error in console
+  #     - "3003:3000"
+  #   environment:
+  #     VITE_API_HOST: ${API_HOST}
+  #   depends_on:
+  #     - api

@@ -7,12 +7,36 @@ import ProfileHeader from "../components/profile/ProfileHeader";
 import { useLocation } from "@solidjs/router";
 import { userDetails } from "../api/stores";
 import { projects, user } from "../assets/profile";
+import { Button } from "@suid/material";
 
 export default function Profile(props) {
   const currentUserID = useLocation().pathname.split('/')[2]
   
+  const follow = async (target, requester) => {
+    const response = await api.post('/users/follow',
+      {
+        follower_id: requester,
+        following_id: target
+      }
+    )
+    
+    return response.data;
+  }
+  
+  const unfollow = async (target, requester) => {
+    const response = await api.post('/users/unfollow',
+      {
+        follower_id: requester,
+        following_id: target
+      }
+    )
+    
+    return response.data;
+  }
+  
+  
   // const [user] = createResource(async () => {
-  //   const response = await api.get(`/users/${currentUserID}`);
+  //   const response = await api.get(`/users/details?username=${currentUserID}`);
   //   return response.data;
   // });
   
@@ -21,9 +45,8 @@ export default function Profile(props) {
   //   return response.data;
   // })
   
-  console.log(projects())
-  console.log(user())
-  
+  console.log(`currentUserID: ${currentUserID}, userDetails.id: ${userDetails.id}`)
+
   return (
     // <Show when={user.loading == false}>
     <Show when={user().loading == false}>
@@ -37,6 +60,37 @@ export default function Profile(props) {
               bio={user()?.bio}
             />
           </div>    
+          
+          <Show when={currentUserID != userDetails.id}>
+            <div class="flex flex-row justify-center items-center pt-4">
+              { 
+                (() => { 
+                  const follows = user().followers.find(x => x.id == userDetails.id)
+                  console.log(user().followers)
+                  
+                  if (follows) {
+                    return (
+                      <Button
+                      color="pmsScheme"
+                      variant="outlined"
+                      fullWidth
+                      onClick={async () => { unfollow(currentUserID, userDetails.id) }}
+                      >
+                        Unfollow
+                      </Button>
+                    )
+                  } else return (<Button
+                      color="pmsScheme"
+                      variant="outlined"
+                      fullWidth
+                      onClick={async () => { follow(currentUserID, userDetails.id) }}
+                      >
+                        Follow
+                      </Button>) 
+                })
+              }
+            </div>
+          </Show>
           
           <div class="pt-4 grid grid-flow-col gap-4 w-full h-80">
             <div class="border-2 rounded-lg border-accent-600 p-2 max-h-80 overflow-y-scroll w-full bg-accent-600 bg-opacity-10">
