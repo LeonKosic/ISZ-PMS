@@ -8,8 +8,8 @@ import "./styles/app.css";
 function App() {
   return (
     <ThemeProvider theme={theme}>
-          <Navbar/>
-          <PMSRouter />
+      <Navbar />
+      <PMSRouter />
     </ThemeProvider>
   );
 }

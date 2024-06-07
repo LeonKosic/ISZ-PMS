@@ -1,7 +1,7 @@
 import { createStore } from "solid-js/store";
 
 export const [userDetails, setUserDetails] = createStore({
-  id: "",
+  id: "2",
   username: "",
   name: ""
 })

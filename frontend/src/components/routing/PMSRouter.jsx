@@ -18,8 +18,8 @@ export default function PMSRouter() {
       {/* <Route path="/admin" component={AdminPanel}/> */}
       <Route path="/courses" component={Courses} />
       <Route path="/courses/:id" component={Course} />
-      
-      <Route path="*" component={NotFound}/>
+
+      <Route path="*" component={NotFound} />
     </Router>
   )
 }
