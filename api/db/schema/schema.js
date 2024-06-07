@@ -20,11 +20,17 @@ import { postRelations } from "./relations/postRelations.js";
 import { post } from "./post.js";
 import { board } from "./board.js";
 import { like } from "./like.js";
-import { reqest } from "./request.js";
+import { request } from "./request.js";
 import { project_members } from "./project_members.js";
+import { request_answers } from "./request_answers.js";
+import { commit } from "./commit.js";
+import { file } from "./file.js";
+import { commited_files } from "./commited_files.js";
+import { comment } from "./comment.js";
+import { message } from "./message.js";
 
+export { users, course_teachers, course_teachersRelations, follow, roles, enrolled, category, course, project, notification, partners, courseRelations, notificationRelations, post_category, userRelations, followRelations, roleRelations, categoryRelations, postRelations, post, board, like, request, project_members,request_answers, commit, file, commited_files, comment, message}
+export default { users, course_teachers, course_teachersRelations, follow, enrolled, roles, category, course, project, notification, partners, courseRelations, notificationRelations, post_category, userRelations, followRelations, roleRelations, categoryRelations, postRelations, post, board, like, request, project_members,request_answers, commit, file, commited_files, comment, message}
 
-export { users, course_teachers, course_teachersRelations, follow, roles, enrolled, category, course, project, notification, partners, courseRelations, notificationRelations, post_category, userRelations, followRelations, roleRelations, categoryRelations, postRelations, post, board, like, reqest, project_members }
-export default { users, course_teachers, course_teachersRelations, follow, enrolled, roles, category, course, project, notification, partners, courseRelations, notificationRelations, post_category, userRelations, followRelations, roleRelations, categoryRelations, postRelations, post, board, like, reqest, project_members }
-
-
+// , request_answers, commit, file, commited_files, comment, message 
+// , request_answers, commit, file, commited_files, comment, message
