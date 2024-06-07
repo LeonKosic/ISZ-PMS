@@ -4,18 +4,29 @@ import { createDropzone } from "@soorria/solid-dropzone"
 import FileList from "../components/generic/file/FileList"
 import ProjectMaintainers from "../components/project/ProjectMaintainers"
 import ProjectOwner from "../components/project/ProjectOwner"
+import CommitDropdown from "../components/project/CommitDropdown"
 
 import api from "../api/api"
 import sortFiles from "../components/generic/file/sortFiles"
-
+import { currentPathStore, selectedFile, setSelectedFile, fileList, setFileList, setCurrentPathStore, projectStore } from "../api/stores"
 
 // mock/test data
 import { projectInfo } from "../assets/projectContent"
-import { currentPathStore, selectedFile, setSelectedFile } from "../api/stores"
 
+const getCommitVersion = async (commitID) => {
+  // ENDPOINT?
+  const response = await api.post(`/project/files`,
+    {
+      id: projectStore.id,
+      commit: projectStore._fileList.commitID,
+    }
+  )
+
+  return response.data
+}
 
 export default function Project(props) {
-  const sortedFiles = sortFiles(projectInfo().files)
+  setFileList("files", sortFiles(projectInfo().files))
 
   const onDrop = async (acceptedFiles) => {
     return await api.upload(`/upload/projects/${projectID}`, { files: acceptedFiles, currentPath: currentPathStore.path })
@@ -63,7 +74,7 @@ export default function Project(props) {
           {/* project files */}
           <div class="h-auto border-2 border-accent-600 rounded-xl p-4">
             <FileList
-              data={sortedFiles}
+              data={fileList.files}
             />
           </div>
         </div>
@@ -78,7 +89,23 @@ export default function Project(props) {
             maintainers={props.data.collaborators}
           />
 
-          {/* <CommitPanel /> */}
+          <CommitDropdown
+            commits={props.data.commits}
+            commitID={props.data.commits[props.data.commits.length - 1]}
+            callback={async (commitID) => {
+              /* 
+                - set current commit, 
+                - get commit-based files 
+                - set virtual path to root 
+              */
+              setFileList("commitID", commitID)
+              setFileList("files", getCommitVersion(commitID))
+
+              // TODO (vidjeti sa leonom):
+              // './' ili '' kao root path?
+              setCurrentPathStore("path",)
+            }}
+          />
         </div>
       </div>
 

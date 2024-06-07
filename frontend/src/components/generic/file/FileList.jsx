@@ -36,10 +36,11 @@ export default function FileList(props) {
     useLocation().pathname.endsWith('/')
       ? useLocation().pathname.substring(0, useLocation().pathname.length - 1)
       : useLocation().pathname);
-  
+
   setActiveData(props.data)
   setCurrentPathStore("path", rootPath())
-  
+  setCurrentPathStore("root", rootPath())
+
   return (
     <div>
       <Show when={currentPathStore.path != rootPath()}>
@@ -48,17 +49,17 @@ export default function FileList(props) {
           onClick={async () => {
             const previousURL = currentPathStore.path.substring(0, currentPathStore.path.lastIndexOf('/'));
             updateCurrentPath(previousURL)
-            
+
             const data = await getDirectoryContent(previousURL)
             updateActiveData(data)
           }}
-          >
+        >
           <p class="text-lg italic text-accent-300">
-            <i class="fa-solid fa-arrow-left mr-2"/> Back
+            <i class="fa-solid fa-arrow-left mr-2" /> Back
           </p>
         </div>
       </Show>
-      <hr class="w-full mb-1 border-accent-600 "/>
+      <hr class="w-full mb-1 border-accent-600 " />
       <For each={activeData()}>
         {
           (file) =>
@@ -69,21 +70,21 @@ export default function FileList(props) {
                 onClick={async () => {
                   if (file.isDirectory) {
                     updateSelectedFile(null, null, true);
-                    
+
                     const targetPath = `${currentPathStore.path}/${file.name}`
                     updateCurrentPath(targetPath)
-                    
+
                     const data = await getDirectoryContent(targetPath)
                     updateActiveData(data)
                   }
-                  
+
                   else if (isReadable(file.mimeType)) {
                     updateSelectedFile(file.name, file.data, false)
                   }
-                  
+
                   else api.download(`${currentPathStore.path}/${file.name}`)
                 }}
-                />
+              />
             </div>
         }
       </For>
