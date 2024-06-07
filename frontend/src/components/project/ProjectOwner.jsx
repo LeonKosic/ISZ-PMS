@@ -22,9 +22,7 @@ export default function ProjectOwner(props) {
             "hover:bg-accent-600 bg-opacity-25 w-50 rounded-xl cursor-pointer duration-500 border-2 border-accent-600  pr-4 transition-all my-2"
           }
           
-          cardClickAction={(id) => {
-            window.location.href = (`/profiles/${id}`)
-          }}
+          cardClickAction={(id) => { window.location.href = `/profiles/${id}` }}
           />
       </div>
     </div>

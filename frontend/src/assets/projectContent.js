@@ -12,6 +12,7 @@ export const projectInfo = () => ({
     { id: "4", username: "testuser4", name: "fullname4" },
     { id: "5", username: "testuser5", name: "fullname5" },
   ],
+  commits: [1, 2, 3, 4, 5, 6],
   files: [
     { name: "dir1", data: "", isDirectory: true, mimeType: "inode/directory" },
     { name: "file2.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", isDirectory: false, mimeType: "text/plain" },
