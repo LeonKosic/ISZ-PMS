@@ -24,13 +24,21 @@ export default function Post(props) {
 
   return (
     <Suspense>
-      <div class="p-2 my-2 mt-20 border-2 border-accent-600 rounded-lg max-w-screen-2xl mx-auto text-accent-100">
+      <div class="p-2 my-2 mt-10 border-2 border-accent-600 rounded-lg max-w-screen-2xl mx-auto text-accent-100 bg-accent-700 bg-opacity-5">
         {/* Title */}
         <p class="text-4xl py-2 pl-1">{props.name}</p>
         <hr class="border-2 border-accent-800 rounded-lg my-1" />
 
         {/* Body */}
         <p class="text-lg pl-1 text-accent-200">{props.body}</p>
+
+        <div class="flex flex-auto items-center justify-center">
+          <p class="italic text-accent-600">{props.posterUsername}</p>
+        </div>
+
+        <div class="children">
+          {props.children}
+        </div>
 
         <div class="flex flex-row justify-between items-stretch gap-2 py-2">
           {/* Ratings */}
@@ -49,7 +57,7 @@ export default function Post(props) {
         <Show when={commentBoxVisible()}>
           <div class="my-6 flex flex-row items-start">
             <input
-              class="w-full ml-2 mr-2 rounded-lg border-accent-800 border-2 bg-opacity-10 bg-primary-300 h-9"
+              class="w-full ml-2 mr-2 rounded-lg border-accent-800 border-2 bg-opacity-10 bg-primary-300 h-9 pl-2 pr-2"
               placeholder="Your comment..."
               color="pmsScheme"
               id="commentBox"
@@ -68,10 +76,6 @@ export default function Post(props) {
 
         {/* Comments */}
         <PostComments data={props.comments} />
-
-        <div class="children">
-          {props.children}
-        </div>
       </div>
     </Suspense>
   )

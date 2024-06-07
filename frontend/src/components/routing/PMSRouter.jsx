@@ -7,8 +7,8 @@ import Register from "../../pages/Register.jsx";
 import NotFound from "../../pages/NotFound.jsx";
 import Courses from "../../pages/Courses.jsx";
 import Course from "../../pages/Course.jsx";
-import Post from "../post/Post.jsx";
 import PostPage from "../../pages/PostPage.jsx";
+import ProjectPage from "../../pages/ProjectPage.jsx";
 
 export default function PMSRouter() {
   return (
@@ -19,6 +19,8 @@ export default function PMSRouter() {
       <Route path="/landing" component={Landing} />
       <Route path="/courses" component={Courses} />
       <Route path="/courses/:id" component={Course} />
+
+      <Route path="/projects/:id" component={ProjectPage} />
 
       {/* dev */}
       <Route path="/post/:id" component={PostPage} />
