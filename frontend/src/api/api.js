@@ -1,5 +1,7 @@
 import axios from "axios";
 import { setUserDetails } from "./stores";
+import { Alert } from "@suid/material";
+import { logoutAlert } from "../components/navbar/LogoutAlert";
 
 const defaultConfig = {
   baseURL: `http://${import.meta.env.VITE_API_HOST}`,
@@ -72,6 +74,15 @@ const api = {
         console.error("Error during login: ", err);
         return response.data;
       })
+  },
+
+  logout: async () => {
+    if (localStorage.getItem('accessToken') == null)
+      return logoutAlert(false);
+
+    localStorage.removeItem('accessToken')
+    window.location.href = '/login';
+    return logoutAlert(true);
   }
 }
 
