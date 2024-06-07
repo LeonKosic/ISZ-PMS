@@ -13,7 +13,7 @@ const jsonParser = bodyParser.json();
 import Joi from 'joi'
 import { follow } from '../db/schema/follow.js';
 import { post } from '../db/schema/post.js';
-import { like } from '../db/schema/like.js';
+import { like, comment } from '../db/schema/like.js';
 
 router.post('/category', jsonParser, async (req, res) => {
   await db.insert(post_category).values(
@@ -35,12 +35,8 @@ router.delete('/:id', async (req, res) => {
 })
 
 router.get('/my', authenticateToken, jsonParser, async (req, res) => {
-  const projects = await db.select().from(post).where(eq(post.owner_id, req.user.id));
-  if (projects.length <= 0) {
-    res.send(400, { err: "User does not have any projects." })
-    return
-  }
-  res.status(200).json(projects)
+  const posts = await db.select().from(post).where(eq(post.owner_id, req.user.id));
+  res.status(200).json(posts)
 })
 
 router.get('/following', authenticateToken, jsonParser, async (req, res) => {
@@ -65,5 +61,14 @@ router.post('/like', authenticateToken, jsonParser, async (req, res) => {
       }])
     const existingProject = await db.select().from(post).where(eq(post.id, req.body.id));
     await db.update(post).set({ likes: existingProject[0].likes+delta }).where(eq(post.id, req.body.id))
+})
+router.post('/comment', authenticateToken, jsonParser, async (req, res) => {
+  await db.insert(comment).values(
+    [{
+      body: req.body.body,
+      user: req.user.id,
+      post: req.body.post
+    }])
+  res.status(200).send({ message: "Comment added." })
 })
 export default router
