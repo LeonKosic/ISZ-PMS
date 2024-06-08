@@ -14,6 +14,7 @@ export default function Login() {
   };
 
   return (
+<<<<<<< HEAD:frontend/src/pages/login.jsx
     <div class="flex justify-center items-center h-screen overflow-hidden">
       <div class="bg-primary-400 p-14 rounded-3xl shadow-md">
         <h2 class="text-2xl font-semibold mb-4 text-gray-50">Login</h2>
@@ -52,4 +53,8 @@ export default function Login() {
       </div>
     </div>
   );
+=======
+    <h1>Login</h1>
+  )
+>>>>>>> 6da2d2eebdd5f62e0efd19a08f11573d4e5957d0:frontend/src/pages/Login.jsx
 }
