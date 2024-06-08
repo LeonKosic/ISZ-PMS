@@ -1,5 +1,5 @@
-import { db } from "../db/db";
-import { project_members } from "../db/schema/project_members";
+import { db } from "../db/db.js";
+import { project_members } from "../db/schema/project_members.js";
 
 export function checkIfTeamMember(req, res, next) {
   const result = db.select().from(project_members).where({ user_id: req.user.id, project_id: req.body.project_id })
