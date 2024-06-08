@@ -1,5 +1,5 @@
 import {  mysqlTable, bigint,varchar , boolean } from 'drizzle-orm/mysql-core';
-import { users } from './users';
+import { users } from './users.js';
 export const message=mysqlTable('message',{
     id:bigint('id', { mode: 'number' }).primaryKey().autoincrement(),
     content:varchar('content', { length: 256 }).notNull(),
