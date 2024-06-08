@@ -55,13 +55,17 @@ const api = {
     // files: dropzone-provided
     var formData = new FormData();
     Array.from(payload).forEach((file, index) => {
-      formData.append(index, file);
+      formData.append(/* id projekta+ path u filetree +*/ file.path, file );
+      /*TODO kad se namjesti ono za upload u nekom dijelu filetree, samo ovo sa baseurl namjesitti da mi daje current url
+        da se ne bi kacilo sve na root
+      */
     });
 
 
     return await axios.post(url,formData,
       {
         headers: {
+          ...defaultConfig.headers,
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           "Content-Type": "multipart/form-data"
         }

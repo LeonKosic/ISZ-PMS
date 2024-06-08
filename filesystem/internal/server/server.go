@@ -2,9 +2,9 @@ package server
 
 import (
 	"fmt"
-	"io"
+	//"io"
 	"net/http"
-	"os"
+	//"os"
 	"pms/filesystem/internal/config"
 )
 
@@ -19,13 +19,14 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 	//		uploadedFile.Read([]byte{})
 	//		uploadedFile.Close()
 	//	}
-	bytedata, err := io.ReadAll(r.Body)
+	err := r.ParseMultipartForm(5 << 20)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, err.Error())
+		fmt.Println("Error ParseMultipartForm: ", err)
+		return
 	}
-	reqBodyString := string(bytedata)
-	os.Stderr.WriteString(reqBodyString)
-	fmt.Fprintf(w, reqBodyString)
+	fmt.Println("AAAAA")
+
+	fmt.Fprintf(w, "accepted")
 }
 
 func RunServer() {
