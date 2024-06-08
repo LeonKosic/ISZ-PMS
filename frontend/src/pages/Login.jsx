@@ -1,13 +1,16 @@
 import { createSignal } from "solid-js";
-import { A } from "@solidjs/router";
+import { A, useNavigate } from "@solidjs/router";
+import api from "../api/api";
 
 export default function Login() {
   const [formData, setFormData] = createSignal({ username: "", password: "" });
+  const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const { username, password } = formData();
-    // Login logic here + redirection
+    api.login( { username, password });
+    navigate('/landing');
   };
 
   return (
@@ -49,3 +52,4 @@ export default function Login() {
       </div>
     </div>
   );
+}
