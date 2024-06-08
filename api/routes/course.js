@@ -124,4 +124,14 @@ router.post("/post", authenticateToken, jsonParser, async (req, res) => {
     res.status(200).send({ message: "Post made." });
 })
 
+router.post('/search', jsonParser ,async(req,res)=>{
+    const existingUser = await db.select().from(course).where(like(course.title,`%${req.body.name}%`) && eq(course.deleted,0));
+    if(existingUser.length>0){
+      existingUser.map((user)=>{
+        delete user.password
+      })
+    }
+    return res.send(200,existingUser)
+  })
+
 export default router;

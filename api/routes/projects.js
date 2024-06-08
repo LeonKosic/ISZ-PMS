@@ -116,7 +116,7 @@ router.post('board/post', authenticateToken, jsonParser, checkIfTeamMember, asyn
   res.status(200).send({ message: "Post made." });
 })
 router.get('/board/:id', authenticateToken, jsonParser, checkIfTeamMember, async (req, res) => {
-  const posts = await db.select().from(post).where(eq(post.board_id, req.params.id));
+  const posts = await db.select().from(post).where(eq(post.board_id, req.params.id) && eq(post.type,0) && eq(post.deleted,0) && eq(post.isFeatureRequest, 0));
   res.status(200).json(posts)
 })
 router.post('/register', authenticateToken, jsonParser, checkIfTeamMember, async (req, res) => {
@@ -135,5 +135,12 @@ router.get("/:id", authenticateToken, async (req, res) => {
   }
   res.send(200, {...existingProject[0], comments, team})
 })
+router.post('/folder/', jsonParser, authenticateToken, async (req, res) => {
+  const {commit, project_id, path} = req.body;
+  })
+  router.get('/board/:id/requests', authenticateToken, jsonParser, checkIfTeamMember, async (req, res) => {
+    const posts = await db.select().from(post).where(eq(post.board_id, req.params.id) && eq(post.type,0) && eq(post.deleted,0) && eq(post.isFeatureRequest, 1));
+    res.status(200).json(posts)
+  })
 
 export default router
