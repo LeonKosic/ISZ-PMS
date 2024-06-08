@@ -29,7 +29,13 @@ export default function Project(props) {
   setFileList("files", sortFiles(projectInfo().files))
 
   const onDrop = async (acceptedFiles) => {
-    return await api.upload(`/upload/projects/${projectID}`, { files: acceptedFiles, currentPath: currentPathStore.path })
+    // TODO: ovaj endpoint?
+    return await api.upload(`/upload/projects/${projectStore.id}`,
+      {
+        id: projectStore.id,
+        currentPath: currentPathStore.path,
+        files: acceptedFiles,
+      })
   }
 
   const dropzone = createDropzone({ onDrop })

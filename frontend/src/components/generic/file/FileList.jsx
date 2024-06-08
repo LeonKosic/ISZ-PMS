@@ -12,10 +12,15 @@ const [activeData, setActiveData] = createSignal([]);
 
 const getDirectoryContent = async (dirpath) => {
   const dirInfo = await mockApi.get(dirpath)
+
+  // TODO
+  // const response = await api.get('/project/content', {})
+
   return dirInfo.files;
 }
 
 const updateCurrentPath = (path) => {
+  console.log(`rootPath: ${path}`);
   setCurrentPathStore("path", path);
 }
 
@@ -32,11 +37,7 @@ const updateSelectedFile = (name, data, hidden) => {
 
 
 export default function FileList(props) {
-  const [rootPath, _] = createSignal(
-    useLocation().pathname.endsWith('/')
-      ? useLocation().pathname.substring(0, useLocation().pathname.length - 1)
-      : useLocation().pathname);
-
+  const [rootPath, setRootPath] = createSignal('')
   setActiveData(props.data)
   setCurrentPathStore("path", rootPath())
   setCurrentPathStore("root", rootPath())
@@ -47,7 +48,13 @@ export default function FileList(props) {
         <div
           class="pl-4 pr-4 py-2 rounded-xl mb-2 block w-28 hover:cursor-pointer hover:bg-accent-600 bg-opacity-5 duration-500"
           onClick={async () => {
-            const previousURL = currentPathStore.path.substring(0, currentPathStore.path.lastIndexOf('/'));
+            let previousURL = currentPathStore.path.substring(0, currentPathStore.path.lastIndexOf('/'));
+            previousURL = previousURL.substring(0, previousURL.lastIndexOf('/'))
+            // boze me pomoz al za dir1/dir2/
+            // bude dir1/dir2
+            // pa onda dir1
+
+            console.log(`previousURL: ${previousURL}`)
             updateCurrentPath(previousURL)
 
             const data = await getDirectoryContent(previousURL)
@@ -71,7 +78,8 @@ export default function FileList(props) {
                   if (file.isDirectory) {
                     updateSelectedFile(null, null, true);
 
-                    const targetPath = `${currentPathStore.path}/${file.name}`
+                    const targetPath = `${currentPathStore.path}${file.name}/`
+                    console.log(`targetPath: ${targetPath}`)
                     updateCurrentPath(targetPath)
 
                     const data = await getDirectoryContent(targetPath)

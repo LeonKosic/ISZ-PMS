@@ -58,23 +58,23 @@ const api = {
   },
 
   upload: async (url, payload) => {
-    // files: dropzone-provided
-    console.log(payload)
+    console.log(payload);
 
     var formData = new FormData();
     Array.from(payload.files).forEach((file, index) => {
-      formData.append(index, file);
+      let filePath = file.path;
+      if (file.path[0] == '/') {
+        // kada je direktorijum dodaje / na pocetak, pa da bude uniformno
+        filePath = file.path.substring(1, file.path.length);
+      }
+
+      let path = `${payload.id}/${payload.currentPath}${filePath}`;
+      console.log(path);
+      formData.append(path, file);
     });
 
-    url = 'http://localhost:3001/'
-
-    return await axios.post(url,
+    return await axios.post(url, formData,
       {
-        files: formData,
-        currentPath: payload.currentPath
-      },
-      {
-        ...defaultConfig,
         headers: {
           ...defaultConfig.headers,
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
