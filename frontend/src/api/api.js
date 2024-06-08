@@ -6,11 +6,17 @@ const defaultConfig = {
 }
 
 const api = {
-  get: (url) => {
-    return axios.get(url, defaultConfig);
-  },
-  post: (url, data) => {
-    return axios.post(url, data, defaultConfig)
+  get: async (url) => {
+    const token = localStorage.getItem('accessToken');
+
+    return await axios.get(url,
+      {
+        ...defaultConfig,
+        headers: {
+          ...defaultConfig.headers,
+          Authorization: `Bearer ${token}`
+        }
+      });
   },
   post: async (url, data) => {
     const token = localStorage.getItem('accessToken');
@@ -52,17 +58,22 @@ const api = {
   },
 
   upload: async (url, payload) => {
-    // files: dropzone-provided
+    console.log(payload);
+
     var formData = new FormData();
-    Array.from(payload).forEach((file, index) => {
-      formData.append(/* id projekta+ path u filetree +*/ file.path, file );
-      /*TODO kad se namjesti ono za upload u nekom dijelu filetree, samo ovo sa baseurl namjesitti da mi daje current url
-        da se ne bi kacilo sve na root
-      */
+    Array.from(payload.files).forEach((file, index) => {
+      let filePath = file.path;
+      if (file.path[0] == '/') {
+        // kada je direktorijum dodaje / na pocetak, pa da bude uniformno
+        filePath = file.path.substring(1, file.path.length);
+      }
+
+      let path = `${payload.id}/${payload.currentPath}${filePath}`;
+      console.log(path);
+      formData.append(path, file);
     });
 
-
-    return await axios.post(url,formData,
+    return await axios.post(url, formData,
       {
         headers: {
           ...defaultConfig.headers,

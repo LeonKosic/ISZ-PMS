@@ -1,12 +1,12 @@
-import {Route, Router} from "@solidjs/router"
+import { Route, Router } from "@solidjs/router"
 import Login from "../../pages/Login.jsx";
 import Landing from "../../pages/Landing.jsx"
 import Profile from "../../pages/Profile.jsx";
 import Register from "../../pages/Register.jsx";
 import NotFound from "../../pages/NotFound.jsx";
-import Project from "../../pages/Project.jsx";
 // import AdminPanel from "../admin/AdminPanel.jsx";
 import DevUpload from "../../pages/devUpload.jsx";
+import ProjectPage from "../../pages/ProjectPage.jsx";
 
 export default function PMSRouter() {
   return (
@@ -17,12 +17,12 @@ export default function PMSRouter() {
       <Route path="/landing" component={Landing} />
       {/* <Route path="/courses" component={Courses} /> /}
       {/ <Route path="/courses/:id" component={Course} /> */}
-      <Route path="/projects/:id" component={Project} />
-      
+      <Route path="/projects/:id" component={ProjectPage} />
+
       {/* DEV, TODO: REMOVE AS SOON AS POSSIBLE */}
       <Route path="/upload" component={DevUpload} />
-      
-      <Route path="*" component={NotFound}/>
+
+      <Route path="*" component={NotFound} />
     </Router>
   )
 }

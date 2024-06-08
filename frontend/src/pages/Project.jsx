@@ -1,176 +1,121 @@
 import { useLocation } from "@solidjs/router"
-import { Box, Container, Stack } from "@suid/material"
-import { For, createResource } from "solid-js"
-import api from "../api/api"
-import axios from "axios";
 import { createDropzone } from "@soorria/solid-dropzone"
+
 import FileList from "../components/generic/file/FileList"
 import ProjectMaintainers from "../components/project/ProjectMaintainers"
 import ProjectOwner from "../components/project/ProjectOwner"
+import CommitDropdown from "../components/project/CommitDropdown"
 
+import api from "../api/api"
+import sortFiles from "../components/generic/file/sortFiles"
+import { currentPathStore, selectedFile, setSelectedFile, fileList, setFileList, setCurrentPathStore, projectStore } from "../api/stores"
 
-let projectID;
+// mock/test data
+import { projectInfo } from "../assets/projectContent"
 
-const getProjectInfo = async () => {
-  const response = await api.get(`/projects/${projectID}`)
+const getCommitVersion = async (commitID) => {
+  // ENDPOINT?
+  const response = await api.post(`/project/files`,
+    {
+      id: projectStore.id,
+      commit: projectStore._fileList.commitID,
+    }
+  )
+
   return response.data
 }
 
 export default function Project(props) {
-  projectID = useLocation().pathname.split('/')[2];
-  // const [projectInfo] = createResource(getProjectInfo)
-  const projectInfo = () => ({
-    name: "Project Management System",
-    about: "Projektni zadatak iz inzenjeringa softverskih zahtjeva, project management service",
-    owner: {
-      id: "1",
-      username: "oggnjen",
-      name: "Ognjen Komadina"
-    },
-    collaborators: [
-      { id: "2", username: "testuser2", name: "fullname2" },
-      { id: "3", username: "testuser3", name: "fullname3" },
-      { id: "4", username: "testuser4", name: "fullname4" },
-      { id: "5", username: "testuser5", name: "fullname5" },
-    ],
-    files: [
-      { name: "dir1", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "dir" },
-      { name: "file2.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "file" },
-      { name: "file3.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "file" },
-      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "file" },
-      { name: "dir2", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "dir" },
-      { name: "docker_compose.yaml", data: `version: '3.8'
-services:
-  database:
-    image: mysql:latest
-    ports:
-      - "3308:3306"
-    expose:
-      - 3306
-    volumes:
-      - ./database:/var/lib/mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: test
-      MYSQL_DATABASE: test
-  api:
-    build: "./api"
-    depends_on:
-      - database
-    restart: always
-    ports:
-      - "3001:3000"
-    environment:
-      DB_HOST: test
-      DB_PORT: test
-      DB_USER: test
-      DB_PASSWORD: test
-      DB_NAME: test 
-      JWT_KEY: test
-  frontend:
-    build: "./frontend"
-    ports:
-      - "3000:3000"
-      
-      # To avoid the infinite HMR error in console
-      - "3003:3000"
-    environment:
-      VITE_API_HOST: test
-    depends_on:
-      - api`, type: "file"
-      },
-      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "file" },
-      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "file" },
-      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "file" },
-      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "file" },
-      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "file" },
-      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "file" },
-      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "file" },
-      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "file" },
-      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "file" },
-      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "file" },
-      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "file" },
-      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "file" },
-      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "file" },
-      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "file" },
-      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "file" },
-      { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "file" },
-                                                                                                            { name: "file4.txt", data: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Assumenda, provident!", type: "file" },
-    ]
-  })
-  
-  const sortedFiles = projectInfo().files.sort((a, b) => {{
-    if (a.type === 'dir' && b.type !== 'dir') {
-      return -1;
-    }
-    if (a.type !== 'dir' && b.type === 'dir') {
-      return 1;
-    }
-    return 0;
-  }})  
-  
+  setFileList("files", sortFiles(projectInfo().files))
+
   const onDrop = async (acceptedFiles) => {
-    console.log(acceptedFiles)
-    return await api.upload("http://localhost:3001/",acceptedFiles)
+    // TODO: ovaj endpoint?
+    return await api.upload(`/upload/projects/${projectStore.id}`,
+      {
+        id: projectStore.id,
+        currentPath: currentPathStore.path,
+        files: acceptedFiles,
+      })
   }
-  
+
   const dropzone = createDropzone({ onDrop })
-  
+
   return (
-    <div class="max-w-screen-2xl mx-auto py-6 mt-4">
-      {/* project title */}
-      <p class="text-3xl pb-6 pl-6">
-        {projectInfo().name}
-      </p>
-      
+    <div class="max-w-screen-2xl mx-auto py-2 mt-2">
+      <hr class="border-accent-700 border-2 rounded-lg" />
+
       {/* panels container */}
-      <div class="flex flex-row justify-between items-stretch gap-10">
+      <div class="flex flex-row justify-between items-stretch gap-4">
         {/* left-panel */}
         <div class="w-full">
           {/* dropzone */}
           <div {...dropzone.getRootProps()} >
             <input {...dropzone.getInputProps()} />
-            <div class="flex flex-row justify-center items-center text-xl my-4 italic border-2 rounded-xl border-accent-600 h-52">
+            <div class="flex flex-row justify-center items-center text-xl my-4 italic border-2 rounded-xl border-accent-600 h-52 hover:cursor-pointer hover:bg-accent-700 duration-300">
               {
-                dropzone.isDragActive ? 
-                <p>Drop files here!</p> :
-                <p>Click here or drag files to upload</p>
+                dropzone.isDragActive ?
+                  <p>Drop files here!</p> :
+                  <p>Click here or drag files to upload</p>
               }
             </div>
           </div>
-          
+
+          {/* file content display */}
+          <Show when={!selectedFile.hidden}>
+            <div class="relative h-auto border-2 border-accent-600 rounded-xl p-4 mb-4">
+              <div class="pb-2">
+                <div
+                  class="absolute right-0 top-0 m-3 mr-3 pl-2 pr-2 py-1 hover:bg-accent-700 bg-opacity-25 rounded-lg duration-500 hover:cursor-pointer"
+                  onClick={() => { setSelectedFile("hidden", true) }}
+                >
+                  <i class="fa-solid fa-x" />
+                </div>
+                <p class="text-xl">Displaying contents of {selectedFile.name}</p>
+              </div>
+              <hr />
+              <code>{selectedFile.data}</code>
+            </div>
+          </Show>
+
           {/* project files */}
-          {/* TODO: parse paths from received response */}
           <div class="h-auto border-2 border-accent-600 rounded-xl p-4">
             <FileList
-              data={sortedFiles}
-              />
-          </div>
-        </div>
-      
-        {/* right panel */}
-        <div class="sticky w-auto">
-          <ProjectOwner
-            owner={projectInfo().owner}
+              data={fileList.files}
             />
-          
-          <ProjectMaintainers
-            maintainers={projectInfo().collaborators}
-          />
-          
-          {/* about */}
-          
-          <p class="text-2xl flex flex-row justify-center items-center mt-8">
-            About
-          </p>
-          <div class="border-2 border-accent-600 rounded-xl h-auto p-4 mt-2">
-            <p>
-              {projectInfo().about}
-            </p>
           </div>
         </div>
-      </div>     
-      {/* <div class="h-80 border-2 mt-80">
-      </div>  */}
+
+        {/* right panel */}
+        <div class="w-1/3">
+          <ProjectOwner
+            owner={props.data.owner}
+          />
+
+          <ProjectMaintainers
+            maintainers={props.data.collaborators}
+          />
+
+          <CommitDropdown
+            commits={props.data.commits}
+            commitID={props.data.commits[props.data.commits.length - 1]}
+            callback={async (commitID) => {
+              /* 
+                - set current commit, 
+                - get commit-based files 
+                - set virtual path to root 
+              */
+              setFileList("commitID", commitID)
+              setFileList("files", getCommitVersion(commitID))
+
+              // TODO (vidjeti sa leonom):
+              // './' ili '' kao root path?
+              setCurrentPathStore("path",)
+            }}
+          />
+        </div>
+      </div>
+
+      <hr class="mt-4 border-accent-700 border-2 rounded-lg" />
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import UserList from "../generic/file/user/UserList";
+import UserList from "../generic/user/UserList";
 
 export default function ProjectMaintainers(props) {
   return (
@@ -9,8 +9,8 @@ export default function ProjectMaintainers(props) {
       >
         Maintainers
       </p>
-      
-      <div class="border-2 rounded-xl border-accent-600 p-4 h-min">
+
+      <div class="border-0 rounded-xl border-accent-600 pl-4 pr-4 h-min w-full">
         <UserList
           style={"w-8"}
           users={props.maintainers}
@@ -19,12 +19,10 @@ export default function ProjectMaintainers(props) {
           highlightColor={"bg-accent-600"}
           cardUseMaxWidth={false}
           cardStyle={
-            "hover:bg-accent-600 bg-opacity-25 w-50 rounded-xl cursor-pointer duration-500 border-2 border-accent-600 ps-4 pr-4 transition-all my-2"
+            "hover:bg-accent-600 bg-opacity-25 w-50 rounded-xl cursor-pointer duration-300 border-2 border-accent-600 transition-all mb-2"
           }
-          cardClickAction={(id) => {
-            window.location.replace(`/profiles/${id}`)
-          }}
-          />
+          cardClickAction={(id) => { window.location.href = `/profiles/${id}` }}
+        />
       </div>
     </div>
   )
