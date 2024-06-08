@@ -3,13 +3,13 @@ import { A, useNavigate } from "@solidjs/router";
 import api from "../api/api"
 
 export default function RegisterPage() {
-  const [formData, setFormData] = createSignal({ username: "", email: "", password: "", name: "", surname: "" });
+  const [formData, setFormData] = createSignal({ username: "", email: "", password: "", password2: "", name: "" });
   const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const { username, email, password, name, surname } = formData();
-    api.post("/users/register", { username, email, password, name, surname })
+    const { username, email, password, password2, name } = formData();
+    api.post("/users/register", { name, username, email, password, password2 })
     navigate("/login");
   };
 
@@ -18,6 +18,17 @@ export default function RegisterPage() {
       <div class="bg-primary-400 p-14 rounded-3xl shadow-md">
         <h2 class="text-2xl font-semibold mb-4 text-gray-50">Register</h2>
         <form onSubmit={handleSubmit}>
+        <div class="mb-4">
+            <input
+              type="text"
+              id="name"
+              class="form-input mt-1 block w-full border-white rounded-md placeholder-primary-100 text-primary"
+              value={formData().name}
+              onInput={(e) => setFormData({ ...formData(), name: e.target.value })}
+              placeholder="Name"
+              required
+            />
+          </div>
           <div class="mb-4">
             <input
               type="text"
@@ -53,23 +64,12 @@ export default function RegisterPage() {
           </div>
           <div class="mb-4">
             <input
-              type="text"
-              id="name"
+              type="password"
+              id="password"
               class="form-input mt-1 block w-full border-white rounded-md placeholder-primary-100 text-primary"
-              value={formData().name}
-              onInput={(e) => setFormData({ ...formData(), name: e.target.value })}
-              placeholder="Name"
-              required
-            />
-          </div>
-          <div class="mb-4">
-            <input
-              type="text"
-              id="surname"
-              class="form-input mt-1 block w-full border-white rounded-md placeholder-primary-100 text-primary"
-              value={formData().surname}
-              onInput={(e) => setFormData({ ...formData(), surname: e.target.value })}
-              placeholder="Surname"
+              value={formData().password2}
+              onInput={(e) => setFormData({ ...formData(), password2: e.target.value })}
+              placeholder="Repeat password"
               required
             />
           </div>
