@@ -54,20 +54,14 @@ const api = {
   upload: async (url, payload) => {
     // files: dropzone-provided
     var formData = new FormData();
-    Array.from(payload.files).forEach((file, index) => {
+    Array.from(payload).forEach((file, index) => {
       formData.append(index, file);
     });
 
 
-    return await axios.post(url,
+    return await axios.post(url,formData,
       {
-        data: formData,
-        currentPath: payload.currentPath
-      },
-      {
-        ...defaultConfig,
         headers: {
-          ...defaultConfig.headers,
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           "Content-Type": "multipart/form-data"
         }
