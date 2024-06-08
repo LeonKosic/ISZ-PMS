@@ -142,5 +142,13 @@ router.post('/folder/', jsonParser, authenticateToken, async (req, res) => {
     const posts = await db.select().from(post).where(eq(post.board_id, req.params.id) && eq(post.type,0) && eq(post.deleted,0) && eq(post.isFeatureRequest, 1));
     res.status(200).json(posts)
   })
-
+  router.post('/search', jsonParser ,async(req,res)=>{
+    const existingUser = await db.select().from(post).where(like(post.title,`%${req.body.title}%`) && eq(post.deleted,0) && eq(post.type,1));
+    if(existingUser.length>0){
+      existingUser.map((user)=>{
+        delete user.password
+      })
+    }
+    return res.send(200,existingUser)
+  })
 export default router
