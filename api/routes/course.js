@@ -125,13 +125,13 @@ router.post("/post", authenticateToken, jsonParser, async (req, res) => {
 })
 
 router.post('/search', jsonParser ,async(req,res)=>{
-    const existingUser = await db.select().from(course).where(like(course.title,`%${req.body.name}%`) && eq(course.deleted,0));
-    if(existingUser.length>0){
-      existingUser.map((user)=>{
+    const  existingCourse = await db.select().from(course).where(like(course.title,`%${req.body.name}%`) && eq(course.deleted,0));
+    if( existingCourse.length>0){
+       existingCourse.map((user)=>{
         delete user.password
       })
     }
-    return res.send(200,existingUser)
+    return res.send(200, existingCourse)
   })
 
 export default router;
