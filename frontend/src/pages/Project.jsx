@@ -30,7 +30,8 @@ export default function Project(props) {
 
   const onDrop = async (acceptedFiles) => {
     // TODO: ovaj endpoint?
-    return await api.upload(`/upload/projects/${projectStore.id}`,
+    // TODO return await api.upload(`/upload/projects/${projectStore.id}`,
+    return await api.upload(`http://localhost:3001/`,
       {
         id: projectStore.id,
         currentPath: currentPathStore.path,

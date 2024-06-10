@@ -16,9 +16,7 @@ router.get('/', async (req, res, next) => {
   res.status(200).send("Hello world");
 });
 router.post("/", jsonParser,upload.any(), async (req, res, next)=>{
-  console.log(req.body)
-  console.log(req.files)
-  console.log(await axios.post("http://filesystem:7070/upload", req.files))
+  console.log(axios.post("http://filesystem:7070/upload", req.files, {headers:{"Content-Type":'multipart/form-data'}}))
   //console.log(await axios.get("http://filesystem:7070/"))
   if(req.body.idk == "hello"){
     //res.status(200).send("hello world")
