@@ -125,5 +125,15 @@ router.post('/register', authenticateToken, jsonParser, checkIfTeamMember, async
       user:req.body.user_id
     })
 })
+router.get("/:id", authenticateToken, async (req, res) => {
+  const existingProject = await db.select().from(post).where(eq(post.id, req.params.id));
+  const comments = await db.select().from(comment).where(eq(comment.post, req.params.id));
+  const team = await db.select({id:users.id, username:users.username, name:users.name}).from(project_members).where(eq(project_members.project, req.params.id)).leftJoin(users, eq(project_members.user, 'users.id'))
+  if (existingProject.length <= 0) {
+    res.send(400, { err: "Post with this name does not exist." })
+    return
+  }
+  res.send(200, {...existingProject[0], comments, team})
+})
 
 export default router
