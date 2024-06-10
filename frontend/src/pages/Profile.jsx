@@ -6,12 +6,12 @@ import ProjectList from "../components/generic/project/ProjectList";
 import ProfileHeader from "../components/profile/ProfileHeader";
 import { useLocation } from "@solidjs/router";
 import { userDetails } from "../api/stores";
-import { projects, user } from "../assets/profile";
+import { projects } from "../assets/profile";
 import { Button } from "@suid/material";
 
 export default function Profile(props) {
   const currentUserID = useLocation().pathname.split('/')[2]
-  
+
   const follow = async (target, requester) => {
     const response = await api.post('/users/follow',
       {
@@ -19,10 +19,10 @@ export default function Profile(props) {
         following_id: target
       }
     )
-    
+
     return response.data;
   }
-  
+
   const unfollow = async (target, requester) => {
     const response = await api.post('/users/unfollow',
       {
@@ -30,90 +30,91 @@ export default function Profile(props) {
         following_id: target
       }
     )
-    
+
     return response.data;
   }
-  
-  
-  // const [user] = createResource(async () => {
-  //   const response = await api.get(`/users/details?username=${currentUserID}`);
-  //   return response.data;
-  // });
-  
+
+
+  const [user] = createResource(async () => {
+    const response = await api.get(`/users/details?username=${currentUserID}`);
+    return response.data;
+  });
+
   // const [projects] = createResource(async () => {
   //   const response = await api.get(currentUserID == userDetails.id ? '/projects/my' : `/users/${currentUserID}`);
   //   return response.data;
   // })
-  
+
   console.log(`currentUserID: ${currentUserID}, userDetails.id: ${userDetails.id}`)
 
   return (
     // <Show when={user.loading == false}>
-    <Show when={user().loading == false}>
+    <Show when={user.loading == false} fallback={Loading}>
       <div class="w-1/3 mx-auto mt-8 grid grid-flow-row grid-cols-1 ">
-        <Suspense fallback={<Loading />}>  
+        <Suspense fallback={<Loading />}>
           <div class="bg-accent-600 bg-opacity-10">
             <ProfileHeader
               username={user()?.username}
               name={user()?.name}
-              role={user()?.role}
-              bio={user()?.bio}
+              // role={user()?.role}
+              role={user()?.email}
+              bio={"Some bio"}
             />
-          </div>    
-          
+          </div>
+
           <Show when={currentUserID != userDetails.id}>
             <div class="flex flex-row justify-center items-center pt-4">
-              { 
-                (() => { 
+              {
+                (() => {
                   const follows = user().followers.find(x => x.id == userDetails.id)
                   console.log(user().followers)
-                  
+
                   if (follows) {
                     return (
                       <Button
-                      color="pmsScheme"
-                      variant="outlined"
-                      fullWidth
-                      onClick={async () => { unfollow(currentUserID, userDetails.id) }}
+                        color="pmsScheme"
+                        variant="outlined"
+                        fullWidth
+                        onClick={async () => { unfollow(currentUserID, userDetails.id) }}
                       >
                         Unfollow
                       </Button>
                     )
                   } else return (<Button
-                      color="pmsScheme"
-                      variant="outlined"
-                      fullWidth
-                      onClick={async () => { follow(currentUserID, userDetails.id) }}
-                      >
-                        Follow
-                      </Button>) 
+                    color="pmsScheme"
+                    variant="outlined"
+                    fullWidth
+                    onClick={async () => { follow(currentUserID, userDetails.id) }}
+                  >
+                    Follow
+                  </Button>)
                 })
               }
             </div>
           </Show>
-          
+
           <div class="pt-4 grid grid-flow-col gap-4 w-full h-80">
             <div class="border-2 rounded-lg border-accent-600 p-2 max-h-80 overflow-y-scroll w-full bg-accent-600 bg-opacity-10">
               <p class="flex flex-auto items-center justify-center text-2xl">Followers {`(${user().followers.length})`}</p>
-              <hr class="border-2 border-accent-600 my-2 mb-3 rounded-lg"/>
+              <hr class="border-2 border-accent-600 my-2 mb-3 rounded-lg" />
               <UserList
-                cardClickAction={(id) => { window.location.href = `/profiles/${id}`}} 
+                cardClickAction={(id) => { window.location.href = `/profiles/${id}` }}
                 users={user().followers}
                 cardStyle={"rounded-md border-2 border-accent-600 my-1 ms-2 mr-2 hover:bg-accent-600 duration-300 transition-all hover:cursor-pointer"}
               />
             </div>
-            
+
             <div class="border-2 rounded-lg border-accent-600 p-2 max-h-80 overflow-y-scroll w-full bg-accent-600 bg-opacity-10">
               <p class="flex flex-auto items-center justify-center text-2xl">Following {`(${user().following.length})`}</p>
-              <hr class="border-2 border-accent-600 my-2 mb-3 rounded-lg"/>
+              <hr class="border-2 border-accent-600 my-2 mb-3 rounded-lg" />
               <UserList
-                cardClickAction={(id) => { window.location.href = `/profiles/${id}`}}
+                cardClickAction={(id) => { window.location.href = `/profiles/${id}` }}
                 users={user().following}
                 cardStyle={"rounded-md border-2 border-accent-600 my-1 ms-2 mr-2 hover:bg-accent-600 duration-300 transition-all hover:cursor-pointer"}
               />
             </div>
           </div>
-          
+
           <div class="my-2 py-2 mt-3 pt-1 rounded-md border-2 border-accent-600 bg-accent-600 bg-opacity-10">
             <p class="flex flex-col items-center justify-center text-2xl">
               {/* Projects {`(${projects().length})`}   */}
