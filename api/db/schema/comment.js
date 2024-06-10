@@ -1,6 +1,6 @@
-import { mysqlTable, bigint, varchar, boolean } from 'drizzle-orm/mysql-core';
+import {  mysqlTable, bigint,varchar , boolean } from 'drizzle-orm/mysql-core';
 import { users } from './users.js';
-import { post } from './post.js';
+import {post} from './post.js';
 
 export const comment = mysqlTable('comment', {
   id: bigint('id', { mode: 'number' }).primaryKey().autoincrement(),
