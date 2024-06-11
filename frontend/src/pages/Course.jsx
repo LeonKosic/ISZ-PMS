@@ -24,7 +24,6 @@ export default function Course(props) {
 
   const isOwner = () => course().ownerID == userDetails.id;
 
-  // TypeError: undefined (reading 'modals') kada dijalog bude van ove komponente? nmg skontati ndms 3:04 je
   const [editDialogOpen, setEditDialogOpen] = createSignal(false);
   const editDialogHandler = () => {
     setEditDialogOpen(!editDialogOpen())

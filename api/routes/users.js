@@ -13,6 +13,7 @@ import { follow } from "../db/schema/follow.js";
 import { partners } from "../db/schema/partners.js";
 import { enrolled } from "../db/schema/enrolled.js";
 import { course } from "../db/schema/course.js";
+import { post } from "../db/schema/post.js";
 
 const router = express.Router();
 const jsonParser = bodyParser.json()
