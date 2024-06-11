@@ -10,11 +10,11 @@ import { post_category } from '../db/schema/post_category.js';
 const router = express.Router();
 import bodyParser from 'body-parser';
 const jsonParser = bodyParser.json();
-import Joi from 'joi'
+import Joi  from 'joi'
 import { follow } from '../db/schema/follow.js';
 import { post } from '../db/schema/post.js';
 import { board } from '../db/schema/board.js';
-import { checkIfTeamMember } from '../middleware/project.js';
+import { checkIfBoardMember, checkIfTeamMember } from '../middleware/project.js';
 import { project_members } from '../db/schema/project_members.js';
 import { users } from '../db/schema/users.js'
 import { comment } from '../db/schema/comment.js'
@@ -119,7 +119,7 @@ router.post('board/post', authenticateToken, jsonParser, checkIfTeamMember, asyn
   );
   res.status(200).send({ message: "Post made." });
 })
-router.get('/board/:id', authenticateToken, jsonParser, checkIfTeamMember, async (req, res) => {
+router.get('/board/:id', authenticateToken, jsonParser, checkIfBoardMember, async (req, res) => {
   const posts = await db.select().from(post).where(eq(post.board_id, req.params.id) && eq(post.type, 0) && eq(post.deleted, 0) && eq(post.isFeatureRequest, 0));
   res.status(200).json(posts)
 })
@@ -157,7 +157,7 @@ router.post('/directory/structure', jsonParser, authenticateToken, async (req, r
 }
 
 )
-router.get('/board/:id/requests', authenticateToken, jsonParser, checkIfTeamMember, async (req, res) => {
+router.get('/board/:id/requests', authenticateToken, jsonParser, checkIfBoardMember, async (req, res) => {
   const posts = await db.select().from(post).where(eq(post.board_id, req.params.id) && eq(post.type, 0) && eq(post.deleted, 0) && eq(post.isFeatureRequest, 1));
   res.status(200).json(posts)
 })
