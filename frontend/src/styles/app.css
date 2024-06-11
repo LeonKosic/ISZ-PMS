@@ -153,7 +153,7 @@ body {
 .courses-list-ctr {
   @apply max-w-screen-xl mx-auto py-16 grid grid-flow-row grid-cols-3 space-y-4 gap-4 justify-between items-center;
   
-  .course-card {
+  /* .course-card {
     @apply relative
     p-4 pl-2 w-auto mx-6
     border-2 rounded-xl border-accent-700 
@@ -178,7 +178,7 @@ body {
     .course-id {
       @apply absolute right-0 pr-4 mt-10 bottom-0 text-accent-200;
     }
-  }
+  } */
 }
 
 .course-page {
