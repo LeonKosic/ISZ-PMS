@@ -1,5 +1,5 @@
 import { category } from "../db/schema/category.js"
-import { eq } from 'drizzle-orm';
+import { eq, like } from 'drizzle-orm';
 import { db } from '../db/db.js';
 import express from 'express';
 import bodyParser from 'body-parser';
@@ -12,6 +12,7 @@ const jsonParser = bodyParser.json()
 import { authenticateToken, authenticateTeacher } from "../middleware/auth.js";
 import { board, course, course_teachers, users } from "../db/schema/schema.js";
 import { enrolled, post } from "../db/schema/schema.js";
+import { and } from 'drizzle-orm';
 
 
 router.post('/', authenticateToken, authenticateTeacher, jsonParser, async (req, res) => {
@@ -51,6 +52,28 @@ router.post('/', authenticateToken, authenticateTeacher, jsonParser, async (req,
         }]
     );
     res.status(200).send({ message: "Course made." });
+})
+router.put("/", jsonParser, authenticateToken, async (req, res) => {
+    const existingCourse = await db.select().from(course).where(eq(course.id, req.body.id));
+    if (existingCourse.length <= 0) {
+        res.status(400).send({ err: "Course does not exist." })
+        return
+    }
+    if (existingCourse[0].owner_id != req.user.id) {
+        res.status(400).send({ err: "Not the owner of the course." })
+        return
+    }
+    if(req.body.password){
+        if(req.body.password != req.body.password2){
+            res.status(400).send({err:"Passwords do not match."})
+            return
+        }
+        const hash = await bcrypt.hash(req.body.password, 10);
+        req.body.password = hash
+        delete req.body.password2;
+    }
+    await db.update(course).set({ ...req.body }).where(eq(course.id, req.body.id))
+    res.status(200).send({ message: "Course updated." });
 })
 
 router.delete('/:id', authenticateToken, authenticateTeacher, async (req, res) => {
@@ -99,7 +122,7 @@ router.get('/:id', authenticateToken, jsonParser, async (req, res) => {
     teachers.forEach(t => delete t.users.password)
     delete existingCourse[0].password
     const content = await db.select().from(post).where(eq(post.parent_id, existingCourse[0].board_id))
-    res.status(200).send({ ...existingCourse[0], teachers: teachers.map(t => t.users), isTeacher: teachers.some(teacher => teacher.teacher_id == req.user.id), content })
+    res.status(200).send({ ...existingCourse[0], teachers: teachers.map(t => t.users), isTeacher: (teachers.some(teacher => teacher.teacher_id == req.user.id) || existingCourse[0].owner_id == req.user.id), content })
 })
 router.post("/post", authenticateToken, jsonParser, async (req, res) => {
     const existingCourse = await db.select().from(course).where(eq(course.id, req.body.course_id));
@@ -122,6 +145,39 @@ router.post("/post", authenticateToken, jsonParser, async (req, res) => {
         }]
     );
     res.status(200).send({ message: "Post made." });
+})
+
+router.post('/search', jsonParser ,async(req,res)=>{
+    const  existingCourse = await db.select().from(course).where(like(course.title,`%${req.body.name}%`) && eq(course.deleted,0));
+    if( existingCourse.length>0){
+       existingCourse.map((user)=>{
+        delete user.password
+      })
+    }
+    return res.send(200, existingCourse)
+  })
+router.post('/teacher', authenticateToken, jsonParser, async (req, res) => {
+    const existingCourse = await db.select().from(course).where(eq(course.id, req.body.course_id));
+    if (existingCourse.length <= 0) {
+        res.status(400).send({ err: "Course does not exist." })
+        return
+    }
+    const teacher = await db.select().from(users).where(eq(users.id, req.body.teacher_id))
+    if (teacher.length <= 0) {
+        res.status(400).send({ err: "Teacher does not exist." })
+        return
+    }
+    await db.insert(course_teachers).values(
+        [{
+            teacher_id: req.body.teacher_id,
+            course_id: req.body.course_id
+        }])
+    res.status(200).send({ message: "Teacher added." });
+})
+router.delete('/teacher/:id', authenticateToken, async (req, res) => {
+    await db.delete(course_teachers).where(and(eq(course_teachers.teacher_id, req.params.id), eq(course_teachers.course_id, req.body.course_id)))
+    res.status(200).send({ message: "Teacher removed." })
+
 })
 
 export default router;

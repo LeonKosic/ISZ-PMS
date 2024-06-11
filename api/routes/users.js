@@ -1,8 +1,8 @@
-import {users} from "../db/schema/users.js"
+import { users } from "../db/schema/users.js"
 
-import { Name,eq, like, and } from 'drizzle-orm';
+import { Name, eq, like, and } from 'drizzle-orm';
 
-import {db} from '../db/db.js';
+import { db } from '../db/db.js';
 import express from 'express';
 import bodyParser from 'body-parser';
 import bcrypt from 'bcrypt';
@@ -13,6 +13,8 @@ import { follow } from "../db/schema/follow.js";
 import { partners } from "../db/schema/partners.js";
 import { enrolled } from "../db/schema/enrolled.js";
 import { course } from "../db/schema/course.js";
+import { post } from "../db/schema/post.js";
+
 
 const router = express.Router();
 const jsonParser = bodyParser.json()
@@ -36,7 +38,7 @@ router.post('/login', jsonParser, async (req, res) => {
 
   if (passwordMatch) {
     const accessToken = generateAccessToken(existingUser[0]);
-    return res.status(200).json({ accessToken: accessToken, username: existingUser[0].username, role_id: existingUser[0].role_id, name: existingUser[0].name});
+    return res.status(200).json({ accessToken: accessToken, username: existingUser[0].username, role_id: existingUser[0].role_id, name: existingUser[0].name });
   }
 
   return res.status(401).json({ err: "Wrong password." });
@@ -81,7 +83,7 @@ router.post('/register', jsonParser, async (req, res) => {
   let isActive = 0;
 
   for (const partnerData of Partners) {
-    console.log(partner[1],partnerData.domain)
+    console.log(partner[1], partnerData.domain)
     if (partner[1].includes(partnerData.domain)) {
       if (partner[1].includes("student")) {
         roleId = 1;
@@ -139,7 +141,7 @@ router.put('/edit', jsonParser, authenticateToken, async (req, res) => {
 });
 
 router.get('/details', authenticateToken, jsonParser, async (req, res) => {
-  const { username } = req.query; 
+  const { username } = req.query;
 
   if (!username) {
     return res.status(400).send({ err: "Missing username parameter." });
@@ -157,24 +159,31 @@ router.get('/details', authenticateToken, jsonParser, async (req, res) => {
 
   return res.status(400).send({ err: "Username does not exist." });
 });
-router.post('/search', jsonParser ,async(req,res)=>{
-  const existingUser = await db.select().from(users).where(like(users.username,`%${req.body.username}%`) && eq(users.deleted,0) && eq(users.is_active,1));
-  if(existingUser.length>0){
-    existingUser.map((user)=>{
+router.post('/search', jsonParser, async (req, res) => {
+  const existingUser = await db.select().from(users).where(like(users.username, `%${req.body.username}%`) && eq(users.deleted, 0) && eq(users.is_active, 1));
+  if (existingUser.length > 0) {
+    existingUser.map((user) => {
       delete user.password
     })
   }
-  return res.send(200,existingUser)
+  return res.send(200, existingUser)
 })
 
 
-router.put('/unfollow', jsonParser, authenticateToken, async (req, res) => {
-  const followingUser = await db.select().from(users).where(eq(users.username, req.body.username))
+router.put('/unfollow', jsonParser, authenticateToken, async (req, res) => {s
   await db.delete(follow).where(and(
     eq(follow.follower_id, req.user.id),
-    eq(follow.following_id, followingUser[0].id)))
-
+    eq(follow.following_id, req.body.id)))
   res.status(200).send({ message: "Unfollow." })
+})
+
+router.post('/follow',jsonParser,authenticateToken,async(req,res)=>{
+  await db.insert(follow).values(
+    [{follower_id: req.user.id,
+    following_id:req.body.id
+  }])
+  res.status(200).send({message:"Following."})
+
 })
 
 router.get("/:id", authenticateToken, async (req, res) => {
@@ -185,6 +194,22 @@ router.get("/:id", authenticateToken, async (req, res) => {
   }
   res.status(200).send(user[0])
 });
+
+router.get('/followers/:id', authenticateToken, async (req, res) => {
+  const followers = await db.select().from(users).leftJoin(follow, eq(users.id, follow.follower_id))
+    .where(eq(follow.following_id, req.params.id))
+  res.status(200).send(followers)
+})
+router.get('/following/:id', authenticateToken, async (req, res) => {
+  const followers = await db.select().from(users).leftJoin(follow, eq(users.id, follow.following_id))
+    .where(eq(follow.follower_id, req.params.id))
+  res.status(200).send(followers)
+})
+router.get('/projects/:id', authenticateToken, async (req, res) => {
+  const projects = await db.select().from(post).where(eq(post.owner_id, req.params.id) && eq(post.type, 1) && eq(post.deleted, 0));
+
+  res.status(200).json(projects)
+})
 
 
 export default router;

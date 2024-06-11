@@ -138,6 +138,17 @@ body {
   }
 }
 
+.notfound {
+  @apply flex flex-col justify-center items-center mt-20;
+  
+  h1 {
+    @apply text-huge;
+  }
+  
+  p {
+    @apply text-medium italic; 
+  }
+}
 .courses-list-ctr {
   @apply max-w-screen-xl mx-auto py-16 grid grid-flow-row grid-cols-3 space-y-4 gap-4 justify-between items-center;
   
@@ -167,4 +178,15 @@ body {
       @apply absolute right-0 pr-4 mt-10 bottom-0 text-accent-200;
     }
   }
+}
+
+::-webkit-scrollbar {
+  @apply rounded-xl pr-4 right-4 py-2;
+  background: rgba(121, 100, 121, 0);
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply rounded-xl right-4 pr-4 my-2;
+ background: #c5c5c5; 
 }
