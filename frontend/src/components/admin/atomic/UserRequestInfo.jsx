@@ -10,7 +10,7 @@ export default function UserRequestInfo(props) {
     email: "<no-email>",
     role: "<no-role>"
   }, props);
-  
+
   return (
     <div class="flex flex-row items-center justify-center py-2">
       <UserCard
@@ -18,11 +18,12 @@ export default function UserRequestInfo(props) {
         name={merged.name}
         username={merged.username}
         role={merged.role}
-        
+        email={merged.email}
+
         showRole={true}
         showUsername={true}
         cardStyle={"border-2 border-accent-600 rounded-lg w-80 h-20 flex flex-row justify-around text-md"}
-        />
+      />
     </div>
   )
 }

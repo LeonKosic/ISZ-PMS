@@ -4,7 +4,7 @@ import { For, createResource, createSignal } from "solid-js";
 
 
 const fetchCategories = async () => {
-  const response = await api.get('/categories')
+  const response = await api.get('/admin/category')
   return response.data
 }
 
