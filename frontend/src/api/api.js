@@ -4,7 +4,7 @@ import { Alert } from "@suid/material";
 import { logoutAlert } from "../components/navbar/LogoutAlert";
 
 const defaultConfig = {
-  baseURL: `http://${import.meta.env.VITE_API_HOST}`,
+  baseURL: `${import.meta.env.VITE_API_HOST}`,
 }
 
 const api = {
@@ -59,30 +59,23 @@ const api = {
       });
   },
 
-  // payload => {username, login}
   login: async (payload) => {
-    return axios
-      .post(`${defaultConfig.baseURL}/users/login`, payload)
-      .then(response => {
-        if (response.status == 200) {
-          localStorage.setItem('accessToken', response.data.accessToken)
-          setUserDetails(response.data.user)
-        } else {
-          throw new Error(response.data.err);
-        }
-      }).catch(err => {
-        console.error("Error during login: ", err);
-        return response.data;
-      })
-  },
+    const response = await axios.post(
+      `/users/login`,
+      {
+        username: payload.username,
+        password: payload.password,
+      },
+      {
+        ...defaultConfig,
+        headers: defaultConfig.headers
+      }
+    )
 
-  logout: async () => {
-    if (localStorage.getItem('accessToken') == null)
-      return logoutAlert(false);
-
-    localStorage.removeItem('accessToken')
-    window.location.href = '/login';
-    return logoutAlert(true);
+    if (response.status == 200) {
+      localStorage.setItem('accessToken', response.data.accessToken)
+      setUserDetails(response.data.user)
+    } else console.error("Error during login: ", err)
   }
 }
 

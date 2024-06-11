@@ -1,9 +1,9 @@
 import {  mysqlTable, bigint,varchar , boolean } from 'drizzle-orm/mysql-core';
-import { users } from './users.js';
+import { post } from './post.js';
+import { commit } from './commit.js';
 
 export const project=mysqlTable('project',{
-    id:bigint('id', { mode: 'number' }).primaryKey().autoincrement(),
-    name:varchar('name',{ length: 256 }),
-    owner_id:bigint('owner_id',{mode:'number'}).notNull().references(()=>users.id),
-    deleted: boolean('deleted')
+    id:bigint('id', { mode: 'number' }).primaryKey().references(()=>post.id),
+    head: bigint('head', { mode: 'number' }).references(()=>commit.id),
+    
 })
