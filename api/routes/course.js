@@ -12,6 +12,7 @@ const jsonParser = bodyParser.json()
 import { authenticateToken, authenticateTeacher } from "../middleware/auth.js";
 import { board, course, course_teachers, users } from "../db/schema/schema.js";
 import { enrolled, post } from "../db/schema/schema.js";
+import { and } from 'drizzle-orm';
 
 
 router.post('/', authenticateToken, authenticateTeacher, jsonParser, async (req, res) => {
@@ -122,6 +123,39 @@ router.post("/post", authenticateToken, jsonParser, async (req, res) => {
         }]
     );
     res.status(200).send({ message: "Post made." });
+})
+
+router.post('/search', jsonParser ,async(req,res)=>{
+    const  existingCourse = await db.select().from(course).where(like(course.title,`%${req.body.name}%`) && eq(course.deleted,0));
+    if( existingCourse.length>0){
+       existingCourse.map((user)=>{
+        delete user.password
+      })
+    }
+    return res.send(200, existingCourse)
+  })
+router.post('/teacher', authenticateToken, jsonParser, async (req, res) => {
+    const existingCourse = await db.select().from(course).where(eq(course.id, req.body.course_id));
+    if (existingCourse.length <= 0) {
+        res.status(400).send({ err: "Course does not exist." })
+        return
+    }
+    const teacher = await db.select().from(users).where(eq(users.id, req.body.teacher_id))
+    if (teacher.length <= 0) {
+        res.status(400).send({ err: "Teacher does not exist." })
+        return
+    }
+    await db.insert(course_teachers).values(
+        [{
+            teacher_id: req.body.teacher_id,
+            course_id: req.body.course_id
+        }])
+    res.status(200).send({ message: "Teacher added." });
+})
+router.delete('/teacher/:id', authenticateToken, async (req, res) => {
+    await db.delete(course_teachers).where(and(eq(course_teachers.teacher_id, req.params.id), eq(course_teachers.course_id, req.body.course_id)))
+    res.status(200).send({ message: "Teacher removed." })
+
 })
 
 export default router;

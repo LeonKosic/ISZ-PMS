@@ -81,5 +81,10 @@ router.post('/solution', jsonParser, authenticateToken, async (req, res) => {
   })
   res.status(200).send({ message: "Solution added." })
 })
+router.post('/search', jsonParser ,async(req,res)=>{
+  const existingRequest = await db.select().from(post).where(like(post.title,`%${req.body.title}%`) && eq(post.deleted,0) && eq(post.type,2));
+
+  return res.send(200,existingRequest)
+})
 
 export default router
