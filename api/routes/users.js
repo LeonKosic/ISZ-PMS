@@ -37,7 +37,7 @@ router.post('/login', jsonParser, async (req, res) => {
 
   if (passwordMatch) {
     const accessToken = generateAccessToken(existingUser[0]);
-    return res.status(200).json({ accessToken: accessToken, username: existingUser[0].username, role_id: existingUser[0].role_id, name: existingUser[0].name });
+    return res.status(200).json({ accessToken: accessToken, username: existingUser[0].username, role_id: existingUser[0].role_id, name: existingUser[0].name, id: existingUser[0].id});
   }
 
   return res.status(401).json({ err: "Wrong password." });
@@ -191,7 +191,9 @@ router.get("/:id", authenticateToken, async (req, res) => {
     res.status(400).send({ err: "User does not exist." })
     return
   }
-  res.status(200).send(user[0])
+  delete user[0].password
+  const follows = await db.select().from(follow).where(eq(follow.following_id, req.params.id) && eq(follow.follower_id, req.user.id));
+  res.status(200).send({...user[0], follows:(follows.length > 0)})
 });
 
 router.get('/followers/:id', authenticateToken, async (req, res) => {
