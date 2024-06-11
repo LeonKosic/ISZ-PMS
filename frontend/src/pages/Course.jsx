@@ -14,7 +14,6 @@ import CourseUnenrollBtn from "../components/course/CourseUnenrollBtn";
 
 const getCourseInformation = async (id) => {
   const response = await api.get(`/course/${id}`)
-  console.log(response.data)
   return response.data;
 }
 
@@ -49,8 +48,6 @@ export default function Course(props) {
       payload["password"] = coursePassword();
       payload["password2"] = coursePasswordConfirm();
     }
-
-    console.log(payload)
 
     const response = await api.put(
       '/course',
