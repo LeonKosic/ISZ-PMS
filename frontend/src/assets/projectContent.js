@@ -6,7 +6,7 @@ export const projectInfo = () => ({
     username: "oggnjen",
     name: "Ognjen Komadina"
   },
-  collaborators: [
+  team: [
     { id: "2", username: "testuser2", name: "fullname2" },
     { id: "3", username: "testuser3", name: "fullname3" },
     { id: "4", username: "testuser4", name: "fullname4" },
