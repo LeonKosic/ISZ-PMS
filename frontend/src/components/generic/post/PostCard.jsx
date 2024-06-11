@@ -1,9 +1,11 @@
-import { createSignal } from "solid-js"
+import { createResource, createSignal } from "solid-js"
 import { redirect } from "@solidjs/router"
 import api from "../../../api/api"
+import preprocessor from "../../../api/preprocessor"
 
 export default function PostCard(props) {
   const [post, setPost] = createSignal(props.data)
+  const [author] = createSignal(preprocessor.profile.details(props.owner_id))
 
   const callback = async (id, status) => {
     await api.post(`/post/like`, { id, status: post().liked == status ? 0 : status })
@@ -21,7 +23,7 @@ export default function PostCard(props) {
         <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-200">{post().title}</h5>
       </a>
       <p class="text-sm text-accent-300">
-        by <a href={"/profiles/" + post().author.id}>{post().author.username}</a>
+        by <a href={"/profiles/" + post().owner_id}>{author().username}</a>
       </p>
       <p class="mb-2 font-normal text-accent-200">{post().body}</p>
       <div class="grid grid-cols-9 grid-rows-1 gap-3">
@@ -30,7 +32,7 @@ export default function PostCard(props) {
           classList={{ "bg-accent-500": post().liked == 1, "bg-primary-500": post().liked != 1 }}
         >
           <div class="flex flex-row items-center justify-around text-2xl">
-            <i class="fa-solid fa-thumbs-up"/>
+            <i class="fa-solid fa-thumbs-up" />
           </div>
         </btn>
         <p class="text-gray-400 text-center">{post().likes}</p>
@@ -39,7 +41,7 @@ export default function PostCard(props) {
           classList={{ "bg-accent-500": post().liked == -1, "bg-primary-500": post().liked != -1 }}
         >
           <div class="flex flex-row items-center justify-around text-2xl">
-            <i class="fa-solid fa-thumbs-down"/>
+            <i class="fa-solid fa-thumbs-down" />
           </div>
         </btn>
         <btn
