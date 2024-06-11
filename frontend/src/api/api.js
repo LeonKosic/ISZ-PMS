@@ -76,23 +76,6 @@ const api = {
       localStorage.setItem('accessToken', response.data.accessToken)
       setUserDetails(response.data.user)
     } else console.error("Error during login: ", err)
-
-    // return axios
-    //   .post(`/users/login`, {
-    //     username: payload.username,
-    //     password: payload.password
-    //   },
-    //   )
-    //   .then(response => {
-    //     if (response.status == 200) {
-    //       localStorage.setItem('accessToken', response.data.accessToken)
-    //       setUserDetails(response.data.user)
-    //     } else {
-    //       throw new Error(response.data.err);
-    //     }
-    //   }).catch(err => {
-    //     console.error("Error during login: ", err);
-    //   })
   }
 }
 
