@@ -1,5 +1,5 @@
 
-import { Name, eq, and } from 'drizzle-orm';
+import { Name, eq, and, like } from 'drizzle-orm';
 import { db } from '../db/db.js';
 import express from 'express';
 import jwt from 'jsonwebtoken'

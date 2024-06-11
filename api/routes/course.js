@@ -1,5 +1,5 @@
 import { category } from "../db/schema/category.js"
-import { eq } from 'drizzle-orm';
+import { eq, like } from 'drizzle-orm';
 import { db } from '../db/db.js';
 import express from 'express';
 import bodyParser from 'body-parser';
