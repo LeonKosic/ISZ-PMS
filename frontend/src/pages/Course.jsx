@@ -50,6 +50,8 @@ export default function Course(props) {
       payload["password2"] = coursePasswordConfirm();
     }
 
+    console.log(payload)
+
     const response = await api.put(
       '/course',
       payload
@@ -83,7 +85,7 @@ export default function Course(props) {
                 // ndms mijenjati jer radi
                 />
 
-                <Show when={course().owner_id == userDetails.id} class="py-2">
+                <Show when={course().owner_id == userDetails.id || course().isTeacher} class="py-2">
                   <Button
                     color="pmsScheme"
                     variant="outlined"
@@ -99,7 +101,7 @@ export default function Course(props) {
                     <DialogContent>
                       <Stack direction="column" gap={2}>
                         <Input
-                          placeholder={courseName()}
+                          placeholder={course().name}
                           type="text"
                           id="nameInput"
                         />
@@ -117,17 +119,18 @@ export default function Course(props) {
                           id="passwordConfirmInput"
                         />
 
-                        <KickParticipantField
-                          courseID={courseID}
+                        {/* ukras :))) */}
+                        {/* <KickParticipantField
+                          courseID={course().id}
                           users={course().participants}
-                        />
+                        /> */}
 
                         <AddTeachersField
-                          courseID={courseID}
+                          courseID={course().id}
                         />
 
                         <RemoveTeachersField
-                          courseID={courseID}
+                          courseID={course().id}
                           teachers={course().teachers}
                         />
 
