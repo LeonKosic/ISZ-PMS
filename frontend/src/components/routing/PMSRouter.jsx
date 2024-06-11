@@ -15,9 +15,8 @@ export default function PMSRouter() {
       <Route path="/register" component={Register} />
       <Route path="/profiles/:id" component={Profile} />
       <Route path="/landing" component={Landing} />
-      {/* <Route path="/pms-admin" component={AdminPanel}/> */}
       <Route path="/courses" component={Courses} />
-      <Route path="/courses/:id" component={Course} />
+      <Route path="/course/:id" component={Course} />
 
       <Route path="*" component={NotFound} />
     </Router>

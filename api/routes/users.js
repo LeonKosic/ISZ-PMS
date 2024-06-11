@@ -15,7 +15,6 @@ import { enrolled } from "../db/schema/enrolled.js";
 import { course } from "../db/schema/course.js";
 import { post } from "../db/schema/post.js";
 
-
 const router = express.Router();
 const jsonParser = bodyParser.json()
 
