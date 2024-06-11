@@ -139,6 +139,17 @@ body {
   }
 }
 
+.notfound {
+  @apply flex flex-col justify-center items-center mt-20;
+  
+  h1 {
+    @apply text-huge;
+  }
+  
+  p {
+    @apply text-medium italic; 
+  }
+}
 .courses-list-ctr {
   @apply max-w-screen-xl mx-auto py-16 grid grid-flow-row grid-cols-3 space-y-4 gap-4 justify-between items-center;
   
