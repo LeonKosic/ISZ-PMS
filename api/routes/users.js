@@ -170,13 +170,20 @@ router.post('/search', jsonParser, async (req, res) => {
 })
 
 
-router.put('/unfollow', jsonParser, authenticateToken, async (req, res) => {
-  const followingUser = await db.select().from(users).where(eq(users.username, req.body.username))
+router.put('/unfollow', jsonParser, authenticateToken, async (req, res) => {s
   await db.delete(follow).where(and(
     eq(follow.follower_id, req.user.id),
-    eq(follow.following_id, followingUser[0].id)))
-
+    eq(follow.following_id, req.body.id)))
   res.status(200).send({ message: "Unfollow." })
+})
+
+router.post('/follow',jsonParser,authenticateToken,async(req,res)=>{
+  await db.insert(follow).values(
+    [{follower_id: req.user.id,
+    following_id:req.body.id
+  }])
+  res.status(200).send({message:"Following."})
+
 })
 
 router.get("/:id", authenticateToken, async (req, res) => {
