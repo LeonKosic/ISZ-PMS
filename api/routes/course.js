@@ -201,5 +201,9 @@ router.delete('/teacher/:id', authenticateToken, async (req, res) => {
   res.status(200).send({ message: "Teacher removed." })
 
 })
+router.get('/my', authenticateToken, jsonParser, async (req, res) => {
+    const courses = await db.select().from(enrolled).innerJoin(course, eq(course.id, enrolled.course_id)).where(eq(enrolled.student_id, req.user.id));
+    res.status(200).json(courses)
+})
 
 export default router;
