@@ -188,13 +188,13 @@ router.get("/:id", authenticateToken, async (req, res) => {
 });
 
 router.get('/followers/:id', authenticateToken, async (req, res) => {
-  const followers = await db.select().from(users).leftJoin(follow, eq(users.id, follow.following_id))
+  const followers = await db.select().from(users).leftJoin(follow, eq(users.id, follow.follower_id))
     .where(eq(follow.following_id, req.params.id))
   res.status(200).send(followers)
 })
 router.get('/following/:id', authenticateToken, async (req, res) => {
-  const followers = await db.select().from(users).leftJoin(follow, eq(users.id, follow.follower_id))
-    .where(eq(follow.following_id, req.params.id))
+  const followers = await db.select().from(users).leftJoin(follow, eq(users.id, follow.following_id))
+    .where(eq(follow.follower_id, req.params.id))
   res.status(200).send(followers)
 })
 router.get('/projects/:id', authenticateToken, async (req, res) => {
