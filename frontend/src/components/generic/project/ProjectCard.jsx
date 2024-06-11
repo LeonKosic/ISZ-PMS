@@ -13,11 +13,7 @@ export default function ProjectCard(props) {
       <div class="flex flex-row justify-center items-center"
         style={{ 'overflow-wrap': 'break-word', 'word-wrap': 'break-word' }}>
         <p class="text-xl p-1">
-          {props.title}
-        </p>
-
-        <p class="text-lg p-1">
-          {props.body}
+          {props.title} | <span class="italic">{props.body}</span>
         </p>
       </div>
     </div>

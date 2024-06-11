@@ -11,7 +11,7 @@ import { Button } from "@suid/material";
 import preprocessor from "../api/preprocessor";
 
 const getProfileInfo = async (id) => {
-  let details = await preprocessor.profile.userDetails(id);
+  let details = await preprocessor.profile.details(id);
   let projects = await preprocessor.profile.projects(id);
   let followers = await preprocessor.profile.followers(id);
   let following = await preprocessor.profile.following(id);
@@ -19,9 +19,15 @@ const getProfileInfo = async (id) => {
   return {
     loading: false,
     ...details,
+
     followers: followers,
-    following: following
+    following: following,
+    projects: projects
   }
+  /*
+  console.log(response)
+  return response;
+  */
 }
 
 export default function Profile(props) {
@@ -49,19 +55,10 @@ export default function Profile(props) {
     return response.data;
   }
 
-  const [user, setUser] = createSignal({
-    loading: true
-  })
-
-  setUser(getProfileInfo(currentUserID))
-  console.log(`currentUserID: ${currentUserID}, userDetails.id: ${userDetails.id}`)
+  const [user] = createResource(async () => getProfileInfo(currentUserID));
 
   return (
-    // <Show when={user.loading == false}>
-    <Show when={user().loading == false} fallback={Loading}>
-      {
-        console.log(user())
-      }
+    <Show when={user.loading == false} fallback={Loading}>
       <div class="w-1/3 mx-auto mt-8 grid grid-flow-row grid-cols-1 ">
         <Suspense fallback={<Loading />}>
           <div class="bg-accent-600 bg-opacity-10">
@@ -133,7 +130,7 @@ export default function Profile(props) {
             </p>
             <hr class="border-2 border-accent-600 my-2 mb-3 ml-3 mr-3 rounded-lg" />
             <ProjectList
-              projects={projects().data}
+              projects={user().projects}
               cardClickAction={(id) => { window.location.href = `/projects/${id}` }}
               cardStyle={"hover:cursor-pointer rounded-lg border-2 border-accent-600 my-1 ms-2 mr-2 hover:bg-accent-600 duration-300 transition-all"}
             />

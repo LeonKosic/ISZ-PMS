@@ -3,7 +3,7 @@ import { userDetails } from "./stores";
 
 const preprocessor = {
   profile: {
-    userDetails: async (userID) => {
+    details: async (userID) => {
       const response = await api.get(`/users/${userID}`)
 
       const parsed = {
@@ -21,7 +21,7 @@ const preprocessor = {
 
       let followers = []
       response.data.forEach(async (e) => {
-        const followerInfo = await userDetails(e.follow.follower_id)
+        const followerInfo = await preprocessor.profile.details(e.follow.follower_id)
         followers.push(followerInfo)
       });
 
@@ -33,7 +33,7 @@ const preprocessor = {
 
       let following = []
       response.data.forEach(async (e) => {
-        const followingInfo = await userDetails(e.follow.following_id)
+        const followingInfo = await preprocessor.profile.details(e.follow.following_id)
         following.push(followingInfo)
       });
 
