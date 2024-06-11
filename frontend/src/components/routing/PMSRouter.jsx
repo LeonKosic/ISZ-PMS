@@ -18,8 +18,9 @@ export default function PMSRouter() {
       <Route path="/profiles/:id" component={Profile} />
       <Route path="/landing" component={Landing} />
       <Route path="/courses" component={Courses} />
-      <Route path="/courses/:id" component={Course} />
       <Route path="/post/:id" component={PostPage} />
+      <Route path="/course/:id" component={Course} />
+      <Route path="/courses/:id" component={Course} />
 
       <Route path="*" component={NotFound} />
     </Router>
