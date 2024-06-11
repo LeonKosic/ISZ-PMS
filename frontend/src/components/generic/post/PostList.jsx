@@ -7,8 +7,6 @@ export default function PostList(props) {
       <For each={props.data}>
         {
           (post) => {
-            console.log(post)
-
             return (<PostCard
               data={post}
               owner_id={post.owner_id}
