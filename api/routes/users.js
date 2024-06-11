@@ -38,7 +38,7 @@ router.post('/login', jsonParser, async (req, res) => {
 
   if (passwordMatch) {
     const accessToken = generateAccessToken(existingUser[0]);
-    return res.status(200).json({ accessToken: accessToken, username: existingUser[0].username, role_id: existingUser[0].role_id, name: existingUser[0].name});
+    return res.status(200).json({ accessToken: accessToken, username: existingUser[0].username, role_id: existingUser[0].role_id, name: existingUser[0].name, id: existingUser[0].id});
   }
 
   return res.status(401).json({ err: "Wrong password." });
