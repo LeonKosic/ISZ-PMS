@@ -1,5 +1,5 @@
 import api from "../api/api";
-import { Show, Suspense, createResource } from "solid-js";
+import { Show, Suspense, createResource, createSignal } from "solid-js";
 import Loading from "../components/placeholders/Loading";
 import UserList from "../components/generic/user/UserList";
 import ProjectList from "../components/generic/project/ProjectList";
@@ -8,6 +8,21 @@ import { useLocation } from "@solidjs/router";
 import { userDetails } from "../api/stores";
 import { projects } from "../assets/profile";
 import { Button } from "@suid/material";
+import preprocessor from "../api/preprocessor";
+
+const getProfileInfo = async (id) => {
+  let details = await preprocessor.profile.userDetails(id);
+  let projects = await preprocessor.profile.projects(id);
+  let followers = await preprocessor.profile.followers(id);
+  let following = await preprocessor.profile.following(id);
+
+  return {
+    loading: false,
+    ...details,
+    followers: followers,
+    following: following
+  }
+}
 
 export default function Profile(props) {
   const currentUserID = useLocation().pathname.split('/')[2]
@@ -34,29 +49,25 @@ export default function Profile(props) {
     return response.data;
   }
 
+  const [user, setUser] = createSignal({
+    loading: true
+  })
 
-  const [user] = createResource(async () => {
-    const response = await api.get(`/users/details?username=${currentUserID}`);
-    return response.data;
-  });
-
-  // const [projects] = createResource(async () => {
-  //   const response = await api.get(currentUserID == userDetails.id ? '/projects/my' : `/users/${currentUserID}`);
-  //   return response.data;
-  // })
-
+  setUser(getProfileInfo(currentUserID))
   console.log(`currentUserID: ${currentUserID}, userDetails.id: ${userDetails.id}`)
 
   return (
     // <Show when={user.loading == false}>
-    <Show when={user.loading == false} fallback={Loading}>
+    <Show when={user().loading == false} fallback={Loading}>
+      {
+        console.log(user())
+      }
       <div class="w-1/3 mx-auto mt-8 grid grid-flow-row grid-cols-1 ">
         <Suspense fallback={<Loading />}>
           <div class="bg-accent-600 bg-opacity-10">
             <ProfileHeader
               username={user()?.username}
               name={user()?.name}
-              // role={user()?.role}
               role={user()?.email}
               bio={"Some bio"}
             />
