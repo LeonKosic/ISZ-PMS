@@ -2,12 +2,13 @@ import { createResource, Suspense } from "solid-js";
 import ProjectList from "../components/generic/ProjectList";
 import api from "../api/api";
 import Loading from "../components/placeholders/Loading";
-import { Button } from "@suid/material"
 
 export default function Projects(props) {
   const [projects] = createResource(async () => {
-    const response = await api.get('/projects/all')
-    return response.data
+    const myProjects = (await api.get('/projects/my')).data
+    const followingProjects = (await api.get('/projects/following')).data
+
+    return [...myProjects, ...followingProjects]
   })
 
   return (
@@ -23,11 +24,16 @@ export default function Projects(props) {
       </div> */}
 
       <Suspense fallback={<Loading message={"Loading projects, please wait..."} />}>
-        <ProjectList
-          projects={projects()}
-          cardClickAction={(id) => { window.location.href = `/project/${id}` }}
-          cardStyle={"hover:cursor-pointer rounded-lg border-2 border-accent-600 my-1 ms-2 mr-2 hover:bg-accent-600 duration-300 transition-all"}
-        />
+        {
+          console.log(projects())
+        }
+        <div class="max-w-screen-2xl mx-auto">
+          <ProjectList
+            projects={projects()}
+            cardClickAction={(id) => { window.location.href = `/project/${id}` }}
+            cardStyle={"hover:cursor-pointer rounded-lg border-2 border-accent-600 my-1 ms-2 mr-2 hover:bg-accent-600 duration-300 transition-all w-full"}
+          />
+        </div>
       </Suspense>
     </div>
   )

@@ -9,6 +9,7 @@ import Courses from "../../pages/Courses.jsx";
 import Course from "../../pages/Course.jsx";
 import Admin from "../../pages/Admin.jsx"
 import PostPage from "../../pages/PostPage.jsx";
+import Projects from "../../pages/Projects.jsx";
 
 export default function PMSRouter() {
   return (

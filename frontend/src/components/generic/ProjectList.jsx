@@ -7,13 +7,14 @@ export default function ProjectList(props) {
   }, props)
 
   return (
-    <div class={props?.style}>
+    <div class={`${props?.style}`}>
       <For each={props.projects}>
         {
           (project) =>
             <ProjectCard
               title={project.title}
               projectid={project.id}
+              body={project.body}
 
               clickAction={merged.cardClickAction}
 

@@ -7,13 +7,18 @@ export default function ProjectCard(props) {
 
   return (
     <div
-      class={props.cardStyle}
+      class={`flex justify-center items-center mx-auto ${props.cardStyle}`}
       onClick={() => { merged.clickAction(props.projectid) }}
     >
-      <div class="flex flex-row justify-center items-center"
-        style={{ 'overflow-wrap': 'break-word', 'word-wrap': 'break-word' }}>
-        <p class="p-1">
+      <div class="flex flex-col justify-center items-center text-center overflow-hidden">
+        <p class="p-2 break-words text-2xl">
           {props.title}
+        </p>
+
+        <hr class="border-2 border-accent-600 rounded-lg w-full" />
+
+        <p class="p-2 italic break-words text-lg">
+          {props.body}
         </p>
       </div>
     </div>
