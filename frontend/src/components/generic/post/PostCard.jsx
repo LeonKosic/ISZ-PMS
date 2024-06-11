@@ -1,4 +1,4 @@
-import { Show, Suspense, createResource, createSignal } from "solid-js"
+import { Show, createResource, createSignal } from "solid-js"
 import { redirect } from "@solidjs/router"
 import api from "../../../api/api"
 import preprocessor from "../../../api/preprocessor"
@@ -13,7 +13,6 @@ const getAuthor = async (owner) => {
 
 export default function PostCard(props) {
   const [post, setPost] = createSignal(props.data)
-  // const [author, setAuthor] = createSignal({ loading: true })
   const [author] = createResource(() => getAuthor(props.owner_id))
 
   const callback = async (id, status) => {
@@ -25,8 +24,6 @@ export default function PostCard(props) {
       liked: post().liked == status ? 0 : status
     })
   }
-
-  // setAuthor(getAuthor(props.owner_id));
 
   return (
     <Show when={author.loading == false}>
