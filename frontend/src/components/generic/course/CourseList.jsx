@@ -2,20 +2,17 @@ import CourseCard from "./CourseCard"
 
 export default function CourseList(props) {
   return (
-    <div class="courses-list-ctr">
-      <For each={props?.courses()}>
+    <div class="max-w-screen-xl mx-auto py-16 grid grid-flow-row grid-cols-3 space-y-4 gap-4 justify-between items-center;">
+      <For each={props?.courses}>
         {
-          (course) => {
-            if (course.deleted == false)
-              return (
-                <a href={`/courses/${course.id}`}>
-                  <CourseCard
-                    name={course.name}
-                    about={"Opis kursa..."}
-                  />
-                </a>
-              )
-          }
+          (course) =>
+            <a href={`/courses/${course.id}`}>
+              <CourseCard
+                name={course.name}
+                about={"Opis kursa..."}
+                cardStyle={props.cardStyle}
+              />
+            </a>
         }
       </For>
     </div>
