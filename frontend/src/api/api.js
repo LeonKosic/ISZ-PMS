@@ -1,8 +1,8 @@
 import axios from "axios";
-import { setUserDetails } from "./stores";
+import { setUserDetails, userDetails } from "./stores";
 
 const defaultConfig = {
-  baseURL: `http://${import.meta.env.VITE_API_HOST}`,
+  baseURL: `${import.meta.env.VITE_API_HOST}`,
 }
 
 const api = {
@@ -57,21 +57,31 @@ const api = {
       });
   },
 
-  // payload => {username, login}
   login: async (payload) => {
-    return axios
-      .post(`${defaultConfig.baseURL}/users/login`, payload)
-      .then(response => {
-        if (response.status == 200) {
-          localStorage.setItem('accessToken', response.data.accessToken)
-          setUserDetails(response.data.user)
-        } else {
-          throw new Error(response.data.err);
-        }
-      }).catch(err => {
-        console.error("Error during login: ", err);
-        return response.data;
-      })
+    const response = await axios.post(
+      `/users/login`,
+      {
+        username: payload.username,
+        password: payload.password,
+      },
+      {
+        ...defaultConfig,
+        headers: defaultConfig.headers
+      }
+    )
+
+    if (response.status == 200) {
+      localStorage.setItem('accessToken', response.data.accessToken)
+      localStorage.setItem("user_id", response.data.id)
+      localStorage.setItem("user_name", response.data.name)
+      localStorage.setItem("user_username", response.data.username)
+
+      setUserDetails("id", response.data.id)
+      setUserDetails("name", response.data.name)
+      setUserDetails("username", response.data.username)
+    } else console.error("Error during login: ", err)
+
+    console.log(userDetails)
   }
 }
 

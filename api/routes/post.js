@@ -81,4 +81,9 @@ router.post('/comment', authenticateToken, jsonParser, async (req, res) => {
     }])
   res.status(200).send({ message: "Comment added." })
 })
+router.post('/filter', jsonParser, authenticateToken, async (req, res) => {
+  const { categories } = req.body;
+  
+
+})
 export default router
