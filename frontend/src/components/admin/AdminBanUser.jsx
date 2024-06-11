@@ -1,57 +1,45 @@
 import { Stack } from "@suid/material";
 import { createSignal } from "solid-js";
 import UserList from '../generic/user/UserList'
-
+import api from "../../api/api";
 const banUser = async (id) => {
   const response = await api.post('/admin/ban', { id: id })
   return response.data;
 }
 
-const _searchUser = async (username) => {
-  if (name == '')
+const searchUser = async (username) => {
+  if (username == '')
     return []
-  
+
   const response = await api.post('/users/search', { username: username })
   return response.data;
 }
 
-const searchUser = (foo) => {
-  return ([
-    { id: "1", username: "testuser1", name: "ratko mladic" },
-    { id: "1", username: "testuser1", name: "ratko mladic" },
-    { id: "1", username: "testuser1", name: "ratko mladic" },
-    { id: "1", username: "testuser1", name: "ratko mladic" },
-    { id: "1", username: "testuser1", name: "ratko mladic" },
-    { id: "1", username: "testuser1", name: "ratko mladic" },
-    { id: "1", username: "testuser1", name: "ratko mladic" },
-    { id: "1", username: "testuser1", name: "ratko mladic" },
-  ])
-}
 
 export default function AdminBanUser(props) {
-  const [targetUsername, setTargetUsername] = createSignal('') 
+  const [targetUsername, setTargetUsername] = createSignal('')
   const [users, setUsers] = createSignal([]);
-  
+
   const handleInputChange = (event) => {
     setTargetUsername(event.target.value)
     setUsers(searchUser(event.target.value))
   }
-  
+
   return (
-    <div class="ban-user-ctr h-80">
-      <h1 class="ctr-title">Ban user</h1>
-      <hr class="my-2 py-2"/>
-      
+    <div class="border-2 ms-8 p-4 rounded-xl h-80 w-max">
+      <h1 class="text-2xl">Ban user</h1>
+      <hr class="my-2 py-2" />
+
       <Stack spacing={2}>
         <input
-          type="text"    
+          type="text"
           value={targetUsername()}
           onChange={handleInputChange}
-          class="default-form form-big"
+          class="subpixel-antialiased rounded-lg bg-opacity-10 border-accent-600 bg-primary-100 border-2 p-4 text-xl"
           placeholder="Search users..."
         />
       </Stack>
-      
+
       <Show when={users().length > 0}>
         <div class="h-80 overflow-y-scroll">
           <UserList
@@ -62,7 +50,7 @@ export default function AdminBanUser(props) {
             showRole={false}
             cardUseMaxWidth={false}
             showUsername={false}
-            />
+          />
         </div>
       </Show>
     </div>

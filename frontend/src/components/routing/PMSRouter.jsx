@@ -8,7 +8,6 @@ import NotFound from "../../pages/NotFound.jsx";
 import Courses from "../../pages/Courses.jsx";
 import Course from "../../pages/Course.jsx";
 import Admin from "../../pages/Admin.jsx"
-import Post from "../post/Post.jsx";
 import PostPage from "../../pages/PostPage.jsx";
 
 export default function PMSRouter() {

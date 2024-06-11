@@ -3,8 +3,6 @@ import { For, Show, createResource } from "solid-js";
 import UserRequestInfo from "./atomic/UserRequestInfo";
 import api from "../../api/api";
 
-// TODO: api endpoints
-
 const fetchRequests = async () => {
   const response = await api.get('/admin/requests')
   return response.data
@@ -22,21 +20,21 @@ const denyRequest = async (id) => {
 
 export default function AdminUserReq(props) {
   const [newRequests] = createResource(fetchRequests);
-  const requests = [{}, {}, {}, {}, {}, {}]
-  
+
   return (
-    <div class="user-req-ctr">
+    // <Show when={newRequests.loading == false}>
+    <div class="border-2 subpixel-antialiased ms-8 p-4 rounded-xl h-80 w-full">
       <Stack spacing={2}>
-        <h1 class="ctr-title">Pending user requests</h1>
-        <hr class="my-2 py-2" />
-        
+        <h1 class="text-2xl">Pending user requests</h1>
+        <hr class="my-2 bg-opacity-100" />
+
         <Show
           // when={newRequests.loading == false}
           when={true}
           fallback={<p class="italic">Loading user requests...</p>}
         >
-          <div class="request-ctr h-80 overflow-y-scroll">
-            <For each={requests}>
+          <div class="max-h-56 overflow-y-scroll">
+            <For each={newRequests()}>
               {
                 (req) => (
                   <div class="flex flex-row items-center justify-center">
@@ -44,19 +42,19 @@ export default function AdminUserReq(props) {
                       <Button
                         variant="outlined"
                         color="pmsScheme"
-                        onClick={() => denyRequest(req.id)}
-                        >
-                        <i class="fa-solid fa-check"/>
-                      </Button>  
+                        onClick={() => approveRequest(req.id)}
+                      >
+                        <i class="fa-solid fa-check" />
+                      </Button>
                     </div>
-                    
+
                     <UserRequestInfo
                       fullname={"test"}
                       username={"test"}
                       email={"test"}
                       id={""}
                     />
-                    
+
                     <div class="flex flex-row items-center justify-center">
                       <div class="ml-4 w-min rounded-md hover:bg-red-400 transition-all duration-500">
                         <Button
@@ -64,20 +62,21 @@ export default function AdminUserReq(props) {
                           color="pmsScheme"
                           onClick={() => denyRequest(req.id)}
                         >
-                          <i class="fa-solid fa-xmark"/>
-                        </Button> 
+                          <i class="fa-solid fa-xmark" />
+                        </Button>
                       </div>
                     </div>
                   </div>
                 )
               }
             </For>
-              
-              <Stack direction="row" spacing={1}>
-              </Stack>
+
+            <Stack direction="row" spacing={1}>
+            </Stack>
           </div>
         </Show>
       </Stack>
     </div>
+    // </Show>
   )
 }

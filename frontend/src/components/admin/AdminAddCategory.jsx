@@ -3,7 +3,6 @@ import { createSignal } from "solid-js";
 import api from "../../api/api";
 
 const addCategory = async (name) => {
-  console.log(name)
   const response = await api.post('/admin/category', { name: name })
   return response.data
 }
@@ -14,27 +13,27 @@ export default function AdminAddCategory(props) {
   const handleInputChange = (event) => {
     setCategoryName(event.target.value);
   }
-  
+
   return (
-    <div class="add-ctg-ctr">
+    <div class="border-2 subpixel-antialiased ms-8 p-4 rounded-xl h-auto w-full">
       <h1 class="ctr-title">Add a category</h1>
       <hr class="my-2 py-2" />
-      
+
       <Stack direction="row">
         <input
           type="text"
-          class="default-form form-big mr-2"
+          class="subpixel-antialiased rounded-lg bg-opacity-10 bg-primary-100 border-2 p-4 text-xl mr-4 w-full border-accent-600"
           value={categoryName()}
           onChange={handleInputChange}
           placeholder="Name"
-          />
-          
-        <div onClick={() => addCategory(categoryName())}>  
+        />
+
+        <div onClick={() => addCategory(categoryName())}>
           <Button
             variant="outlined"
             color="pmsScheme"
             class="m-2 h-full"
-            >
+          >
             Add
           </Button>
         </div>
