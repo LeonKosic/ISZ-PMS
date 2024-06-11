@@ -6,13 +6,13 @@ import { Button } from "@suid/material"
 
 export default function Projects(props) {
   const [projects] = createResource(async () => {
-    const response = await api.get('/project/my')
+    const response = await api.get('/projects/all')
     return response.data
   })
 
   return (
     <div class="pt-10 pb-5">
-      <div class="flex flex-auto items-center justify-center">
+      {/* <div class="flex flex-auto items-center justify-center">
         <Button
           color="pmsScheme"
           variant="outlined"
@@ -20,7 +20,7 @@ export default function Projects(props) {
         >
           Create Project
         </Button>
-      </div>
+      </div> */}
 
       <Suspense fallback={<Loading message={"Loading projects, please wait..."} />}>
         <ProjectList
