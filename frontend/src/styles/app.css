@@ -14,6 +14,7 @@
 
 body {
   @apply bg-primary-800 text-accent-100 scroll-smooth;
+  scroll-behavior: smooth;
 }
 
 .inset-padding {
@@ -138,6 +139,17 @@ body {
   }
 }
 
+.notfound {
+  @apply flex flex-col justify-center items-center mt-20;
+  
+  h1 {
+    @apply text-huge;
+  }
+  
+  p {
+    @apply text-medium italic; 
+  }
+}
 .courses-list-ctr {
   @apply max-w-screen-xl mx-auto py-16 grid grid-flow-row grid-cols-3 space-y-4 gap-4 justify-between items-center;
   
@@ -167,4 +179,50 @@ body {
       @apply absolute right-0 pr-4 mt-10 bottom-0 text-accent-200;
     }
   }
+}
+
+.course-page {
+  @apply max-w-screen-xl mx-auto flex flex-row flex-shrink;
+  /* @apply max-w-screen-xl mx-auto grid grid-flow-row grid-cols-2 space-y-4 gap-4 justify-center items-center my-4; */
+  
+    .course-card {
+    @apply relative
+    p-4 pl-2 w-auto mx-6
+    border-2 rounded-xl border-accent-700 
+    transition-all duration-200;
+    
+    .title {
+      @apply pl-2 pb-2 text-medium overflow-hidden grid grid-flow-row grid-cols-1 justify-center place-items-center;
+    }
+    
+    .separator {
+      @apply w-full mx-auto opacity-75 pb-3;
+    }
+    
+    .about {
+      @apply pl-2 pb-2 text-small;
+    }
+    
+    .course-id {
+      @apply absolute right-0 pr-4 mt-10 bottom-0 text-accent-200;
+    }
+  }
+}
+
+
+::-webkit-scrollbar {
+  @apply rounded-xl pr-4 right-4 py-2;
+  background: rgba(121, 100, 121, 0);
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply rounded-xl right-4 pr-4;
+ background: #c5c5c5; 
+}
+
+.edit-course-usercard {
+  @apply hover:bg-accent-200;
+  @apply rounded-xl right-4 pr-4 my-2;
+ background: #c5c5c5; 
 }
