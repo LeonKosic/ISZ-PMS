@@ -13,14 +13,7 @@ import { course } from '../assets/course'
 import CourseUnenrollBtn from "../components/course/CourseUnenrollBtn";
 
 const getCourseInformation = async (id) => {
-  // 1: get
-  const response = await api.get(`/course?id=${id}`)
-
-  // 2: post -> kako kreirati na ovom endpointu?
-  // const response = await api.post(`/course`, {
-  //   id: id
-  // })
-
+  const response = await api.get(`/course/${id}`)
   return response.data;
 }
 
