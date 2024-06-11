@@ -117,7 +117,7 @@ router.delete('/user', authenticateToken, jsonParser, async (req, res) => {
     res.send(400, { err: "Username does not exist." })
     return
   }
-  await db.update(users).set({ deleted: '1' }).where(eq(users.username, req.user.id))
+  await db.update(users).set({ deleted: '1' }).where(eq(users.id, req.user.id))
   res.send(200, { message: "Account deleted." })
 
 })
