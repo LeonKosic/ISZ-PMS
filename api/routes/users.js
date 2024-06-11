@@ -192,7 +192,9 @@ router.get("/:id", authenticateToken, async (req, res) => {
     res.status(400).send({ err: "User does not exist." })
     return
   }
-  res.status(200).send(user[0])
+  delete user[0].password
+  const follows = await db.select().from(follow).where(eq(follow.following_id, req.params.id) && eq(follow.follower_id, req.user.id));
+  res.status(200).send({...user[0], follows:(follows.length > 0)})
 });
 
 router.get('/followers/:id', authenticateToken, async (req, res) => {
