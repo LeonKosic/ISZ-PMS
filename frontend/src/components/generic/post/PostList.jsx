@@ -3,14 +3,17 @@ import PostCard from "./PostCard"
 
 export default function PostList(props) {
   return (
-    <div class="grid grid-cols-1 gap-3 bg-primary-900 mt-3 h-full">
+    <div class="grid grid-cols-1 gap-3 mt-3 h-full">
       <For each={props.data}>
         {
-          (post) =>
-            <PostCard
+          (post) => {
+            console.log(post)
+
+            return (<PostCard
               data={post}
               owner_id={post.owner_id}
-            />
+            />)
+          }
         }
       </For>
     </div>
