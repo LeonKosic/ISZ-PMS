@@ -13,6 +13,7 @@ import { follow } from "../db/schema/follow.js";
 import { partners } from "../db/schema/partners.js";
 import { enrolled } from "../db/schema/enrolled.js";
 import { course } from "../db/schema/course.js";
+import { post } from "../db/schema/post.js";
 
 
 const router = express.Router();
@@ -176,6 +177,16 @@ router.put('/unfollow', jsonParser, authenticateToken, async (req, res) => {
     eq(follow.following_id, followingUser[0].id)))
 
   res.status(200).send({ message: "Unfollow." })
+})
+
+router.post('/follow',jsonParser,authenticateToken,async(req,res)=>{
+  const followingUser=await db.select().from(users).where(eq(users.user_name,req.body.user_name))
+  await db.insert(follow).values(
+    [{follower_id: req.user.id,
+    following_id:followingUser[0].id
+  }])
+  res.status(200).send({message:"Following."})
+
 })
 
 router.get("/:id", authenticateToken, async (req, res) => {
