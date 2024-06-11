@@ -24,10 +24,6 @@ const getProfileInfo = async (id) => {
     following: following,
     projects: projects
   }
-  /*
-  console.log(response)
-  return response;
-  */
 }
 
 export default function Profile(props) {
@@ -75,7 +71,6 @@ export default function Profile(props) {
               {
                 (() => {
                   const follows = user().followers.find(x => x.id == userDetails.id)
-                  console.log(user().followers)
 
                   if (follows) {
                     return (

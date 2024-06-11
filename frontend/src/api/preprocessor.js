@@ -53,11 +53,18 @@ const preprocessor = {
   },
 
   course: {
-    
+
   },
 
   project: {
 
+  },
+
+  post: {
+    details: async (id) => {
+      const response = await api.get(`/post/${id}`)
+      return response.data
+    }
   }
 };
 

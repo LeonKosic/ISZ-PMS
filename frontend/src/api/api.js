@@ -58,8 +58,6 @@ const api = {
   },
 
   login: async (payload) => {
-    console.log(payload)
-
     const response = await axios.post(
       `/users/login`,
       {
