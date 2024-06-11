@@ -166,4 +166,20 @@ router.post('/search', jsonParser, async (req, res) => {
 
   return res.send(200, existingProject)
 })
+router.post("/rollback", authenticateToken, jsonParser, checkIfTeamMember, async (req, res) => {
+  const { commit, project_id } = req.body;
+  const project = await db.select().from(project).where(eq(project.id, project_id));
+  if (project.length <= 0) {
+    res.status(400).send({ err: "Project does not exist." })
+    return
+  }
+  const newHead = await db.select().from(commit).where(eq(commit.id, commit) && eq(commit.project, project_id));
+  if (newHead.length <= 0) {
+    res.status(400).send({ err: "Commit does not exist." })
+    return
+  }
+  await db.update(project).set({ head: commit}).where(eq(project.id, project_id))
+  res.status(200).send({ message: "Rolled back." })
+
+})
 export default router
