@@ -53,6 +53,28 @@ router.post('/', authenticateToken, authenticateTeacher, jsonParser, async (req,
     );
     res.status(200).send({ message: "Course made." });
 })
+router.put("/", jsonParser, authenticateToken, async (req, res) => {
+    const existingCourse = await db.select().from(course).where(eq(course.id, req.body.id));
+    if (existingCourse.length <= 0) {
+        res.status(400).send({ err: "Course does not exist." })
+        return
+    }
+    if (existingCourse[0].owner_id != req.user.id) {
+        res.status(400).send({ err: "Not the owner of the course." })
+        return
+    }
+    if(req.body.password){
+        if(req.body.password != req.body.password2){
+            res.status(400).send({err:"Passwords do not match."})
+            return
+        }
+        const hash = await bcrypt.hash(req.body.password, 10);
+        req.body.password = hash
+        delete req.body.password2;
+    }
+    await db.update(course).set({ ...req.body }).where(eq(course.id, req.body.id))
+    res.status(200).send({ message: "Course updated." });
+})
 
 router.delete('/:id', authenticateToken, authenticateTeacher, async (req, res) => {
     const existingCourse = await db.select().from(course).where(eq(course.id, req.params.id));
@@ -100,7 +122,7 @@ router.get('/:id', authenticateToken, jsonParser, async (req, res) => {
     teachers.forEach(t => delete t.users.password)
     delete existingCourse[0].password
     const content = await db.select().from(post).where(eq(post.parent_id, existingCourse[0].board_id))
-    res.status(200).send({ ...existingCourse[0], teachers: teachers.map(t => t.users), isTeacher: teachers.some(teacher => teacher.teacher_id == req.user.id), content })
+    res.status(200).send({ ...existingCourse[0], teachers: teachers.map(t => t.users), isTeacher: (teachers.some(teacher => teacher.teacher_id == req.user.id) || existingCourse[0].owner_id == req.user.id), content })
 })
 router.post("/post", authenticateToken, jsonParser, async (req, res) => {
     const existingCourse = await db.select().from(course).where(eq(course.id, req.body.course_id));
