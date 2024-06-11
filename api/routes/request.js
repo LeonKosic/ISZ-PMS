@@ -1,5 +1,5 @@
 
-import { Name, eq, and } from 'drizzle-orm';
+import { Name, eq, and, like } from 'drizzle-orm';
 import { db } from '../db/db.js';
 import express from 'express';
 import jwt from 'jsonwebtoken'
@@ -17,6 +17,7 @@ import { board } from '../db/schema/board.js';
 import { checkIfTeamMember } from '../middleware/project.js';
 import { project_members } from '../db/schema/project_members.js';
 import { request } from '../db/schema/request.js';
+import { request_answers } from '../db/schema/request_answers.js';
 
 
 router.delete('/:id', jsonParser, async (req, res) => {
@@ -72,6 +73,18 @@ router.get('/following', authenticateToken, jsonParser, async (req, res) => {
   const followingProjectNames = await db.select().from(post).leftJoin(follow, eq(post.owner_id, follow.following_id))
     .where(eq(follow.follower_id, req.user.id) && eq(post.type,2))
   res.status(200).send(followingProjectNames)
+})
+router.post('/solution', jsonParser, authenticateToken, async (req, res) => {
+  await db.insert(request_answers).values({
+    request: req.body.request_id,
+    project: req.body.project_id,
+  })
+  res.status(200).send({ message: "Solution added." })
+})
+router.post('/search', jsonParser ,async(req,res)=>{
+  const existingRequest = await db.select().from(post).where(like(post.title,`%${req.body.title}%`) && eq(post.deleted,0) && eq(post.type,2));
+
+  return res.send(200,existingRequest)
 })
 
 export default router

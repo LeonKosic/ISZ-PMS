@@ -1,15 +1,25 @@
 import Post from "../components/post/Post";
-import { postDetails } from '../assets/post'
+import { Show, createResource } from "solid-js";
+import preprocessor from "../api/preprocessor";
+import { useLocation } from "@solidjs/router";
+import Loading from "../components/placeholders/Loading";
 
 export default function PostPage(props) {
-  const demo = postDetails()
+  const postID = useLocation().pathname.split('/')[2]
+  const [post] = createResource(() => preprocessor.post.details(postID));
 
   return (
-    <Post
-      id={demo.id}
-      name={demo.name}
-      body={demo.body}
-      comments={demo.comments}
-    />
+    <Show
+      when={post.loading == false}
+      fallback={Loading}
+    >
+      <Post
+        id={post().id}
+        name={post().title}
+        owner_id={post().owner_id}
+        body={post().body}
+        comments={post().comments}
+      />
+    </Show>
   )
 }
