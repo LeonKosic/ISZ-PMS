@@ -16,6 +16,8 @@ import { post } from '../db/schema/post.js';
 import { board } from '../db/schema/board.js';
 import { checkIfTeamMember } from '../middleware/project.js';
 import { project_members } from '../db/schema/project_members.js';
+import {users} from '../db/schema/users.js'
+import {comment} from '../db/schema/comment.js'
 
 router.post('/category', jsonParser, async (req, res) => {
   await db.insert(post_category).values(

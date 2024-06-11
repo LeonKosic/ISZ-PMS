@@ -13,6 +13,7 @@ import { follow } from "../db/schema/follow.js";
 import { partners } from "../db/schema/partners.js";
 import { enrolled } from "../db/schema/enrolled.js";
 import { course } from "../db/schema/course.js";
+import { follow } from "../db/schema/follow.js";
 
 const router = express.Router();
 const jsonParser = bodyParser.json()
@@ -185,6 +186,22 @@ router.get("/:id", authenticateToken, async (req, res) => {
   }
   res.status(200).send(user[0])
 });
+
+router.get('/followers/:id', authenticateToken, async (req, res) => {
+  const followers = await db.select().from(users).leftJoin(follow, eq(users.id, follow.following_id))
+    .where(eq(follow.following_id, req.params.id))
+  res.status(200).send(followers)
+})
+router.get('/following/:id', authenticateToken, async (req, res) => {
+  const followers = await db.select().from(users).leftJoin(follow, eq(users.id, follow.follower_id))
+    .where(eq(follow.following_id, req.params.id))
+  res.status(200).send(followers)
+})
+router.get('/projects/:id', authenticateToken, async (req, res) => {
+  const projects = await db.select().from(post).where(eq(post.owner_id, req.params.id) && eq(post.type,1) && eq(post.deleted,0));
+
+  res.status(200).json(projects)
+})
 
 
 export default router;
