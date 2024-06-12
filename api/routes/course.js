@@ -12,7 +12,6 @@ const jsonParser = bodyParser.json()
 import { authenticateToken, authenticateTeacher } from "../middleware/auth.js";
 import { board, course, course_teachers, users } from "../db/schema/schema.js";
 import { enrolled, post } from "../db/schema/schema.js";
-import { and } from 'drizzle-orm';
 
 
 router.post('/', authenticateToken, authenticateTeacher, jsonParser, async (req, res) => {
@@ -111,23 +110,7 @@ router.delete('/unenroll/:id', authenticateToken, async (req, res) => {
 
 })
 
-router.get('/:id', authenticateToken, jsonParser, async (req, res) => {
-    const existingCourse = await db.select().from(course).where(eq(course.id, req.params.id));
-    const isEnrolled = await db.select().from(enrolled).where(and(eq(enrolled.student_id, req.user.id), eq(enrolled.course_id, req.params.id)))
-    const teachers = await db.select().from(course_teachers).innerJoin(users, eq(users.id, course_teachers.teacher_id)).where(eq(course_teachers.course_id, req.params.id))
-    if (existingCourse.length <= 0) {
-        res.status(400).send({ err: "Course does not exist." })
-        return
-    }
-    if (!(isEnrolled.length > 0 || existingCourse[0].owner_id == req.user.id || teachers.some(teacher => teacher.teacher_id == req.user.id))) {
-        res.status(400).send({ message: "Not enrolled." })
-        return
-    }
-    teachers.forEach(t => delete t.users.password)
-    delete existingCourse[0].password
-    const content = await db.select().from(post).where(eq(post.parent_id, existingCourse[0].board_id))
-    res.status(200).send({ ...existingCourse[0], teachers: teachers.map(t => t.users), isTeacher: (teachers.some(teacher => teacher.teacher_id == req.user.id) || existingCourse[0].owner_id == req.user.id), content })
-})
+
 router.post("/post", authenticateToken, jsonParser, async (req, res) => {
   const existingCourse = await db.select().from(course).where(eq(course.id, req.body.course_id));
   if (existingCourse.length <= 0) {
@@ -187,6 +170,22 @@ router.get('/my', authenticateToken, jsonParser, async (req, res) => {
     const courses = await db.select().from(enrolled).innerJoin(course, eq(course.id, enrolled.course_id)).where(eq(enrolled.student_id, req.user.id));
     res.status(200).json(courses)
 })
-
+router.get('/:id', authenticateToken, jsonParser, async (req, res) => {
+    const existingCourse = await db.select().from(course).where(eq(course.id, req.params.id));
+    const isEnrolled = await db.select().from(enrolled).where(and(eq(enrolled.student_id, req.user.id), eq(enrolled.course_id, req.params.id)))
+    const teachers = await db.select().from(course_teachers).innerJoin(users, eq(users.id, course_teachers.teacher_id)).where(eq(course_teachers.course_id, req.params.id))
+    if (existingCourse.length <= 0) {
+        res.status(400).send({ err: "Course does not exist." })
+        return
+    }
+    if (!(isEnrolled.length > 0 || existingCourse[0].owner_id == req.user.id || teachers.some(teacher => teacher.teacher_id == req.user.id))) {
+        res.status(400).send({ message: "Not enrolled." })
+        return
+    }
+    teachers.forEach(t => delete t.users.password)
+    delete existingCourse[0].password
+    const content = await db.select().from(post).where(eq(post.parent_id, existingCourse[0].board_id))
+    res.status(200).send({ ...existingCourse[0], teachers: teachers.map(t => t.users), isTeacher: (teachers.some(teacher => teacher.teacher_id == req.user.id) || existingCourse[0].owner_id == req.user.id), content })
+})
 
 export default router;
