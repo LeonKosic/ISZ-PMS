@@ -76,14 +76,17 @@ router.post('/', authenticateToken, jsonParser, async (req, res) => {
 })
 
 router.get('/my', authenticateToken, jsonParser, async (req, res) => {
-  const projects = await db.select().from(post).where(eq(post.owner_id, req.user.id) && eq(post.type, 1));
-
+  console.log(req.user.id)
+  const projects = await db.select().from(post).where(and(eq(post.owner_id, req.user.id), eq(post.type, 1)));
+  for (let i = 0; i < projects.length; i++) {
+    console.log(projects[i])
+  }
   res.status(200).json(projects)
 })
 
 router.get('/following', authenticateToken, jsonParser, async (req, res) => {
   const followingProjectNames = await db.select().from(post).leftJoin(follow, eq(post.owner_id, follow.following_id))
-    .where(eq(follow.follower_id, req.user.id) && eq(post.type, 1))
+    .where(and(eq(follow.follower_id, req.user.id), eq(post.type, 1)))
   res.status(200).send(followingProjectNames)
 
 })
@@ -120,7 +123,7 @@ router.post('board/post', authenticateToken, jsonParser, checkIfTeamMember, asyn
   res.status(200).send({ message: "Post made." });
 })
 router.get('/board/:id', authenticateToken, jsonParser, checkIfBoardMember, async (req, res) => {
-  const posts = await db.select().from(post).where(eq(post.board_id, req.params.id) && eq(post.type, 0) && eq(post.deleted, 0) && eq(post.isFeatureRequest, 0));
+  const posts = await db.select().from(post).where(and(eq(post.board_id, req.params.id), eq(post.type, 0), eq(post.deleted, 0), eq(post.isFeatureRequest, 0)));
   res.status(200).json(posts)
 })
 router.post('/register', authenticateToken, jsonParser, checkIfTeamMember, async (req, res) => {
@@ -148,7 +151,7 @@ router.get("/:id", authenticateToken, async (req, res) => {
 router.post('/directory/structure', jsonParser, authenticateToken, async (req, res) => {
   const { commit, project_id, path } = req.body;
   console.log(req.body)
-  const parentFile = await db.select().from(file).where(eq(file.path, path) && eq(file.project, project_id));
+  const parentFile = await db.select().from(file).where(and(eq(file.path, path), eq(file.project, project_id)));
   if (parentFile.length < 0) {
     res.status(400).send({ message: "File does not exist." })
   }
@@ -158,11 +161,11 @@ router.post('/directory/structure', jsonParser, authenticateToken, async (req, r
 
 )
 router.get('/board/:id/requests', authenticateToken, jsonParser, checkIfBoardMember, async (req, res) => {
-  const posts = await db.select().from(post).where(eq(post.board_id, req.params.id) && eq(post.type, 0) && eq(post.deleted, 0) && eq(post.isFeatureRequest, 1));
+  const posts = await db.select().from(post).where(and(eq(post.board_id, req.params.id), eq(post.type, 0), eq(post.deleted, 0), eq(post.isFeatureRequest, 1)));
   res.status(200).json(posts)
 })
 router.post('/search', jsonParser, async (req, res) => {
-  const existingProject = await db.select().from(post).where(like(post.title, `%${req.body.title}%`) && eq(post.deleted, 0) && eq(post.type, 1));
+  const existingProject = await db.select().from(post).where(and(like(post.title, `%${req.body.title}%`), eq(post.deleted, 0), eq(post.type, 1)));
 
   return res.send(200, existingProject)
 })
@@ -173,7 +176,7 @@ router.post("/rollback", authenticateToken, jsonParser, checkIfTeamMember, async
     res.status(400).send({ err: "Project does not exist." })
     return
   }
-  const newHead = await db.select().from(commit).where(eq(commit.id, commit) && eq(commit.project, project_id));
+  const newHead = await db.select().from(commit).where(and(eq(commit.id, commit), eq(commit.project, project_id)));
   if (newHead.length <= 0) {
     res.status(400).send({ err: "Commit does not exist." })
     return

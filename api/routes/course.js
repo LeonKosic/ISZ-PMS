@@ -1,5 +1,5 @@
 import { category } from "../db/schema/category.js"
-import { eq, like } from 'drizzle-orm';
+import { eq, like, and } from 'drizzle-orm';
 import { db } from '../db/db.js';
 import express from 'express';
 import bodyParser from 'body-parser';
@@ -113,7 +113,7 @@ router.delete('/unenroll/:id', authenticateToken, async (req, res) => {
 
 router.get('/:id', authenticateToken, jsonParser, async (req, res) => {
     const existingCourse = await db.select().from(course).where(eq(course.id, req.params.id));
-    const isEnrolled = await db.select().from(enrolled).where(eq(enrolled.student_id, req.user.id) && eq(enrolled.course_id, req.params.id))
+    const isEnrolled = await db.select().from(enrolled).where(and(eq(enrolled.student_id, req.user.id), eq(enrolled.course_id, req.params.id)))
     const teachers = await db.select().from(course_teachers).innerJoin(users, eq(users.id, course_teachers.teacher_id)).where(eq(course_teachers.course_id, req.params.id))
     if (existingCourse.length <= 0) {
         res.status(400).send({ err: "Course does not exist." })
@@ -152,7 +152,7 @@ router.post("/post", authenticateToken, jsonParser, async (req, res) => {
 })
 
 router.post('/search', jsonParser, async (req, res) => {
-  const existingCourse = await db.select().from(course).where(like(course.title, `%${req.body.name}%`) && eq(course.deleted, 0));
+  const existingCourse = await db.select().from(course).where(and(like(course.title, `%${req.body.name}%`), eq(course.deleted, 0)));
   if (existingCourse.length > 0) {
     existingCourse.map((user) => {
       delete user.password
