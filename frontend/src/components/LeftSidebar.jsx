@@ -30,11 +30,10 @@ export default function LeftSidebar() {
           courses().map((course) => (
             <div 
               class="bg-primary-400 p-4 mb-4 rounded-lg shadow-md w-full cursor-pointer"
-              key={course.id}
-              onClick={() => handleCourseClick(course.id)}
+              key={course.course.id}
+              onClick={() => handleCourseClick(course.course.id)}
             >
-              <h3 class="text-lg font-semibold text-gray-50">{course.title}</h3>
-              <p class="text-gray-200">{course.body}</p>
+              <h3 class="text-lg font-semibold text-gray-50">{course.course.name}</h3>
             </div>
           ))
         )}
