@@ -15,15 +15,15 @@ const preprocessor = {
 
       return parsed
     },
-
+    
     followers: async (userID) => {
       const response = await api.get(`/users/followers/${userID}`)
 
-      let followers = []
-      response.data.forEach(async (e) => {
-        const followerInfo = await preprocessor.profile.details(e.follow.follower_id)
-        followers.push(followerInfo)
-      });
+      const followersPromises = response.data.map((e) =>
+        preprocessor.profile.details(e.follow.follower_id)
+      );
+
+      const followers = await Promise.all(followersPromises);
 
       return followers;
     },
@@ -31,11 +31,11 @@ const preprocessor = {
     following: async (userID) => {
       const response = await api.get(`/users/followers/${userID}`)
 
-      let following = []
-      response.data.forEach(async (e) => {
-        const followingInfo = await preprocessor.profile.details(e.follow.following_id)
-        following.push(followingInfo)
-      });
+      const followingPromises = response.data.map((e) =>
+        preprocessor.profile.details(e.follow.following_id)
+      );
+
+      const following = await Promise.all(followingPromises);
 
       return following;
     },
