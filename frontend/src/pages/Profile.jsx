@@ -53,9 +53,6 @@ export default function Profile(props) {
 
   const [user] = createResource(async () => getProfileInfo(currentUserID));
 
-  console.log("curr_id: ", currentUserID)
-  console.log(userDetails)
-
   return (
     <Show when={user.loading == false} fallback={Loading}>
       <div class="w-1/3 mx-auto mt-8 grid grid-flow-row grid-cols-1 ">
