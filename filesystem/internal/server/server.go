@@ -40,7 +40,9 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 		path = cfg.Dir + strings.Join(multipartFormData.Value[str+"[fieldname]"], "")
 		initialStat, err := os.Stat(path)
 		if err != nil {
-			fileState = 3
+			if os.IsNotExist(err) {
+				fileState = 3
+			}
 		}
 		os.MkdirAll(filepath.Dir(path), os.ModePerm)
 		f, err := os.Create(path)
