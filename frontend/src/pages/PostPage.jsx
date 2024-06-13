@@ -3,6 +3,8 @@ import { Show, createResource } from "solid-js";
 import preprocessor from "../api/preprocessor";
 import { useLocation } from "@solidjs/router";
 import Loading from "../components/placeholders/Loading";
+import RightSidebar from "../components/RightSidebar";
+import LeftSidebar from "../components/LeftSidebar";
 
 export default function PostPage(props) {
   const postID = useLocation().pathname.split('/')[2]
@@ -13,6 +15,8 @@ export default function PostPage(props) {
       when={post.loading == false}
       fallback={Loading}
     >
+      <RightSidebar />
+      <LeftSidebar />
       <Post
         id={post().id}
         name={post().title}

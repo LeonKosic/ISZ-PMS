@@ -1,14 +1,7 @@
 import { createStore } from "solid-js/store";
 
-// user related
-export const [userDetails, setUserDetails] = createStore({
-  id: "",
-  username: "",
-  name: ""
-})
 
 // project page related
-
 export const [currentPathStore, setCurrentPathStore] = createStore({
   root: '',
   path: ''
@@ -31,3 +24,11 @@ export const [projectStore, setProjectStore] = createStore({
   _selectedFile: selectedFile,
   _fileList: fileList
 })
+
+export const [userDetails, setUserDetails] = createStore(
+  {
+    id: localStorage.getItem("user_id"),
+    name: localStorage.getItem("user_name"),
+    username: localStorage.getItem("user_username")
+  }
+)

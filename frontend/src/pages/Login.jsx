@@ -10,7 +10,7 @@ export default function Login() {
     event.preventDefault();
     const { username, password } = formData();
     api.login( { username, password });
-    navigate('/landing');
+    navigate('/');
   };
 
   return (

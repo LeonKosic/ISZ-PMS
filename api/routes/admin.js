@@ -1,5 +1,5 @@
 import { category } from "../db/schema/category.js"
-import { eq, like } from 'drizzle-orm';
+import { and, eq, like } from 'drizzle-orm';
 import { db } from '../db/db.js';
 import express from 'express';
 import bodyParser from 'body-parser';
@@ -61,7 +61,7 @@ router.get('/requests', authenticateToken, authenticateAdmin, async (req, res) =
   res.status(200).send(reqests)
 })
 router.post('/requests/search', authenticateToken, authenticateAdmin, jsonParser, async (req, res) => {
-  const reqests = await db.select().from(users).where(eq(users.is_active, 0) && like(users.username, req.body.username))
+  const reqests = await db.select().from(users).where(and(eq(users.is_active, 0), like(users.username, req.body.username)))
   if (existingUser.length > 0) {
     existingUser.map((user) => {
       delete user.password

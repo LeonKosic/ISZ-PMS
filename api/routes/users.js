@@ -159,7 +159,8 @@ router.get('/details', authenticateToken, jsonParser, async (req, res) => {
   return res.status(400).send({ err: "Username does not exist." });
 });
 router.post('/search', jsonParser, async (req, res) => {
-  const existingUser = await db.select().from(users).where(like(users.username, `%${req.body.username}%`) && eq(users.deleted, 0) && eq(users.is_active, 1));
+  const existingUser = await db.select().from(users).where(and(like(users.username, `%${req.body.username}%`), eq(users.deleted, 0)));
+  console.log(existingUser, req.body.username);
   if (existingUser.length > 0) {
     existingUser.map((user) => {
       delete user.password
@@ -185,16 +186,7 @@ router.post('/follow',jsonParser,authenticateToken,async(req,res)=>{
 
 })
 
-router.get("/:id", authenticateToken, async (req, res) => {
-  const user = await db.select().from(users).where(eq(users.id, req.params.id));
-  if (user.length <= 0) {
-    res.status(400).send({ err: "User does not exist." })
-    return
-  }
-  delete user[0].password
-  const follows = await db.select().from(follow).where(eq(follow.following_id, req.params.id) && eq(follow.follower_id, req.user.id));
-  res.status(200).send({...user[0], follows:(follows.length > 0)})
-});
+
 
 router.get('/followers/:id', authenticateToken, async (req, res) => {
   const followers = await db.select().from(users).leftJoin(follow, eq(users.id, follow.follower_id))
@@ -207,10 +199,20 @@ router.get('/following/:id', authenticateToken, async (req, res) => {
   res.status(200).send(followers)
 })
 router.get('/projects/:id', authenticateToken, async (req, res) => {
-  const projects = await db.select().from(post).where(eq(post.owner_id, req.params.id) && eq(post.type, 1) && eq(post.deleted, 0));
+  const projects = await db.select().from(post).where(and(eq(post.owner_id, req.params.id), eq(post.type, 1),eq(post.deleted, 0)));
 
   res.status(200).json(projects)
 })
+router.get("/:id", authenticateToken, async (req, res) => {
+  const user = await db.select().from(users).where(eq(users.id, req.params.id));
+  if (user.length <= 0) {
+    res.status(400).send({ err: "User does not exist." })
+    return
+  }
+  delete user[0].password
+  const follows = await db.select().from(follow).where(and(eq(follow.following_id, req.params.id), eq(follow.follower_id, req.user.id)));
+  res.status(200).send({...user[0], follows:(follows.length > 0)})
+});
 
 
 export default router;

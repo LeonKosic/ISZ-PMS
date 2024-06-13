@@ -9,6 +9,8 @@ import { userDetails } from "../api/stores";
 import { projects } from "../assets/profile";
 import { Button } from "@suid/material";
 import preprocessor from "../api/preprocessor";
+import RightSidebar from "../components/RightSidebar";
+import LeftSidebar from "../components/LeftSidebar";
 
 const getProfileInfo = async (id) => {
   let details = await preprocessor.profile.details(id);
@@ -29,23 +31,19 @@ const getProfileInfo = async (id) => {
 export default function Profile(props) {
   const currentUserID = useLocation().pathname.split('/')[2]
 
-  const follow = async (target, requester) => {
-    const response = await api.post('/users/follow',
-      {
-        follower_id: requester,
-        following_id: target
-      }
+  const follow = async (target) => {
+    const response = await api.post(
+      '/users/follow',
+      { id: target }
     )
 
     return response.data;
   }
 
-  const unfollow = async (target, requester) => {
-    const response = await api.post('/users/unfollow',
-      {
-        follower_id: requester,
-        following_id: target
-      }
+  const unfollow = async (target) => {
+    const response = await api.post(
+      '/users/unfollow',
+      { id: target }
     )
 
     return response.data;
@@ -55,6 +53,8 @@ export default function Profile(props) {
 
   return (
     <Show when={user.loading == false} fallback={Loading}>
+      <RightSidebar />
+      <LeftSidebar />
       <div class="w-1/3 mx-auto mt-8 grid grid-flow-row grid-cols-1 ">
         <Suspense fallback={<Loading />}>
           <div class="bg-accent-600 bg-opacity-10">
@@ -78,7 +78,7 @@ export default function Profile(props) {
                         color="pmsScheme"
                         variant="outlined"
                         fullWidth
-                        onClick={async () => { unfollow(currentUserID, userDetails.id) }}
+                        onClick={async () => { unfollow(currentUserID) }}
                       >
                         Unfollow
                       </Button>
@@ -87,7 +87,7 @@ export default function Profile(props) {
                     color="pmsScheme"
                     variant="outlined"
                     fullWidth
-                    onClick={async () => { follow(currentUserID, userDetails.id) }}
+                    onClick={async () => { follow(currentUserID) }}
                   >
                     Follow
                   </Button>)
