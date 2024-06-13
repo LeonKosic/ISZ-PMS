@@ -1,6 +1,10 @@
 import { redirect } from "@solidjs/router";
 
 export default function Navbar(props) {
+  const navigateToRequests = () => {
+    window.location.href = "/requests";
+  };
+
   return (
     <div class="sticky top-0 bg-primary-800 pb-0 z-50">
       
@@ -26,7 +30,12 @@ export default function Navbar(props) {
         <div class="minibar-wrapper grid grid-flow-row grid-cols-3 gap-2">
           <div class="bg-accent-800 rounded-full size-12" />
           <div class="bg-accent-800 rounded-full size-12" />
-          <div class="bg-accent-800 rounded-full size-12"/>
+          <div
+            class="bg-accent-800 rounded-full flex items-center justify-center cursor-pointer"
+            onClick={navigateToRequests}
+          >
+            <span class="text-white text-center">Project Requests</span>
+          </div>
         </div>
       </div>
       <hr class="mt-4 pb-0 w-full text-accent"/>
