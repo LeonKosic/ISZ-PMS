@@ -82,7 +82,7 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 	}
 	sort.Strings(res)
 
-	res = append([]string{id}, res)
+	res = append([]string{id}, res...)
 	fmt.Println(strings.Join(res, "\n"))
 	/*resp, err := json.Marshal(res)
 	if err != nil {
