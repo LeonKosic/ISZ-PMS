@@ -48,21 +48,24 @@ router.get('/following', authenticateToken, jsonParser, async (req, res) => {
 
 })
 router.post('/like', authenticateToken, jsonParser, async (req, res) => {
-    const prevState = await db.select().from(like).where(eq(like.post, req.body.id));
+    const prevState = await db.select().from(like).where(and(eq(like.post, req.body.id), eq(like.user, req.user.id)));
     let delta = req.body.status;
     if (prevState.length > 0) {
       delta-=prevState[0].status;
       if(req.body.status==0){
         delta = -prevState[0].status;
     }}
+    
     await db.insert(like).values(
       [{
         post: req.body.id,
         user: req.user.id,
         status: req.body.status
-      }])
+      }]).onDuplicateKeyUpdate({set:{status: req.body.status}})
     const existingProject = await db.select().from(post).where(eq(post.id, req.body.id));
+    console.log(delta, prevState[0])
     await db.update(post).set({ likes: existingProject[0].likes+delta }).where(eq(post.id, req.body.id))
+    res.status(200).send({ message: "Like added." })
 })
 router.post('/comment', authenticateToken, jsonParser, async (req, res) => {
   await db.insert(comment).values(
