@@ -27,13 +27,13 @@ export default function NavbarIcons(props) {
           clickAction={() => { navigateTo('/projects') }}
           iconClass={"p-1 opacity-75 hover:cursor-pointer hover:opacity-100 transition-all duration-500 text-3xl"}
         />
-        
+
         <Icon
           iconID="fa-solid fa-question"
           clickAction={() => { navigateTo('/requests') }}
           iconClass={"p-1 opacity-75 hover:cursor-pointer hover:opacity-100 transition-all duration-500 text-3xl"}
         />
-        
+
 
         <div
           onClick={(event) => { setAnchorEl(event.currentTarget) }}

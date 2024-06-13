@@ -4,6 +4,8 @@ import Loading from "../components/placeholders/Loading";
 import CourseList from "../components/generic/course/CourseList";
 import RightSidebar from "../components/sidebars/right/RightSidebar";
 import LeftSidebar from "../components/sidebars/left/LeftSidebar";
+import CreateProjectButton from "../components/sidebars/right/CreateProjectButton";
+import CreateCourseButton from "../components/course/CreateCourseButton";
 
 
 const getCourses = async () => {
@@ -21,10 +23,15 @@ export default function Courses(props) {
     >
       <RightSidebar />
       <LeftSidebar />
-      <CourseList
-        courses={courses()}
-        cardStyle={"border-2 border-accent-600 rounded-lg p-4 m-2"}
-      />
+      <div>
+        <div class="flex flex-row items-center justify-center mt-20">
+          <CreateCourseButton />
+        </div>
+        <CourseList
+          courses={courses()}
+          cardStyle={"border-2 border-accent-600 rounded-lg p-4 m-2"}
+        />
+      </div>
     </Show>
   )
 }

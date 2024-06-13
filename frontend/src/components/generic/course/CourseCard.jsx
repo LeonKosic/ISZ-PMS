@@ -1,13 +1,11 @@
 export default function CourseCard(props) {
   return (
-    // <Container class={props.style} maxWidth="sm">
-    // <div style={props.cardStyle}>
     <div class={props.cardStyle}>
       <p
         class="text-big mb-2 mt-1 pb-2"
         style={{ 'overflow-wrap': 'break-word' }}
       >
-        {props.name} test
+        {props.name}
       </p >
 
       <hr class="separator" />
@@ -17,7 +15,6 @@ export default function CourseCard(props) {
       >
         {props.about}
       </p>
-    </div >
-    // </Container>
+    </div>
   )
 }

@@ -19,18 +19,18 @@ const searchCourses = async (id) => {
   return response.data
 }
 
-export default function SearchBar(props) {  
+export default function SearchBar(props) {
   const [anchorEl, setAnchorEl] = createSignal(null);
   const open = () => Boolean(anchorEl())
-  
+
   let searchResults = []
-  
+
   const process = (responseArr) => {
     let processed = []
-    
+
     responseArr.forEach(entry => {
       let newEntry = []
-      
+
       if (entry.username != undefined) {
         newEntry.url = `/profiles/${entry.id}`
         newEntry.name = entry.username
@@ -48,32 +48,32 @@ export default function SearchBar(props) {
       }
       processed.push(newEntry)
     });
-    
+
     processed.sort((a) => a.type)
-    
+
     return processed
   }
-  
+
   searchResults = process(searchResults)
-  
-  const handleSearch = (ev) => {  
+
+  const handleSearch = (ev) => {
     const text = document.querySelector("#searchbar").value
-    
+
     searchResults = []
     searchResults.push(searchUsers(text))
     // TODO: nije jos implementirano
     // searchResults.push(searchProjects(text))
     searchResults.push(searchCourses(text))
-    
+
     searchResults = process(searchResults)
-    
+
     if (searchResults.length == 0)
       setAnchorEl(null)
   }
-  
+
   return (
     <div class="relative w-full ml-10 mr-10 ">
-      <input 
+      <input
         id="searchbar"
         type="text"
         class="h-12 w-full rounded-full bg-primary-600 border-2 border-opacity-25 border-accent-600 pl-4"
@@ -84,14 +84,14 @@ export default function SearchBar(props) {
           }
         }}
       />
-      
+
       <div onClick={(evt) => { setAnchorEl(evt.currentTarget) }}>
-        <Icon 
+        <Icon
           iconID="fa-solid fa-search"
-          clickAction={() => {handleSearch()}}
+          clickAction={() => { handleSearch() }}
           iconClass={"cursor-pointer text-xl text-accent-300 top-0 right-0 absolute mr-3 pt-2 pl-2 pr-2"}
         />
-        
+
         <Menu
           id="search-dropdown"
           open={open()}
@@ -101,20 +101,20 @@ export default function SearchBar(props) {
         >
           <For each={searchResults}>
             {
-              (entry) => {                
+              (entry) => {
                 return (
-                    <MenuItem class="h-8">
-                      {
-                        /* TODO: kad se navigira na rutu koristi se trenutna (relativno) - ne moze se sa jedne putanje otici na istu - pukne,
-                        a redirect() i navigate() ne rade uopste */
-                      }
-                      <a href={`http://localhost:3000${entry.url}`}>
-                        {entry.name}
-                        {console.log(entry.url)}
-                        <span class="text-sm italic"> in {entry.type}</span>
-                      </a>
-                    </MenuItem>
-                )  
+                  <MenuItem class="h-8">
+                    {
+                      /* TODO: kad se navigira na rutu koristi se trenutna (relativno) - ne moze se sa jedne putanje otici na istu - pukne,
+                      a redirect() i navigate() ne rade uopste */
+                    }
+                    <a href={`http://localhost:3000${entry.url}`}>
+                      {entry.name}
+                      {console.log(entry.url)}
+                      <span class="text-sm italic"> in {entry.type}</span>
+                    </a>
+                  </MenuItem>
+                )
               }
             }
           </For>
