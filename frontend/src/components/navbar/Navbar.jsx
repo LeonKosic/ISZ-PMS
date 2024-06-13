@@ -1,4 +1,5 @@
 import { redirect } from "@solidjs/router";
+import Searchbar from "./SearchBar";
 
 export default function Navbar(props) {
   return (
@@ -11,17 +12,8 @@ export default function Navbar(props) {
             PMS
           </h1>
         </div>
-        
-        <input
-          class="w-3/4 bg-accent-800 px-4 rounded-md
-            text-accent-200 text-2xl
-            hover:w-5/6 duration-300
-            hover:md:w-4/5 
-            placeholder:italic
-            focus:border-y-0"
-          type="text"
-          placeholder="Search ...">
-        </input>
+
+        <Searchbar/>
         
         <div class="minibar-wrapper grid grid-flow-row grid-cols-3 gap-2">
           <div class="bg-accent-800 rounded-full size-12" />
