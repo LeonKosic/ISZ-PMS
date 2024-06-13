@@ -41,7 +41,7 @@ export default function Post(props) {
         when={author.loading == false}
         fallback={Loading}
       >
-        <div class="p-2 my-2 mt-20 border-2 border-accent-600 rounded-lg max-w-screen-2xl mx-auto text-accent-100">
+        <div class="items-center justify-center p-2 my-2 mt-20 border-2 border-accent-600 rounded-lg w-2/5 mx-auto text-accent-100">
           {/* Title */}
           <p class="text-4xl py-2 pl-1">{props.name}</p>
           <hr class="border-2 border-accent-800 rounded-lg my-1" />

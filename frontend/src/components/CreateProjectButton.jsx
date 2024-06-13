@@ -18,7 +18,7 @@ export default function CreateProjectButton() {
       const response = await api.get("projects/my");
       const latestProject = response.data.slice(-1)[0]; // Get the latest project
       setLatestProjectId(latestProject.id);
-      navigate(`/projects/${latestProjectId()}`);
+      navigate(`/post/${latestProjectId()}`);
     } catch (error) {
       console.error("Error creating project:", error);
     }
