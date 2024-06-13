@@ -150,7 +150,7 @@ router.get('/board/:id/requests', authenticateToken, jsonParser, checkIfBoardMem
   res.status(200).json(posts)
 })
 router.post('/search', jsonParser, async (req, res) => {
-  const existingProject = await db.select().from(post).where(like(post.title, `%${req.body.title}%`) && eq(post.deleted, 0)&& eq(post.type, 1));
+  const existingProject = await db.select().from(post).where(and(like(post.title, `%${req.body.title}%`), eq(post.type, 1)));
 
   return res.send(200, existingProject)
 })
