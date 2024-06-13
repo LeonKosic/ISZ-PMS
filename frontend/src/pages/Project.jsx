@@ -13,6 +13,8 @@ import { currentPathStore, selectedFile, setSelectedFile, fileList, setFileList,
 // mock/test data
 import { projectInfo } from "../assets/projectContent"
 import ProjectTeam from "../components/project/ProjectTeam"
+import { Show, createResource, createSignal } from "solid-js"
+import Loading from "../components/placeholders/Loading"
 
 const getCommitVersion = async (commitID) => {
   // ENDPOINT?
@@ -26,9 +28,17 @@ const getCommitVersion = async (commitID) => {
   return response.data
 }
 
+async function getProjectFiles() { 
+  const response = await api.post("/projects/directory/structure", {path: "/", project_id: projectStore.id });
+  console.log(response.data)
+  return response.data; 
+ }
+
 export default function Project(props) {
   setFileList("files", sortFiles(projectInfo().files))
-
+  console.log("id ", projectStore.id)
+  const [fileInfo] = createResource(getProjectFiles)
+  console.log("file info: ", fileInfo())
   const onDrop = async (acceptedFiles) => {
     // TODO: ovaj endpoint?
     // TODO return await api.upload(`/upload/projects/${projectStore.id}`,
@@ -81,9 +91,12 @@ export default function Project(props) {
 
           {/* project files */}
           <div class="h-auto border-2 border-accent-600 rounded-xl p-4">
-            <FileList
-              data={fileList.files}
+            <Show when={fileInfo.loading == false}
+            fallback={Loading}>
+            <FileList 
+              data={fileInfo().files}
             />
+            </Show>
           </div>
         </div>
 
