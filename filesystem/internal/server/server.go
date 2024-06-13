@@ -1,9 +1,11 @@
 package server
 
 import (
-	"fmt"
-	//"io"
 	"encoding/json"
+	"fmt"
+
+	//"io"
+
 	"net/http"
 	"os"
 	"path/filepath"
@@ -13,6 +15,10 @@ import (
 	"strings"
 	// "pms/filesystem/internal/models"
 )
+
+type myJSON struct {
+	Array []string `json:"arr"`
+}
 
 var cfg = config.DefaultConfig()
 
@@ -65,7 +71,13 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 	}
 	sort.Strings(res)
 	fmt.Println(strings.Join(res, "\n"))
-	resp, err := json.Marshal(res)
+	/*resp, err := json.Marshal(res)
+	if err != nil {
+		fmt.Println(err)
+	}*/
+	jsondat := &myJSON{Array: res}
+	encjson, _ := json.Marshal(jsondat)
+	fmt.Println(string(encjson))
 	commit := cfg.Commit + r.PathValue("commit")
 	os.MkdirAll(cfg.Commit, os.ModePerm)
 	f, err := os.Create(commit)
@@ -79,7 +91,7 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 	f.Close()
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	fmt.Fprint(w, resp)
+	w.Write(encjson)
 }
 func commitSearch(w http.ResponseWriter, r *http.Request) {
 	commit := cfg.Commit + r.PathValue("id")
