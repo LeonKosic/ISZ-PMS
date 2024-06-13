@@ -1,4 +1,5 @@
 export const projectInfo = () => ({
+  loading: false,
   name: "Project Management System",
   body: "Projektni zadatak iz inzenjeringa softverskih zahtjeva, project management service",
   owner: {

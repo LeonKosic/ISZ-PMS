@@ -12,10 +12,11 @@ const getProjectInfo = async (id) => {
 
 export default function ProjectPage(props) {
   // demo
-  // const data = projectInfo();
+  const data = projectInfo();
 
   setProjectStore("id", useLocation().pathname.split('/')[2]);
-  const data = createResource(() => getProjectInfo(projectStore.id));
+  // const data = createResource(() => getProjectInfo(projectStore.id));
+  console.log(data)
 
   return (
     <Show when={data.loading == false}>

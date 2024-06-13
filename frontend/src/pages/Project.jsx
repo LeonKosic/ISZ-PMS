@@ -12,6 +12,7 @@ import { currentPathStore, selectedFile, setSelectedFile, fileList, setFileList,
 
 // mock/test data
 import { projectInfo } from "../assets/projectContent"
+import ProjectTeam from "../components/project/ProjectTeam"
 
 const getCommitVersion = async (commitID) => {
   // ENDPOINT?
