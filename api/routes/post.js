@@ -20,7 +20,7 @@ router.post('/category', jsonParser, async (req, res) => {
   await db.insert(post_category).values(
     [{
       category_id: req.body.category_id,
-      post_id: req.body.project_id
+      post_id: req.body.post_id
     }])
   res.status(200).send({ message: "Project assigned to a category." })
 })
