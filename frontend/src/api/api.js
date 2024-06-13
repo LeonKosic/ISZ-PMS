@@ -57,6 +57,34 @@ const api = {
       });
   },
 
+  upload: async (url, payload) => {
+    console.log(payload);
+
+    var formData = new FormData();
+    Array.from(payload.files).forEach((file, index) => {
+      let filePath = file.path;
+      if (file.path[0] == '/') {
+        // kada je direktorijum dodaje / na pocetak, pa da bude uniformno
+        filePath = file.path.substring(1, file.path.length);
+      }
+
+      let path = `${payload.id}/${payload.currentPath}${filePath}`;
+      console.log(path);
+      formData.append(path, file);
+    });
+
+    return await axios.post(url, formData,
+      {
+        headers: {
+          ...defaultConfig.headers,
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          "Content-Type": "multipart/form-data"
+        }
+      }
+    )
+  },
+
+  // payload => {username, login}
   login: async (payload) => {
     const response = await axios.post(
       `/users/login`,

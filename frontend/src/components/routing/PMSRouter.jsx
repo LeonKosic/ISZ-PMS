@@ -1,5 +1,4 @@
-import { Route, Router } from "@solidjs/router";
-
+import { Route, Router } from "@solidjs/router"
 import Login from "../../pages/Login.jsx";
 import Landing from "../../pages/Landing.jsx"
 import Profile from "../../pages/Profile.jsx";
@@ -18,7 +17,7 @@ export default function PMSRouter() {
       <Route path="/login" component={Login} />
       <Route path="/register" component={Register} />
       <Route path="/profiles/:id" component={Profile} />
-      <Route path="/landing" component={Landing} />
+      <Route path="/" component={Landing} />
       <Route path="/admin" component={Admin} />
       <Route path="/courses" component={Courses} />
       <Route path="/post/:id" component={PostPage} />

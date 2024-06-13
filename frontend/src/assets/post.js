@@ -5,6 +5,7 @@ export const postDetails = () => {
     name: "Post Title (npr. Project Management System, Feature Request: FR1)",
     body: "Post Text (npr. Projektni zadatak iz PS, Treba mi taj i taj feature)",
     owner_id: 1,
+    posterUsername: "oggnjen",
 
     // ne trebam dobiti izbrisane postove
     // deleted: false,
