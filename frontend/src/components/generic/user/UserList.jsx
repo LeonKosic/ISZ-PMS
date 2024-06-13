@@ -16,7 +16,7 @@ export default function UserList(props) {
               name={user.name}
               username={user.username}
               role={user.role}
-              userid={user.userid}
+              userid={user.id}
               
               clickAction={merged.cardClickAction}
               

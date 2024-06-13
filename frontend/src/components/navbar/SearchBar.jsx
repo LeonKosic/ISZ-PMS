@@ -88,13 +88,13 @@ export default function Searchbar(props){
       />
 
       <div onClick={(evt) => { setAnchorEl(evt.currentTarget) }}>
-        <a href={`http://localhost:3000/search/`+query()}>
+        <button onClick={() => { window.location.href = `/search/${query()}` }}>
         <Icon 
           iconID="fa-solid fa-search"
           clickAction={() => {handleSearch()}}
           iconClass={"cursor-pointer text-xl text-accent-300 top-0 right-0 absolute mr-3 pt-2 pl-2 pr-2"}
         />
-        </a>
+        </button>
 
         <Menu
           id="search-dropdown"
