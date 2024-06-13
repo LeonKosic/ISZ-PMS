@@ -9,6 +9,8 @@ import { userDetails } from "../api/stores";
 import { projects } from "../assets/profile";
 import { Button } from "@suid/material";
 import preprocessor from "../api/preprocessor";
+import RightSidebar from "../components/RightSidebar";
+import LeftSidebar from "../components/LeftSidebar";
 
 const getProfileInfo = async (id) => {
   let details = await preprocessor.profile.details(id);
@@ -51,6 +53,8 @@ export default function Profile(props) {
 
   return (
     <Show when={user.loading == false} fallback={Loading}>
+      <RightSidebar />
+      <LeftSidebar />
       <div class="w-1/3 mx-auto mt-8 grid grid-flow-row grid-cols-1 ">
         <Suspense fallback={<Loading />}>
           <div class="bg-accent-600 bg-opacity-10">
