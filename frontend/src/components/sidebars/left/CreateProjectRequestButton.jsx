@@ -1,6 +1,6 @@
 import { createSignal } from "solid-js";
 import { useNavigate } from "@solidjs/router";
-import api from "../api/api";
+import api from "../../../api/api";
 
 export default function CreateProjectRequestButton() {
   const [showModal, setShowModal] = createSignal(false);
@@ -11,12 +11,12 @@ export default function CreateProjectRequestButton() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const { title, body } = formData();
-    
+
     try {
       await api.post("/request", { title, body });
       setShowModal(false);
       const response = await api.get("/request/my");
-      const latestRequest = response.data.slice(-1)[0]; 
+      const latestRequest = response.data.slice(-1)[0];
       setLatestRequestId(latestRequest.id);
       navigate(`/post/${latestRequestId()}`);
     } catch (error) {

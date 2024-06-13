@@ -80,6 +80,11 @@ const api = {
       setUserDetails("name", response.data.name)
       setUserDetails("username", response.data.username)
     } else console.error("Error during login: ", err)
+  },
+
+  logout: async (payload) => {
+    localStorage.removeItem('accessToken')
+    window.location.href = '/login'
   }
 }
 

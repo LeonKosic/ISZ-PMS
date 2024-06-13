@@ -5,6 +5,10 @@ import { createSignal } from "solid-js";
 import { userDetails } from "../../api/stores";
 import api from "../../api/api";
 
+const navigateTo = (url) => {
+  window.location.href = url;
+}
+
 export default function NavbarIcons(props) {
   const [anchorEl, setAnchorEl] = createSignal(null);
   const open = () => Boolean(anchorEl())
@@ -14,15 +18,22 @@ export default function NavbarIcons(props) {
       <div class="flex flex-row justify-center items-center gap-4">
         <Icon
           iconID="fa-solid fa-book"
-          clickAction={() => { window.location.href = '/courses' }}
+          clickAction={() => { navigateTo('/courses') }}
           iconClass={"p-1 opacity-75 hover:cursor-pointer hover:opacity-100 transition-all duration-500 text-3xl"}
         />
 
         <Icon
           iconID="fa-solid fa-folder-open"
-          clickAction={() => { window.location.href = '/projects' }}
+          clickAction={() => { navigateTo('/projects') }}
           iconClass={"p-1 opacity-75 hover:cursor-pointer hover:opacity-100 transition-all duration-500 text-3xl"}
         />
+        
+        <Icon
+          iconID="fa-solid fa-question"
+          clickAction={() => { navigateTo('/requests') }}
+          iconClass={"p-1 opacity-75 hover:cursor-pointer hover:opacity-100 transition-all duration-500 text-3xl"}
+        />
+        
 
         <div
           onClick={(event) => { setAnchorEl(event.currentTarget) }}

@@ -9,8 +9,8 @@ import { userDetails } from "../api/stores";
 import { projects } from "../assets/profile";
 import { Button } from "@suid/material";
 import preprocessor from "../api/preprocessor";
-import RightSidebar from "../components/RightSidebar";
-import LeftSidebar from "../components/LeftSidebar";
+import RightSidebar from "../components/sidebars/right/RightSidebar";
+import LeftSidebar from "../components/sidebars/left/LeftSidebar";
 
 const getProfileInfo = async (id) => {
   let details = await preprocessor.profile.details(id);

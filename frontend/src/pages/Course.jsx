@@ -10,8 +10,8 @@ import KickParticipantField from "../components/course/KickParticipantField";
 import AddTeachersField from "../components/course/AddTeachersField";
 import RemoveTeachersField from "../components/course/RemoveTeachersField";
 import CourseUnenrollBtn from "../components/course/CourseUnenrollBtn";
-import RightSidebar from "../components/RightSidebar";
-import LeftSidebar from "../components/LeftSidebar";
+import RightSidebar from "../components/sidebars/right/RightSidebar";
+import LeftSidebar from "../components/sidebars/left/LeftSidebar";
 
 const getCourseInformation = async (id) => {
   const response = await api.get(`/course/${id}`);

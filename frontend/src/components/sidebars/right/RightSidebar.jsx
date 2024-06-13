@@ -1,6 +1,6 @@
 import { createSignal, onMount } from "solid-js";
 import { useNavigate } from "@solidjs/router";
-import api from "../api/api";
+import api from "../../../api/api";
 import CreateProjectButton from "./CreateProjectButton"; // Assuming you have this button component ready
 
 export default function RightSidebar() {
@@ -28,7 +28,7 @@ export default function RightSidebar() {
           <p class="text-gray-400 text-center">No projects found</p>
         ) : (
           projects().map((project) => (
-            <div 
+            <div
               class="bg-primary-400 p-4 mb-4 rounded-lg shadow-md w-full cursor-pointer"
               key={project.id}
               onClick={() => handleProjectClick(project.id)}

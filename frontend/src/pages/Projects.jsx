@@ -2,8 +2,8 @@ import { createResource, Suspense } from "solid-js";
 import ProjectList from "../components/generic/ProjectList";
 import api from "../api/api";
 import Loading from "../components/placeholders/Loading";
-import RightSidebar from "../components/RightSidebar";
-import LeftSidebar from "../components/LeftSidebar";
+import RightSidebar from "../components/sidebars/right/RightSidebar";
+import LeftSidebar from "../components/sidebars/left/LeftSidebar";
 
 export default function Projects(props) {
   const [projects] = createResource(async () => {

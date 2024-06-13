@@ -1,7 +1,7 @@
 import { createSignal, onMount } from "solid-js";
 import { useNavigate } from "@solidjs/router";
-import api from "../api/api";
-import CreateProjectRequestButton from "./CreateProjectRequestButton"; 
+import api from "../../../api/api";
+import CreateProjectRequestButton from "./CreateProjectRequestButton";
 
 export default function LeftSidebar() {
   const [courses, setCourses] = createSignal([]);
@@ -9,7 +9,7 @@ export default function LeftSidebar() {
 
   onMount(async () => {
     const response = await api.get("/course/my");
-    const latestCourses = response.data; 
+    const latestCourses = response.data;
     setCourses(latestCourses);
   });
 
@@ -28,7 +28,7 @@ export default function LeftSidebar() {
           <p class="text-gray-400 text-center">No courses found</p>
         ) : (
           courses().map((course) => (
-            <div 
+            <div
               class="bg-primary-400 p-4 mb-4 rounded-lg shadow-md w-full cursor-pointer"
               key={course.course.id}
               onClick={() => handleCourseClick(course.course.id)}

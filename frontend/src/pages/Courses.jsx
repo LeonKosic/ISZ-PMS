@@ -2,8 +2,8 @@ import { Show, createResource } from "solid-js"
 import api from "../api/api";
 import Loading from "../components/placeholders/Loading";
 import CourseList from "../components/generic/course/CourseList";
-import RightSidebar from "../components/RightSidebar";
-import LeftSidebar from "../components/LeftSidebar";
+import RightSidebar from "../components/sidebars/right/RightSidebar";
+import LeftSidebar from "../components/sidebars/left/LeftSidebar";
 
 
 const getCourses = async () => {
