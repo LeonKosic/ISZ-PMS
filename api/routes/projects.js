@@ -150,25 +150,9 @@ router.get('/board/:id/requests', authenticateToken, jsonParser, checkIfBoardMem
   res.status(200).json(posts)
 })
 router.post('/search', jsonParser, async (req, res) => {
-  const existingProject = await db.select().from(post).where(and(like(post.title, `%${req.body.title}%`), eq(post.deleted, 0), eq(post.type, 1)));
+  const existingProject = await db.select().from(post).where(like(post.title, `%${req.body.title}%`) && eq(post.deleted, 0)&& eq(post.type, 1));
 
   return res.send(200, existingProject)
-})
-router.post("/rollback", authenticateToken, jsonParser, checkIfTeamMember, async (req, res) => {
-  const { commit, project_id } = req.body;
-  const project = await db.select().from(project).where(eq(project.id, project_id));
-  if (project.length <= 0) {
-    res.status(400).send({ err: "Project does not exist." })
-    return
-  }
-  const newHead = await db.select().from(commit).where(and(eq(commit.id, commit), eq(commit.project, project_id)));
-  if (newHead.length <= 0) {
-    res.status(400).send({ err: "Commit does not exist." })
-    return
-  }
-  await db.update(project).set({ head: commit}).where(eq(project.id, project_id))
-  res.status(200).send({ message: "Rolled back." })
-
 })
 router.get("/:id", authenticateToken, async (req, res) => {
   const existingProject = await db.select().from(project).where(eq(project.id, req.params.id));
