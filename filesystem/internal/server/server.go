@@ -77,6 +77,8 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 	}
 	f.Close()
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
 	fmt.Fprint(w, resp)
 }
 func commitSearch(w http.ResponseWriter, r *http.Request) {
