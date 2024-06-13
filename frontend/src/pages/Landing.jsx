@@ -16,8 +16,8 @@ export default function Landing(props) {
   const navigate = useNavigate();
 
   onMount(() => {
-    console.log(localStorage.getItem("token"))
-    if (localStorage.getItem("token") == null) {
+    console.log(localStorage.getItem("accessToken"))
+    if (localStorage.getItem("accessToken") == null) {
       navigate("/login")
     }
   })
