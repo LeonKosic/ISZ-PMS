@@ -19,6 +19,10 @@ import (
 type myJSON struct {
 	Array []string `json:"arr"`
 }
+type DownloadFile struct {
+	id   string `json:"project_id"`
+	path string `json:"path"`
+}
 
 var cfg = config.DefaultConfig()
 
@@ -114,11 +118,19 @@ func commitSearch(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Fprintf(w, string(diff))
 }
+func downloadFile(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Stiglo")
+	var file DownloadFile
+	err := json.NewDecoder(r.Body).Decode(&file)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println("files/" + file.id + "/" + file.path)
+}
 func RunServer() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("POST /upload/{commit}", uploadFile)
-	fs := http.FileServer(http.Dir(cfg.Dir))
-	mux.Handle("/files", http.StripPrefix("/files", fs))
+	mux.HandleFunc("POST /files", downloadFile)
 	mux.HandleFunc("GET /commit/{id}", commitSearch)
 	//c := cors.New(cors.Options{
 	//	AllowedOrigins:   []string{"*"},
