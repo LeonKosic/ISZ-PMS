@@ -121,7 +121,7 @@ export default function Profile(props) {
           <div class="my-2 py-2 mt-3 pt-1 rounded-md border-2 border-accent-600 bg-accent-600 bg-opacity-10">
             <p class="flex flex-col items-center justify-center text-2xl">
               {/* Projects {`(${projects().length})`}   */}
-              Projects {`(${projects().data.length})`}
+              Projects {`(${user().projects.length})`}
             </p>
             <hr class="border-2 border-accent-600 my-2 mb-3 ml-3 mr-3 rounded-lg" />
             <ProjectList
