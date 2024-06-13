@@ -22,10 +22,12 @@ router.post("/", jsonParser,upload.any(), async (req, res, next)=>{
   const newCommit = await db.insert(commit).values({project:req.body.projectId});
   db.update(project).set({head:newCommit[0].insertId}).where({id:req.body.projectId})
   await axios.post("http://filesystem:7070/upload/"+newCommit[0].insertId, req.files, {headers:{"Content-Type":'multipart/form-data'}}).then((response)=>{
-    console.log(response.data)
+    console.log("data", response.data)
+    console.log("headers ", response.headers)
+    res.status("203").send("now good g")
   })
 
-  res.status("203").send("now good g")
+
 })
 
 export default router;
