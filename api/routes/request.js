@@ -20,6 +20,12 @@ import { request } from '../db/schema/request.js';
 import { request_answers } from '../db/schema/request_answers.js';
 
 
+
+router.get('/', jsonParser, async (req, res) => {
+  const projects = await db.select().from(post).where(and(eq(post.deleted, 0), eq(post.type,2)));
+  res.status(200).json(projects)
+})
+
 router.delete('/:id', jsonParser, async (req, res) => {
   const existingProject = await db.select().from(post).where(eq(post.id, req.params.id));
   if (existingProject.length <= 0) {
@@ -86,5 +92,10 @@ router.post('/search', jsonParser ,async(req,res)=>{
 
   return res.send(200,existingRequest)
 })
+router.get("/:id",jsonParser,async(req,res)=>{
+  const answers = await db.select().from(request_answers).leftJoin(project, eq(project.id, request_answers.project)).where(eq(request_answers.request,req.params.id))
+  res.send(200,answers);
+})
+
 
 export default router
