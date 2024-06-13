@@ -81,7 +81,7 @@ export default function EnrolledCourse(props) {
 
 
   return (
-    <div class="mx-auto py-10 border-2 border-accent-600 rounded-xl max-w-screen-2xl my-4">
+    <div class="mx-auto py-10 border-2 border-accent-600 rounded-xl max-w-screen-xl my-4">
       <div class="flex flex-row items-center justify-center">
         <div class="flex flex-col items-center justify-center w-1/2">
           <p class="text-4xl pb-2">

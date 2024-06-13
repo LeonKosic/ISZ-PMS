@@ -4,7 +4,7 @@ export default function Banner(props) {
       class="cursor-pointer"
     >
       <a
-        href="/landing"
+        href="/"
         class="text-6xl ps-4 mr-4"
       >
         PMS

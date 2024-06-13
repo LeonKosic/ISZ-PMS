@@ -27,7 +27,7 @@ export default function PostCard(props) {
 
   return (
     <Show when={author.loading == false}>
-      <div class="w-1/2 mx-auto h-min p-6 border-2 border-accent-600 rounded-lg shadow">
+      <div class="mx-auto h-min p-6 border-2 border-accent-600 rounded-lg shadow">
         <a href={"/post/" + post().id}>
           <h5 class="mb-2 text-2xl tracking-tight text-gray-200">{post().title}</h5>
         </a>

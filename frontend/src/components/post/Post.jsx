@@ -67,6 +67,7 @@ export default function Post(props) {
   const [solutionDialog, setSolutionDialog] = createSignal(null)
   const [commentValue, setCommentValue] = createSignal('');
 
+  console.log(props)
 
   return (
     <Suspense>
@@ -188,34 +189,36 @@ export default function Post(props) {
           </Show>
 
           {/* Solutions */}
-          <Show
-            when={solutions.loading == false && props.data.isFeatureRequest == true}
-            fallback={<p class="text-xl italic">Loading solutions, please wait...</p>}
-          >
-            <hr class="border-2 border-accent-600 my-2" />
+          <Show when={props.data.isFeatureRequest == true}>
             <Show
-              when={solutions().length > 0}
-              fallback={
-                <div>
-                  <p class="text-xl italic">
-                    No solutions submitted yet. Be first!
-                  </p>
-                </div>
-              }
+              when={solutions.loading == false && props.data.isFeatureRequest == true}
+              fallback={<p class="text-xl italic">Loading solutions, please wait...</p>}
             >
-              <div class="flex flex-col items-center justify-center">
-                <ProjectList
-                  projects={solutions()}
-                  style={"flex flex-col items-center justify-center w-full w-max"}
-                  cardStyle={"w-full border-2 border-accent-600 rounded-lg p-2 text-lg hover:bg-accent-600 hover:cursor-pointer duration-300 transition-all mt-2"}
-                  cardClickAction={(id) => {
-                    window.location.href = `/project/${id}`
-                    setTimeout(() => { location.reload() }, 1000)
-                  }}
-                />
-              </div>
+              <hr class="border-2 border-accent-600 my-2" />
+              <Show
+                when={solutions().length > 0}
+                fallback={
+                  <div>
+                    <p class="text-xl italic">
+                      No solutions submitted yet. Be first!
+                    </p>
+                  </div>
+                }
+              >
+                <div class="flex flex-col items-center justify-center">
+                  <ProjectList
+                    projects={solutions()}
+                    style={"flex flex-col items-center justify-center w-full w-max"}
+                    cardStyle={"w-full border-2 border-accent-600 rounded-lg p-2 text-lg hover:bg-accent-600 hover:cursor-pointer duration-300 transition-all mt-2"}
+                    cardClickAction={(id) => {
+                      window.location.href = `/project/${id}`
+                      setTimeout(() => { location.reload() }, 1000)
+                    }}
+                  />
+                </div>
+              </Show>
+              <hr class="border-2 border-accent-600 my-2" />
             </Show>
-            <hr class="border-2 border-accent-600 my-2" />
           </Show>
 
           {/* Comments */}
