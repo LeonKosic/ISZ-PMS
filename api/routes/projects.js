@@ -72,7 +72,7 @@ router.post('/', authenticateToken, jsonParser, async (req, res) => {
     }]
   );
   await db.insert(project).values([{ id: newPost[0].insertId }])
-  res.status(200).send({ message: "Project made." });
+  res.status(200).send({ message: "Project made.", id: newPost[0].insertId});
 })
 
 router.get('/my', authenticateToken, jsonParser, async (req, res) => {
