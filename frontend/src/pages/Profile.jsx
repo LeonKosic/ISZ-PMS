@@ -29,32 +29,25 @@ const getProfileInfo = async (id) => {
 export default function Profile(props) {
   const currentUserID = useLocation().pathname.split('/')[2]
 
-  const follow = async (target, requester) => {
-    const response = await api.post('/users/follow',
-      {
-        follower_id: requester,
-        following_id: target
-      }
+  const follow = async (target) => {
+    const response = await api.post(
+      '/users/follow',
+      { id: target }
     )
 
     return response.data;
   }
 
-  const unfollow = async (target, requester) => {
-    const response = await api.post('/users/unfollow',
-      {
-        follower_id: requester,
-        following_id: target
-      }
+  const unfollow = async (target) => {
+    const response = await api.post(
+      '/users/unfollow',
+      { id: target }
     )
 
     return response.data;
   }
 
   const [user] = createResource(async () => getProfileInfo(currentUserID));
-
-  console.log("curr_id: ", currentUserID)
-  console.log(userDetails)
 
   return (
     <Show when={user.loading == false} fallback={Loading}>
@@ -81,7 +74,7 @@ export default function Profile(props) {
                         color="pmsScheme"
                         variant="outlined"
                         fullWidth
-                        onClick={async () => { unfollow(currentUserID, userDetails.id) }}
+                        onClick={async () => { unfollow(currentUserID) }}
                       >
                         Unfollow
                       </Button>
@@ -90,7 +83,7 @@ export default function Profile(props) {
                     color="pmsScheme"
                     variant="outlined"
                     fullWidth
-                    onClick={async () => { follow(currentUserID, userDetails.id) }}
+                    onClick={async () => { follow(currentUserID) }}
                   >
                     Follow
                   </Button>)

@@ -76,14 +76,17 @@ router.post('/', authenticateToken, jsonParser, async (req, res) => {
 })
 
 router.get('/my', authenticateToken, jsonParser, async (req, res) => {
-  const projects = await db.select().from(post).where(eq(post.owner_id, req.user.id) && eq(post.type, 1));
-
+  console.log(req.user.id)
+  const projects = await db.select().from(post).where(and(eq(post.owner_id, req.user.id), eq(post.type, 1)));
+  for (let i = 0; i < projects.length; i++) {
+    console.log(projects[i])
+  }
   res.status(200).json(projects)
 })
 
 router.get('/following', authenticateToken, jsonParser, async (req, res) => {
   const followingProjectNames = await db.select().from(post).leftJoin(follow, eq(post.owner_id, follow.following_id))
-    .where(eq(follow.follower_id, req.user.id) && eq(post.type, 1))
+    .where(and(eq(follow.follower_id, req.user.id), eq(post.type, 1)))
   res.status(200).send(followingProjectNames)
 
 })
@@ -120,7 +123,7 @@ router.post('board/post', authenticateToken, jsonParser, checkIfTeamMember, asyn
   res.status(200).send({ message: "Post made." });
 })
 router.get('/board/:id', authenticateToken, jsonParser, checkIfBoardMember, async (req, res) => {
-  const posts = await db.select().from(post).where(eq(post.board_id, req.params.id) && eq(post.type, 0) && eq(post.deleted, 0) && eq(post.isFeatureRequest, 0));
+  const posts = await db.select().from(post).where(and(eq(post.board_id, req.params.id), eq(post.type, 0), eq(post.deleted, 0), eq(post.isFeatureRequest, 0)));
   res.status(200).json(posts)
 })
 router.post('/register', authenticateToken, jsonParser, checkIfTeamMember, async (req, res) => {
@@ -128,6 +131,44 @@ router.post('/register', authenticateToken, jsonParser, checkIfTeamMember, async
     project: req.body.project_id,
     user: req.body.user_id
   })
+})
+
+router.post('/directory/structure', jsonParser, authenticateToken, async (req, res) => {
+  const { commit, project_id, path } = req.body;
+  console.log(req.body)
+  const parentFile = await db.select().from(file).where(and(eq(file.path, path), eq(file.project, project_id)));
+  if (parentFile.length < 0) {
+    res.status(400).send({ message: "File does not exist." })
+  }
+  const files = await db.execute(sql`select id, path from file join commited_files on file.id = commited_files.fileId where commitId = (select max(commitId) from commited_files where fileId = file.id group by fileId ) and project = ${project_id} and parent = ${parentFile[0].id}`)
+  res.status(200).send(files[0]);
+}
+
+)
+router.get('/board/:id/requests', authenticateToken, jsonParser, checkIfBoardMember, async (req, res) => {
+  const posts = await db.select().from(post).where(and(eq(post.board_id, req.params.id), eq(post.type, 0), eq(post.deleted, 0), eq(post.isFeatureRequest, 1)));
+  res.status(200).json(posts)
+})
+router.post('/search', jsonParser, async (req, res) => {
+  const existingProject = await db.select().from(post).where(and(like(post.title, `%${req.body.title}%`), eq(post.deleted, 0), eq(post.type, 1)));
+
+  return res.send(200, existingProject)
+})
+router.post("/rollback", authenticateToken, jsonParser, checkIfTeamMember, async (req, res) => {
+  const { commit, project_id } = req.body;
+  const project = await db.select().from(project).where(eq(project.id, project_id));
+  if (project.length <= 0) {
+    res.status(400).send({ err: "Project does not exist." })
+    return
+  }
+  const newHead = await db.select().from(commit).where(and(eq(commit.id, commit), eq(commit.project, project_id)));
+  if (newHead.length <= 0) {
+    res.status(400).send({ err: "Commit does not exist." })
+    return
+  }
+  await db.update(project).set({ head: commit}).where(eq(project.id, project_id))
+  res.status(200).send({ message: "Rolled back." })
+
 })
 router.get("/:id", authenticateToken, async (req, res) => {
   const existingProject = await db.select().from(project).where(eq(project.id, req.params.id));
@@ -144,42 +185,5 @@ router.get("/:id", authenticateToken, async (req, res) => {
   const files = await db.execute(sql`select id, path from file join commited_files on file.id = commited_files.fileId where commitId = (select max(commitId) from commited_files where fileId = file.id and commitId <= ${head} group by fileId ) and project = ${req.params.id} and parent is null`)
 
   res.send(200, { commits, team, files:files[0] })
-})
-router.post('/directory/structure', jsonParser, authenticateToken, async (req, res) => {
-  const { commit, project_id, path } = req.body;
-  console.log(req.body)
-  const parentFile = await db.select().from(file).where(eq(file.path, path) && eq(file.project, project_id));
-  if (parentFile.length < 0) {
-    res.status(400).send({ message: "File does not exist." })
-  }
-  const files = await db.execute(sql`select id, path from file join commited_files on file.id = commited_files.fileId where commitId = (select max(commitId) from commited_files where fileId = file.id group by fileId ) and project = ${project_id} and parent = ${parentFile[0].id}`)
-  res.status(200).send(files[0]);
-}
-
-)
-router.get('/board/:id/requests', authenticateToken, jsonParser, checkIfBoardMember, async (req, res) => {
-  const posts = await db.select().from(post).where(eq(post.board_id, req.params.id) && eq(post.type, 0) && eq(post.deleted, 0) && eq(post.isFeatureRequest, 1));
-  res.status(200).json(posts)
-})
-router.post('/search', jsonParser, async (req, res) => {
-  const existingProject = await db.select().from(post).where(like(post.title, `%${req.body.title}%`) && eq(post.deleted, 0) && eq(post.type, 1));
-
-  return res.send(200, existingProject)
-})
-router.post("/rollback", authenticateToken, jsonParser, checkIfTeamMember, async (req, res) => {
-  const { commit, project_id } = req.body;
-  const project = await db.select().from(project).where(eq(project.id, project_id));
-  if (project.length <= 0) {
-    res.status(400).send({ err: "Project does not exist." })
-    return
-  }
-  const newHead = await db.select().from(commit).where(eq(commit.id, commit) && eq(commit.project, project_id));
-  if (newHead.length <= 0) {
-    res.status(400).send({ err: "Commit does not exist." })
-    return
-  }
-  await db.update(project).set({ head: commit}).where(eq(project.id, project_id))
-  res.status(200).send({ message: "Rolled back." })
-
 })
 export default router

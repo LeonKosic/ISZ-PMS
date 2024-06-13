@@ -64,14 +64,14 @@ router.post('/', authenticateToken, jsonParser, async (req, res) => {
 })
 
 router.get('/my', authenticateToken, jsonParser, async (req, res) => {
-  const projects = await db.select().from(post).where(eq(post.owner_id, req.user.id) && eq(post.type,2));
+  const projects = await db.select().from(post).where(and(eq(post.owner_id, req.user.id), eq(post.type,2)));
 
   res.status(200).json(projects)
 })
 
 router.get('/following', authenticateToken, jsonParser, async (req, res) => {
   const followingProjectNames = await db.select().from(post).leftJoin(follow, eq(post.owner_id, follow.following_id))
-    .where(eq(follow.follower_id, req.user.id) && eq(post.type,2))
+    .where(and(eq(follow.follower_id, req.user.id), eq(post.type,2)))
   res.status(200).send(followingProjectNames)
 })
 router.post('/solution', jsonParser, authenticateToken, async (req, res) => {
@@ -82,7 +82,7 @@ router.post('/solution', jsonParser, authenticateToken, async (req, res) => {
   res.status(200).send({ message: "Solution added." })
 })
 router.post('/search', jsonParser ,async(req,res)=>{
-  const existingRequest = await db.select().from(post).where(like(post.title,`%${req.body.title}%`) && eq(post.deleted,0) && eq(post.type,2));
+  const existingRequest = await db.select().from(post).where(and(like(post.title,`%${req.body.title}%`), eq(post.deleted,0), eq(post.type,2)));
 
   return res.send(200,existingRequest)
 })

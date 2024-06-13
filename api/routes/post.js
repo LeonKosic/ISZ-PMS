@@ -34,15 +34,7 @@ router.delete('/:id', async (req, res) => {
   await db.update(post).set({ deleted: '1' }).where(eq(post.id, req.params.id))
   res.send(200, { message: "Post deleted." })
 })
-router.get("/:id", authenticateToken, async (req, res) => {
-  const existingProject = await db.select().from(post).where(eq(post.id, req.params.id));
-  const comments = await db.select().from(comment).where(eq(comment.post, req.params.id));
-  if (existingProject.length <= 0) {
-    res.send(400, { err: "Post with this name does not exist." })
-    return
-  }
-  res.send(200, {...existingProject[0], comments})
-})
+
 
 router.get('/my', authenticateToken, jsonParser, async (req, res) => {
   const posts = await db.select().from(post).where(eq(post.owner_id, req.user.id));
@@ -83,7 +75,16 @@ router.post('/comment', authenticateToken, jsonParser, async (req, res) => {
 })
 router.post('/filter', jsonParser, authenticateToken, async (req, res) => {
   const { categories } = req.body;
-  
 
+
+})
+router.get("/:id", authenticateToken, async (req, res) => {
+  const existingProject = await db.select().from(post).where(eq(post.id, req.params.id));
+  const comments = await db.select().from(comment).where(eq(comment.post, req.params.id));
+  if (existingProject.length <= 0) {
+    res.send(400, { err: "Post with this name does not exist." })
+    return
+  }
+  res.send(200, {...existingProject[0], comments})
 })
 export default router
