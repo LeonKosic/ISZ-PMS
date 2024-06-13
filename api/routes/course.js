@@ -50,6 +50,11 @@ router.post('/', authenticateToken, authenticateTeacher, jsonParser, async (req,
       owner_id: req.user.id
     }]
   );
+  await db.insert(enrolled).values(
+    [{
+      student_id: req.user.id,
+      course_id: newCourse[0].insertId
+    }])
   res.status(200).send({ message: "Course made.", id: newCourse[0].insertId});
 })
 router.put("/", jsonParser, authenticateToken, async (req, res) => {
@@ -159,6 +164,11 @@ router.post('/teacher', authenticateToken, jsonParser, async (req, res) => {
       teacher_id: req.body.teacher_id,
       course_id: req.body.course_id
     }])
+    await db.insert(enrolled).values(
+      [{
+        student_id: req.body.teacher_id,
+        course_id: req.body.course_id
+      }])
   res.status(200).send({ message: "Teacher added." });
 })
 router.delete('/teacher/:id', authenticateToken, async (req, res) => {
