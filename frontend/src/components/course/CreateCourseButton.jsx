@@ -19,7 +19,7 @@ export default function CreateCourseButton(props) {
       return;
     }
 
-    console.log(name, password1, password2)
+    // console.log(name, password1, password2)
 
     const response = await api.post(
       '/course',
