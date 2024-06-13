@@ -106,23 +106,6 @@ export default function Project(props) {
             team={props.data.team}
           />
 
-          <CommitDropdown
-            commits={props.data.commits}
-            commitID={props.data.commits[props.data.commits.length - 1]}
-            callback={async (commitID) => {
-              /* 
-                - set current commit, 
-                - get commit-based files 
-                - set virtual path to root 
-              */
-              setFileList("commitID", commitID)
-              setFileList("files", getCommitVersion(commitID))
-
-              // TODO (vidjeti sa leonom):
-              // './' ili '' kao root path?
-              setCurrentPathStore("path",)
-            }}
-          />
         </div>
       </div>
 
