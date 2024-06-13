@@ -14,8 +14,8 @@ const searchProjects = async (name) => {
   // return response.data
 }
 
-const searchCourses = async (id) => {
-  const response = await api.get(`/course/${id}`)
+const searchCourses = async (name) => {
+  const response = await api.post(`/course/search`, { name: name})
   return response.data
 }
 
@@ -88,7 +88,7 @@ export default function Searchbar(props){
       />
 
       <div onClick={(evt) => { setAnchorEl(evt.currentTarget) }}>
-        <a href={`http://localhost:3000/search/users/`+query()}>
+        <a href={`http://localhost:3000/search/`+query()}>
         <Icon 
           iconID="fa-solid fa-search"
           clickAction={() => {handleSearch()}}

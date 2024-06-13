@@ -2,7 +2,7 @@ import CourseList from "../components/generic/course/CourseList";
 import api from "./api"
 
 export const searchCourse = async (courseName, toCourseList = false) => {
-  const response = await api.post("/courses/search", { name: courseName })
+  const response = await api.post("/course/search", { name: courseName })
   const data = await response.data;
   
   if (toCourseList == false)

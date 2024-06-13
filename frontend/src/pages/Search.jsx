@@ -64,7 +64,7 @@ export default function Search(){
                 </Show>
                 <Show when={select() == 3}>
                     <RequestList requests={requests}
-                    cardClickAction={(id) => { window.location.href = `/requests/${id}` }}
+                    //cardClickAction={(id) => { window.location.href = `/requests/${id}` }}
                     cardStyle={"overflow-auto max-h-52 my-2 bg-accent-600 bg-opacity-5 border-2 rounded-xl border-accent-600 py-2 text-xl text-slate-200"}   
                     />
                 </Show>

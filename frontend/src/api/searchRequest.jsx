@@ -8,7 +8,7 @@ export const searchRequest = async (requestName, toRequestList = false) => {
   if (toRequestList == false)
     return data
   else return <RequestList requests={data.requests}
-                cardClickAction={(id) => { window.location.href = `/requests/${id}` }}
+                //cardClickAction={(id) => { window.location.href = `/requests/${id}` }}
                 cardStyle={"hover:cursor-pointer rounded-lg border-2 border-accent-600 my-1 ms-2 mr-2 hover:bg-accent-600 duration-300 transition-all"}
                />
 }
