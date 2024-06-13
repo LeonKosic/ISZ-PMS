@@ -34,9 +34,9 @@ export default function ProjectPage(props) {
       {console.log(postData())}
 
       <Post
-        name={postData.name}
-        body={postData.body}
-        owner_id={postData.owner_id}
+        name={postData().name}
+        body={postData().body}
+        owner_id={postData().owner_id}
       >
         <Project data={projectData} post={postData} />
       </Post>

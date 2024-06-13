@@ -29,6 +29,7 @@ const getAuthor = async (owner) => {
 }
 
 export default function Post(props) {
+  console.log(props.owner_id)
   const [author] = createResource(() => getAuthor(props.owner_id))
   const [commentBoxVisible, setCommentBoxVisible] = createSignal(false);
   const [commentValue, setCommentValue] = createSignal('');
