@@ -179,7 +179,7 @@ router.get('/:id', authenticateToken, jsonParser, async (req, res) => {
         return
     }
     if (!(isEnrolled.length > 0 || existingCourse[0].owner_id == req.user.id || teachers.some(teacher => teacher.teacher_id == req.user.id))) {
-        res.status(400).send({ message: "Not enrolled." })
+        res.status(200).send({name: existingCourse[0].name, id: existingCourse[0].id, isEnrolled: false})
         return
     }
     teachers.forEach(t => delete t.users.password)
