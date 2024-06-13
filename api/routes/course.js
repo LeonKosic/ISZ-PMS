@@ -135,7 +135,7 @@ router.post("/post", authenticateToken, jsonParser, async (req, res) => {
 })
 
 router.post('/search', jsonParser, async (req, res) => {
-  const existingCourse = await db.select().from(course).where(and(like(course.title, `%${req.body.name}%`), eq(course.deleted, 0)));
+  const existingCourse = await db.select().from(course).where(and(like(course.name, `%${req.body.name}%`), eq(course.deleted, 0)));
   if (existingCourse.length > 0) {
     existingCourse.map((user) => {
       delete user.password
