@@ -61,13 +61,13 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		switch fileState {
-		case 2:
-			diff = append(diff, path+" changed")
 		case 3:
 			_, after, _ := strings.Cut(path, "/")
 			_, final, _ := strings.Cut(after, "/")
 			res = append(res, final)
 			diff = append(diff, path+" new")
+		case 2:
+			diff = append(diff, path+" changed")
 		default:
 		}
 	}
