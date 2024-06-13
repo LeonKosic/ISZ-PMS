@@ -3,9 +3,6 @@ package server
 import (
 	"encoding/json"
 	"fmt"
-
-	//"io"
-
 	"net/http"
 	"os"
 	"path/filepath"
@@ -119,18 +116,20 @@ func commitSearch(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, string(diff))
 }
 func downloadFile(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Stiglo")
 	var file DownloadFile
 	err := json.NewDecoder(r.Body).Decode(&file)
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println("files/" + file.Id + "/" + file.Path)
+	w.Header().Set("Content-Disposition", "attachment; filename=\""+file.Path+"\"")
+	w.Header().Set("Content-Type", "application/octet-stream")
+	fmt.Println("files/" + file.Id + file.Path)
+	http.ServeFile(w, r, "files/"+file.Id+file.Path)
 }
 func RunServer() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("POST /upload/{commit}", uploadFile)
-	mux.HandleFunc("POST /files", downloadFile)
+	mux.HandleFunc("POST /files/", downloadFile)
 	mux.HandleFunc("GET /commit/{id}", commitSearch)
 	//c := cors.New(cors.Options{
 	//	AllowedOrigins:   []string{"*"},
