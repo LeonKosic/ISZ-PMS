@@ -26,6 +26,8 @@ export default function PMSRouter() {
       <Route path="/projects" component={Projects} />
       <Route path="/requests" component={Requests} />
 
+      {/* <Route path="/project/:id" element={<p>project page</p>} /> */}
+
       <Route path="*" component={NotFound} />
     </Router>
   )

@@ -212,17 +212,19 @@ export default function EnrolledCourse(props) {
             </p>
             <hr class="w-2/3 border-2 border-accent-600" />
 
-            <div class="py-2">
-              <Button
-                variant="outlined"
-                color="pmsScheme"
-                onClick={() => { setShowPostModal(true) }}
-              >
-                Add post
-              </Button>
-            </div>
+            <Show when={props.data.isTeacher}>
+              <div class="py-2">
+                <Button
+                  variant="outlined"
+                  color="pmsScheme"
+                  onClick={() => { setShowPostModal(true) }}
+                >
+                  Add post
+                </Button>
+              </div>
 
-            <hr class="w-2/3 border-2 border-accent-600 mb-2" />
+              <hr class="w-2/3 border-2 border-accent-600 mb-2" />
+            </Show>
           </div>
 
           <Show when={showPostModal() == true}>

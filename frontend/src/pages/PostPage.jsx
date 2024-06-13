@@ -18,11 +18,13 @@ export default function PostPage(props) {
       <RightSidebar />
       <LeftSidebar />
       <Post
-        id={post().id}
-        name={post().title}
-        owner_id={post().owner_id}
-        body={post().body}
-        comments={post().comments}
+        data={post()}
+
+      // id={post().id}
+      // name={post().title}
+      // owner_id={post().owner_id}
+      // body={post().body}
+      // comments={post().comments}
       />
     </Show>
   )
