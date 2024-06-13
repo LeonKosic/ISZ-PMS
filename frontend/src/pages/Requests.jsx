@@ -5,7 +5,7 @@ export default function Requests() {
   const [requests, setRequests] = createSignal([]);
 
   onMount(async () => {
-    const response = await api.get("/requests");
+    const response = await api.get("/request");
     setRequests(response.data);
   });
 
