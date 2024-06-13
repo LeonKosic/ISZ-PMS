@@ -2,7 +2,7 @@ import { useLocation } from "@solidjs/router"
 import { createDropzone } from "@soorria/solid-dropzone"
 
 import FileList from "../components/generic/file/FileList"
-import ProjectMaintainers from "../components/project/ProjectMaintainers"
+import ProjectMaintainers from "../components/project/ProjectTeam"
 import ProjectOwner from "../components/project/ProjectOwner"
 import CommitDropdown from "../components/project/CommitDropdown"
 
@@ -12,6 +12,7 @@ import { currentPathStore, selectedFile, setSelectedFile, fileList, setFileList,
 
 // mock/test data
 import { projectInfo } from "../assets/projectContent"
+import ProjectTeam from "../components/project/ProjectTeam"
 
 const getCommitVersion = async (commitID) => {
   // ENDPOINT?
@@ -88,12 +89,8 @@ export default function Project(props) {
 
         {/* right panel */}
         <div class="w-1/3">
-          <ProjectOwner
-            owner={props.data.owner}
-          />
-
-          <ProjectMaintainers
-            maintainers={props.data.collaborators}
+          <ProjectTeam
+            team={props.data.team}
           />
 
           <CommitDropdown
