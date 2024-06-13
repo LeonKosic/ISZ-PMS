@@ -1,105 +1,133 @@
-import ProfileActivityCard from "../components/profile/ProfileActivityCard";
-import ProfileHeader from "../components/profile/ProfileHeader";
-import ProfileProjectBanner from "../components/profile/ProfileProjectBanner";
-import ProfileRepositoryBanner from "../components/profile/ProfileRepositoryBanner";
-
 import api from "../api/api";
-import { Show, Suspense, createResource } from "solid-js";
-import { A, useLocation } from "@solidjs/router";
+import { Show, Suspense, createResource, createSignal } from "solid-js";
+import Loading from "../components/placeholders/Loading";
+import UserList from "../components/generic/user/UserList";
+import ProjectList from "../components/generic/project/ProjectList";
+import ProfileHeader from "../components/profile/ProfileHeader";
+import { useLocation } from "@solidjs/router";
+import { userDetails } from "../api/stores";
+import { projects } from "../assets/profile";
+import { Button } from "@suid/material";
+import preprocessor from "../api/preprocessor";
+
+const getProfileInfo = async (id) => {
+  let details = await preprocessor.profile.details(id);
+  let projects = await preprocessor.profile.projects(id);
+  let followers = await preprocessor.profile.followers(id);
+  let following = await preprocessor.profile.following(id);
+
+  return {
+    loading: false,
+    ...details,
+
+    followers: followers,
+    following: following,
+    projects: projects
+  }
+}
 
 export default function Profile(props) {
-  const [user] = createResource(async () => {
-    // const url = `http://localhost:3301/ogg`;
-    const url = `${import.meta.env.VITE_API_HOST}${useLocation().pathname}`;
-    const response = await api.get(url);
-    return await response.json();
-  });
-  
+  const currentUserID = useLocation().pathname.split('/')[2]
+
+  const follow = async (target) => {
+    const response = await api.post(
+      '/users/follow',
+      { id: target }
+    )
+
+    return response.data;
+  }
+
+  const unfollow = async (target) => {
+    const response = await api.post(
+      '/users/unfollow',
+      { id: target }
+    )
+
+    return response.data;
+  }
+
+  const [user] = createResource(async () => getProfileInfo(currentUserID));
+
   return (
-    <Suspense>  
-      <div class="user-profile">
-        <div class="activities">
-          <For each={user()?.activity}>
-            {
-              (activity) => 
-                <ProfileActivityCard
-                  atTime={activity.date}
-                  action={activity.what}
-                  where={activity.where}
-                />
-            }
-          </For>
-        </div>
-        
-        <div class="info">
-        <ProfileHeader
-          username={user()?.username}
-          name={user()?.fullname}
-          role={user()?.role}
-          bio={user()?.bio}
-          avatarUrl={user()?.avatarUrl}
-        />
-          
-          <div class="social">
-            <div class="following">
-              <h1 class="italic">Followers</h1>
-              <For each={user()?.following}>
-                {
-                  (follower, idx) => {
-                    if (idx() >= 5) return (<></>)
-                    else return (
-                      <p>{follower}</p>
-                    )
-                  }
-                }
-              </For>
-            </div>
-            <div class="popular-projects">
-              <h1 class="italic">Popular projects</h1>
-              <For each={user()?.popularProjects}>
-                {
-                  (project, idx) => {
-                    if (idx() >= 5) return (<></>)
-                    else return (
-                      <A href="TODO#REPLACEME">
-                        {project}
-                        <br/>
-                      </A>    
-                    )
-                  }
-                }
-              </For>
-            </div>
+    <Show when={user.loading == false} fallback={Loading}>
+      <div class="w-1/3 mx-auto mt-8 grid grid-flow-row grid-cols-1 ">
+        <Suspense fallback={<Loading />}>
+          <div class="bg-accent-600 bg-opacity-10">
+            <ProfileHeader
+              username={user()?.username}
+              name={user()?.name}
+              role={user()?.email}
+              bio={"Some bio"}
+            />
           </div>
-          
-          <div class="project-listings">
-            <h1 class="text-big italic">Spotlight</h1>
-            <For each={user()?.spotlight}>
+
+          <Show when={currentUserID != userDetails.id}>
+            <div class="flex flex-row justify-center items-center pt-4">
               {
-                (project, idx) =>
-                  <ProfileProjectBanner
-                    title={project.title}
-                    description={project.description}
-                    owner={project.owner}
-                    maintainers={project.maintainers}
-                  />
+                (() => {
+                  const follows = user().followers.find(x => x.id == userDetails.id)
+
+                  if (follows) {
+                    return (
+                      <Button
+                        color="pmsScheme"
+                        variant="outlined"
+                        fullWidth
+                        onClick={async () => { unfollow(currentUserID) }}
+                      >
+                        Unfollow
+                      </Button>
+                    )
+                  } else return (<Button
+                    color="pmsScheme"
+                    variant="outlined"
+                    fullWidth
+                    onClick={async () => { follow(currentUserID) }}
+                  >
+                    Follow
+                  </Button>)
+                })
               }
-            </For>
+            </div>
+          </Show>
+
+          <div class="pt-4 grid grid-flow-col gap-4 w-full h-80">
+            <div class="border-2 rounded-lg border-accent-600 p-2 max-h-80 overflow-y-scroll w-full bg-accent-600 bg-opacity-10">
+              <p class="flex flex-auto items-center justify-center text-2xl">Followers {`(${user().followers.length})`}</p>
+              <hr class="border-2 border-accent-600 my-2 mb-3 rounded-lg" />
+              <UserList
+                cardClickAction={(id) => { window.location.href = `/profiles/${id}` }}
+                users={user().followers}
+                cardStyle={"rounded-md border-2 border-accent-600 my-1 ms-2 mr-2 hover:bg-accent-600 duration-300 transition-all hover:cursor-pointer"}
+              />
+            </div>
+
+            <div class="border-2 rounded-lg border-accent-600 p-2 max-h-80 overflow-y-scroll w-full bg-accent-600 bg-opacity-10">
+              <p class="flex flex-auto items-center justify-center text-2xl">Following {`(${user().following.length})`}</p>
+              <hr class="border-2 border-accent-600 my-2 mb-3 rounded-lg" />
+              <UserList
+                cardClickAction={(id) => { window.location.href = `/profiles/${id}` }}
+                users={user().following}
+                cardStyle={"rounded-md border-2 border-accent-600 my-1 ms-2 mr-2 hover:bg-accent-600 duration-300 transition-all hover:cursor-pointer"}
+              />
+            </div>
           </div>
-        </div>
-        
-        <div class="repositories">
-          <For each={user()?.repositories}>
-            {
-              (repo, idx) => 
-                <ProfileRepositoryBanner
-                  title={repo.title}
-                  date={repo.date}
-                />
-            }
-          </For>
-        </div>
+
+          <div class="my-2 py-2 mt-3 pt-1 rounded-md border-2 border-accent-600 bg-accent-600 bg-opacity-10">
+            <p class="flex flex-col items-center justify-center text-2xl">
+              {/* Projects {`(${projects().length})`}   */}
+              Projects {`(${projects().data.length})`}
+            </p>
+            <hr class="border-2 border-accent-600 my-2 mb-3 ml-3 mr-3 rounded-lg" />
+            <ProjectList
+              projects={user().projects}
+              cardClickAction={(id) => { window.location.href = `/projects/${id}` }}
+              cardStyle={"hover:cursor-pointer rounded-lg border-2 border-accent-600 my-1 ms-2 mr-2 hover:bg-accent-600 duration-300 transition-all"}
+            />
+          </div>
+        </Suspense>
       </div>
-    </Suspense>
+    </Show>
   )
 }
