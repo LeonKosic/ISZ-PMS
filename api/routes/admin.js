@@ -3,37 +3,55 @@ import { and, eq, like } from 'drizzle-orm';
 import { db } from '../db/db.js';
 import express from 'express';
 import bodyParser from 'body-parser';
+import bcrypt from 'bcrypt';
+import Joi from 'joi';
 
 import jwt from 'jsonwebtoken'
 const router = express.Router();
 const jsonParser = bodyParser.json()
-import {authenticateToken} from "../middleware/auth.js"
+import { authenticateToken, authenticateAdmin } from "../middleware/auth.js"
+import { course, users } from "../db/schema/schema.js";
 
-router.post('/create', authenticateToken, jsonParser, async (req, res) => {
+router.post('/category', authenticateToken, authenticateAdmin, jsonParser, async (req, res) => {
 
-  const existingCategory = await db.select().from(category).where(eq(category.category_name, req.body.category_name));
+  const schema = Joi.object({
+    name: Joi.string().required()
+  })
+  const options = {
+    errors: {
+      wrap: {
+        label: false
+      }
+    }
+  }
+  const { error, value } = schema.validate(req.body, options);
+
+  if (error) {
+    res.send(400, { err: error.details })
+    return
+  }
+  const existingCategory = await db.select().from(category).where(eq(category.name, req.body.name));
   if (existingCategory.length > 0) {
     res.status(400).send({ err: "Category already exists." })
     return
   }
   await db.insert(category).values(
     [{
-      category_name: req.body.category_name,
+      name: req.body.name,
       deleted: 0
     }]
   );
-
   res.status(200).send({ message: "Category made." });
 })
 
 
-router.put('/delete', jsonParser, async (req, res) => {
-  const existingCategory = await db.select().from(category).where(eq(category.category_name, req.body.category_name));
+router.delete('/category/:id', authenticateToken, authenticateAdmin, async (req, res) => {
+  const existingCategory = await db.select().from(category).where(eq(category.id, req.params.id));
   if (existingCategory.length <= 0) {
     res.status(400).send({ err: "Category does not exist." })
     return
   }
-  await db.update(category).set({ deleted: '1' }).where(eq(category.category_name, req.body.category_name))
+  await db.update(category).set({ deleted: '1' }).where(eq(category.id, req.params.id))
   res.status(200).send({ message: "Category deleted." })
 
 })
