@@ -82,6 +82,8 @@ router.get('/following', authenticateToken, jsonParser, async (req, res) => {
   res.status(200).send(followingProjectNames)
 })
 router.post('/solution', jsonParser, authenticateToken, async (req, res) => {
+  console.log(req.body);
+
   await db.insert(request_answers).values({
     request: req.body.request_id,
     project: req.body.project_id,
@@ -96,6 +98,17 @@ router.post('/search', jsonParser, async (req, res) => {
 router.get("/:id", jsonParser, async (req, res) => {
   const answers = await db.select().from(request_answers).leftJoin(project, eq(project.id, request_answers.project)).where(eq(request_answers.request, req.params.id))
   res.send(200, answers);
+})
+
+router.get("/:id/solutions", jsonParser, async (req, res) => {
+  const projects = await db
+    .select(post)
+    .from(request_answers)
+    .innerJoin(post,
+      eq(post.id, request_answers.project))
+    .where(eq(request_answers.request, req.params.id))
+
+  res.send(200, projects);
 })
 
 

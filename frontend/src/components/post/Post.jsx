@@ -40,8 +40,8 @@ const submitSolution = async (requestID, projectID) => {
   const response = await api.post(
     `/request/solution`,
     {
-      project: projectID,
-      request: requestID
+      project_id: projectID,
+      request_id: requestID
     }
   )
 
@@ -50,15 +50,13 @@ const submitSolution = async (requestID, projectID) => {
 
 const getSolutions = async (id) => {
   const response = await api.get(
-    `/request/${id}`
+    `/request/${id}/solutions`
   )
 
   return response.data
 }
 
 export default function Post(props) {
-  console.log(props)
-
   const postID = useLocation().pathname.split('/')[2]
 
   const [author] = createResource(() => getAuthor(props.data.owner_id))
@@ -128,7 +126,10 @@ export default function Post(props) {
               <Button
                 color="pmsScheme"
                 variant="outlined"
-                onClick={() => { comment(commentValue(), props.data.id) }}
+                onClick={() => {
+                  comment(commentValue(), props.data.id);
+                  setTimeout(() => { location.reload() }, 500)
+                }}
               >
                 Submit
               </Button>
@@ -137,7 +138,7 @@ export default function Post(props) {
 
           <Show when={solutionDialog() != null}>
             <div class="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-opacity-50 z-50 bg-primary from-current">
-              <div class="bg-primary-400 pl-14 pr-14 pb-14 rounded-3xl shadow-md w-full max-w-lg">
+              <div class="bg-primary-400 pl-14 pr-14 pb-4 rounded-3xl shadow-md w-full max-w-lg">
                 <div class="flex flex-col items-center justify-center mt-14 mb-2">
                   <p class="text-2xl">
                     Submit a solution for {props.data.title}
@@ -146,26 +147,30 @@ export default function Post(props) {
                   <Show
                     when={ownProjects.loading == false && ownProjects().length > 0}
                   >
-                    <hr class="border-2 border-accent-600 rounded-lg my-2" />
+                    <hr class="border-2 border-accent-600 rounded-lg my-2 w-full" />
                     <ProjectList
                       projects={ownProjects()}
                       style={"flex flex-col items-center justify-center w-full w-max"}
                       cardStyle={"w-full border-2 border-accent-600 rounded-lg p-2 text-lg hover:bg-accent-600 hover:cursor-pointer duration-300 transition-all mt-2"}
-                      cardClickAction={(id) => { submitSolution(id) }}
+                      cardClickAction={(id) => {
+                        submitSolution(props.data.id, id);
+                        setSolutionDialog(null);
+                        setTimeout(() => { location.reload() }, 500)
+                      }}
                     />
-                    <hr class="border-2 border-accent-600 rounded-lg my-2" />
+                    <hr class="border-2 border-accent-600 rounded-lg my-2 w-full" />
                   </Show>
 
                   <Show
                     when={ownProjects.loading == false && ownProjects().length == 0}
                   >
-                    <hr class="border-2 border-accent-600 rounded-lg my-1" />
+                    <hr class="border-2 border-accent-600 rounded-lg my-1 w-full" />
                     <div class="flex flex-row items-center justify-center">
                       <p class="text-lg italic">
                         You have no acceptable projects. Why not create some?
                       </p>
                     </div>
-                    <hr class="border-2 border-accent-600 rounded-lg my-2" />
+                    <hr class="border-2 border-accent-600 rounded-lg my-2 w-full" />
                   </Show>
 
                   <div class="flex flex-row items-center justify-center my-4">
@@ -198,15 +203,17 @@ export default function Post(props) {
                 </div>
               }
             >
-              <ProjectList
-                projects={solutions()}
-                style={""}
-                cardStyle={""}
-                cardClickAction={(id) => {
-                  window.location.href(`/project/${id}`);
-                  setTimeout(() => { location.reload() }, 1000)
-                }}
-              />
+              <div class="flex flex-col items-center justify-center">
+                <ProjectList
+                  projects={solutions()}
+                  style={"flex flex-col items-center justify-center w-full w-max"}
+                  cardStyle={"w-full border-2 border-accent-600 rounded-lg p-2 text-lg hover:bg-accent-600 hover:cursor-pointer duration-300 transition-all mt-2"}
+                  cardClickAction={(id) => {
+                    window.location.href = `/project/${id}`
+                    setTimeout(() => { location.reload() }, 1000)
+                  }}
+                />
+              </div>
             </Show>
             <hr class="border-2 border-accent-600 my-2" />
           </Show>
