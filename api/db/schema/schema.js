@@ -1,7 +1,9 @@
-import {users} from "./users.js"
-import {follow} from "./follow.js"
-import {roles} from "./roles.js"
+import { users } from "./users.js"
+import { follow } from "./follow.js"
+import { roles } from "./roles.js"
 import { category } from "./category.js";
+import { project } from "./project.js";
+import { course } from "./course.js";
 import { userRelations } from "./relations/userRelations.js";
 import { followRelations } from "./relations/followRelations.js";
 import { roleRelations } from "./relations/roleRelations.js";
