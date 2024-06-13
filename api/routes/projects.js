@@ -171,8 +171,9 @@ router.post('/search', jsonParser, async (req, res) => {
 
   return res.send(200, existingProject)
 })
-router.get("/download/:project/:path", authenticateToken, async (req, res) => {
-  axios.get(`http://filesystem:7070/files/${req.params.project}/${req.params.path}`).then((response) => {
+router.post("/download",jsonParser, authenticateToken, async (req, res) => {
+  const {project_id, path} = req.body
+  axios.post(`http://filesystem:7070/files/`, {project_id, path}).then((response) => {
 
     res.send(response.data)
   

@@ -114,7 +114,7 @@ const api = {
   download: async ({project, path}) => {
     const token = localStorage.getItem('accessToken');
 
-    return await axios.get("/projects/download/" + project + path,
+    return await axios.post("/projects/download/", {project_id: project, path},
       {
         ...defaultConfig,
         headers: {
