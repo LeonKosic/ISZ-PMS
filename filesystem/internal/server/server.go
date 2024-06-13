@@ -45,9 +45,10 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 		}
 		f.Close()
 		stat, err := os.Stat(path)
-		if err == nil {
-
-			if stat.Size() != initialStat.Size() || stat.ModTime() != initialStat.ModTime() {
+		if err != nil {
+			fmt.Println(err)
+		} else {
+			if fileState == 1 && (stat.Size() != initialStat.Size() || stat.ModTime() != initialStat.ModTime()) {
 				fileState = 2
 			}
 		}
@@ -56,12 +57,12 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 			diff = append(diff, path+" changed")
 		case 3:
 			diff = append(diff, path+" new")
+		default:
 		}
-
 	}
 	res := strings.Join(diff, "\n")
 	commit := cfg.Commit + r.PathValue("commit")
-	os.MkdirAll(commit, os.ModePerm)
+	os.MkdirAll(cfg.Commit, os.ModePerm)
 	f, err := os.Create(commit)
 	if err != nil {
 		fmt.Println(err)
@@ -83,7 +84,6 @@ func commitSearch(w http.ResponseWriter, r *http.Request) {
 }
 func RunServer() {
 	mux := http.NewServeMux()
-	mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) { fmt.Fprintf(w, "TEST") })
 	mux.HandleFunc("POST /upload/{commit}", uploadFile)
 	fs := http.FileServer(http.Dir(cfg.Dir))
 	mux.Handle("/files", http.StripPrefix("/files", fs))
