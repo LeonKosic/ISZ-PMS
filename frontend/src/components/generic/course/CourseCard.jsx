@@ -7,7 +7,7 @@ export default function CourseCard(props) {
         class="text-big mb-2 mt-1 pb-2"
         style={{ 'overflow-wrap': 'break-word' }}
       >
-        {props.name} test
+        {props.name}
       </p >
 
       <hr class="separator" />
