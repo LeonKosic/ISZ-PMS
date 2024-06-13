@@ -3,11 +3,12 @@ package server
 import (
 	"fmt"
 	//"io"
-	//	"encoding/json"
+	"encoding/json"
 	"net/http"
 	"os"
 	"path/filepath"
 	"pms/filesystem/internal/config"
+	"sort"
 	"strconv"
 	"strings"
 	// "pms/filesystem/internal/models"
@@ -24,6 +25,7 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 		numFiles = numFiles + 1
 	}
 	var diff []string
+	var res []string
 	var path string
 	numFiles = numFiles + 1
 	for i := 0; i < numFiles; i++ {
@@ -55,24 +57,29 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 		switch fileState {
 		case 2:
 			diff = append(diff, path+" changed")
+			res = append(res, path)
 		case 3:
+			res = append(res, path)
 			diff = append(diff, path+" new")
 		default:
 		}
 	}
-	res := strings.Join(diff, "\n")
+	sort.Strings(res)
+	resp, err := json.Marshal(res)
 	commit := cfg.Commit + r.PathValue("commit")
 	os.MkdirAll(cfg.Commit, os.ModePerm)
 	f, err := os.Create(commit)
 	if err != nil {
 		fmt.Println(err)
 	}
-	_, err = f.WriteString(res)
+	_, err = f.WriteString(strings.Join(diff, "\n"))
 	if err != nil {
 		fmt.Println(err)
 	}
 	f.Close()
-	fmt.Fprintf(w, res)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	fmt.Fprint(w, resp)
 }
 func commitSearch(w http.ResponseWriter, r *http.Request) {
 	commit := cfg.Commit + r.PathValue("id")
