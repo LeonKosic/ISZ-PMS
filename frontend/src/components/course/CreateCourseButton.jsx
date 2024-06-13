@@ -66,7 +66,7 @@ export default function CreateCourseButton(props) {
                 placeholder="Name"
                 class="mt-1 p-2 block w-full border-accent-600 rounded-lg placeholder-primary-100 text-primary text-lg 
                 bg-accent-100
-                bg-opacity-75 focus:bg-opacity-100"
+                bg-opacity-50 hover:bg-opacity-75 focus:bg-opacity-100 transition-all duration-500"
                 onChange={(ev) => { setCourseName(ev.target.value) }}
 
                 required
@@ -79,7 +79,7 @@ export default function CreateCourseButton(props) {
                 value={coursePassword()}
                 class="mt-1 p-2 block w-full border-accent-600 rounded-lg placeholder-primary-100 text-primary text-lg 
                 bg-accent-100
-                bg-opacity-75 focus:bg-opacity-100"
+                bg-opacity-50 hover:bg-opacity-75 focus:bg-opacity-100 transition-all duration-500"
                 onChange={(ev) => { setCoursePassword(ev.target.value) }}
 
                 required
@@ -92,7 +92,7 @@ export default function CreateCourseButton(props) {
                 value={coursePassword2()}
                 class="mt-1 p-2 block w-full border-accent-600 rounded-lg placeholder-primary-100 text-primary text-lg 
                 bg-accent-100
-                bg-opacity-75 focus:bg-opacity-100"
+                bg-opacity-50 hover:bg-opacity-75 focus:bg-opacity-100 transition-all duration-500"
                 onChange={(ev) => { setCoursePassword2(ev.target.value) }}
 
                 required

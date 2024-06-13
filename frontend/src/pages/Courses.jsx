@@ -29,7 +29,8 @@ export default function Courses(props) {
         </div>
         <CourseList
           courses={courses()}
-          cardStyle={"border-2 border-accent-600 rounded-lg p-4 m-2"}
+          cardStyle={"border-2 border-accent-600 rounded-lg p-4 m-2 hover:cursor-pointer bg-opacity-0 bg-primary-500 hover:bg-opacity-75 duration-300 transition-all"}
+          cardShowEnroll={true}
         />
       </div>
     </Show>
