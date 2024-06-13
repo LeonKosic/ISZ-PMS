@@ -50,7 +50,7 @@ router.post('/', authenticateToken, authenticateTeacher, jsonParser, async (req,
       owner_id: req.user.id
     }]
   );
-  res.status(200).send({ message: "Course made.", id: newCourse[0].insertId});
+  res.status(200).send({ message: "Course made.", id: newCourse[0].insertId });
 })
 router.put("/", jsonParser, authenticateToken, async (req, res) => {
   const existingCourse = await db.select().from(course).where(eq(course.id, req.body.id));
@@ -75,8 +75,8 @@ router.put("/", jsonParser, authenticateToken, async (req, res) => {
   res.status(200).send({ message: "Course updated." });
 })
 router.get('/', authenticateToken, jsonParser, async (req, res) => {
-    const courses = await db.select().from(course).where(eq(course.deleted, 0));
-    res.status(200).json(courses)
+  const courses = await db.select().from(course).where(eq(course.deleted, 0));
+  res.status(200).json(courses)
 })
 
 router.delete('/:id', authenticateToken, authenticateTeacher, async (req, res) => {
@@ -122,6 +122,7 @@ router.post("/post", authenticateToken, jsonParser, async (req, res) => {
     res.status(400).send({ err: "Not a teacher in this course." })
     return
   }
+
   const newPost = await db.insert(post).values(
     [{
       ...req.body,
@@ -167,25 +168,25 @@ router.delete('/teacher/:id', authenticateToken, async (req, res) => {
 
 })
 router.get('/my', authenticateToken, jsonParser, async (req, res) => {
-    const courses = await db.select().from(enrolled).innerJoin(course, eq(course.id, enrolled.course_id)).where(eq(enrolled.student_id, req.user.id));
-    res.status(200).json(courses)
+  const courses = await db.select().from(enrolled).innerJoin(course, eq(course.id, enrolled.course_id)).where(eq(enrolled.student_id, req.user.id));
+  res.status(200).json(courses)
 })
 router.get('/:id', authenticateToken, jsonParser, async (req, res) => {
-    const existingCourse = await db.select().from(course).where(eq(course.id, req.params.id));
-    const isEnrolled = await db.select().from(enrolled).where(and(eq(enrolled.student_id, req.user.id), eq(enrolled.course_id, req.params.id)))
-    const teachers = await db.select().from(course_teachers).innerJoin(users, eq(users.id, course_teachers.teacher_id)).where(eq(course_teachers.course_id, req.params.id))
-    if (existingCourse.length <= 0) {
-        res.status(400).send({ err: "Course does not exist." })
-        return
-    }
-    if (!(isEnrolled.length > 0 || existingCourse[0].owner_id == req.user.id || teachers.some(teacher => teacher.teacher_id == req.user.id))) {
-        res.status(200).send({name: existingCourse[0].name, id: existingCourse[0].id, isEnrolled: false})
-        return
-    }
-    teachers.forEach(t => delete t.users.password)
-    delete existingCourse[0].password
-    const content = await db.select().from(post).where(eq(post.parent_id, existingCourse[0].board_id))
-    res.status(200).send({ ...existingCourse[0], teachers: teachers.map(t => t.users), isTeacher: (teachers.some(teacher => teacher.teacher_id == req.user.id) || existingCourse[0].owner_id == req.user.id), content })
+  const existingCourse = await db.select().from(course).where(eq(course.id, req.params.id));
+  const isEnrolled = await db.select().from(enrolled).where(and(eq(enrolled.student_id, req.user.id), eq(enrolled.course_id, req.params.id)))
+  const teachers = await db.select().from(course_teachers).innerJoin(users, eq(users.id, course_teachers.teacher_id)).where(eq(course_teachers.course_id, req.params.id))
+  if (existingCourse.length <= 0) {
+    res.status(400).send({ err: "Course does not exist." })
+    return
+  }
+  if (!(isEnrolled.length > 0 || existingCourse[0].owner_id == req.user.id || teachers.some(teacher => teacher.teacher_id == req.user.id))) {
+    res.status(200).send({ name: existingCourse[0].name, id: existingCourse[0].id, isEnrolled: false })
+    return
+  }
+  teachers.forEach(t => delete t.users.password)
+  delete existingCourse[0].password
+  const content = await db.select().from(post).where(eq(post.parent_id, existingCourse[0].board_id))
+  res.status(200).send({ ...existingCourse[0], teachers: teachers.map(t => t.users), isTeacher: (teachers.some(teacher => teacher.teacher_id == req.user.id) || existingCourse[0].owner_id == req.user.id), content })
 })
 
 export default router;

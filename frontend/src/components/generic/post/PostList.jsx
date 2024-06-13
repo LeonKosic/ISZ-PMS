@@ -3,7 +3,7 @@ import PostCard from "./PostCard"
 
 export default function PostList(props) {
   return (
-    <div class="grid grid-cols-1 gap-3 mt-3 h-full">
+    <div class="grid grid-cols-1 gap-3 h-full">
       <For each={props.data}>
         {
           (post) => {
