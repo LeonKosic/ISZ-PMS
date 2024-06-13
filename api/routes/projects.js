@@ -72,7 +72,7 @@ router.post('/', authenticateToken, jsonParser, async (req, res) => {
     }]
   );
   await db.insert(project).values([{ id: newPost[0].insertId }])
-  res.status(200).send({ message: "Project made." });
+  res.status(200).send({ message: "Project made.", id: newPost[0].insertId});
 })
 
 router.get('/my', authenticateToken, jsonParser, async (req, res) => {
@@ -133,15 +133,31 @@ router.post('/register', authenticateToken, jsonParser, checkIfTeamMember, async
   })
 })
 
-router.post('/directory/structure', jsonParser, authenticateToken, async (req, res) => {
-  const { commit, project_id, path } = req.body;
-  console.log(req.body)
-  const parentFile = await db.select().from(file).where(and(eq(file.path, path), eq(file.project, project_id)));
-  if (parentFile.length < 0) {
-    res.status(400).send({ message: "File does not exist." })
+const getDirectoryContentPatch = async (dirpath, project) => {
+  const files = await db.select().from(file).where(and(like(file.path, `${dirpath}%`), eq(file.project, project)));
+  let result = {}
+  for (let i = 0; i < files.length; i++) {
+    let name = files[i].path.slice(dirpath.length)
+    console.log(name)
+    console.log(name.split('/').length)
+    result[name.split('/')[0]] = {name:"/"+name.split('/')[0], isDirectory: name.split('/').length > 1}
   }
-  const files = await db.execute(sql`select id, path from file join commited_files on file.id = commited_files.fileId where commitId = (select max(commitId) from commited_files where fileId = file.id group by fileId ) and project = ${project_id} and parent = ${parentFile[0].id}`)
-  res.status(200).send(files[0]);
+  console.log(result)
+  return result
+}
+
+router.post('/directory/structure', jsonParser, authenticateToken, async (req, res) => {
+  const { project_id, path } = req.body;
+  console.log(req.body)
+  const result = await getDirectoryContentPatch(path, project_id)
+  console.log(result)
+  // const parentFile = await db.select().from(file).where(and(eq(file.path, path), eq(file.project, project_id)));
+  // if (parentFile.length < 0) {
+  //   res.status(400).send({ message: "File does not exist." })
+  // }
+  // const files = await db.execute(sql`select id, path from file join commited_files on file.id = commited_files.fileId where commitId = (select max(commitId) from commited_files where fileId = file.id group by fileId ) and project = ${project_id} and parent = ${parentFile[0].id}`)
+  // res.status(200).send(files[0]);
+  res.status(200).send({files:Object.values(result)})
 }
 
 )

@@ -24,6 +24,7 @@ export const [projectStore, setProjectStore] = createStore({
   _selectedFile: selectedFile,
   _fileList: fileList
 })
+
 export const [userDetails, setUserDetails] = createStore(
   {
     id: localStorage.getItem("user_id"),
