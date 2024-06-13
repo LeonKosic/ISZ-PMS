@@ -154,6 +154,12 @@ router.post('/search', jsonParser, async (req, res) => {
 
   return res.send(200, existingProject)
 })
+router.get("/download/:project/:path", authenticateToken, async (req, res) => {
+  axios.get(`http://filesystem:7070/files/${req.params.project}/${req.params.path}`).then((response) => {
+
+    res.send(response.data)
+  
+})})
 router.get("/:id", authenticateToken, async (req, res) => {
   const existingProject = await db.select().from(project).where(eq(project.id, req.params.id));
   // const comments = await db.select().from(comment).where(eq(comment.post, req.params.id));
