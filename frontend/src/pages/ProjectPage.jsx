@@ -16,13 +16,14 @@ export default function ProjectPage(props) {
 
   setProjectStore("id", useLocation().pathname.split('/')[2]);
   // const data = createResource(() => getProjectInfo(projectStore.id));
-  console.log(data)
+  console.log(data.loading)
 
   return (
     <Show when={data.loading == false}>
       <Post
         name={data.name}
         body={data.body}
+        owner_id={data.owner.id}
       >
         <Project data={data} />
       </Post>
