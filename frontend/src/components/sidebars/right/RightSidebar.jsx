@@ -14,7 +14,8 @@ export default function RightSidebar() {
   });
 
   const handleProjectClick = (projectId) => {
-    navigate(`/post/${projectId}`);
+    window.location.href = `/post/${projectId}`
+    setTimeout(() => { location.reload() }, 1000)
   };
 
   return (

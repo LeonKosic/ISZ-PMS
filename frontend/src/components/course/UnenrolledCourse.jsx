@@ -8,20 +8,22 @@ export default function UnenrolledCourse(props) {
   const [warning, setWarning] = createSignal(null);
 
   const enroll = async (id, password) => {
-    console.log(id, password)
+    try {
+      const response = await api.post(
+        `/course/enroll`,
+        {
+          id: id,
+          password: password
+        }
+      )
 
-    const responsePromise = api.post(
-      `/course/enroll`,
-      {
-        id: id,
-        password: password
+      if (response.status === 200)
+        location.reload();
+    } catch (err) {
+      if (err.response && err.response.status === 400) {
+        setWarning("Wrong password, please try again.")
       }
-    ).catch((e) => {
-      setWarning("Unable to enroll.")
-      return;
-    })
-
-    location.reload()
+    }
   }
 
   return (
@@ -71,7 +73,7 @@ export default function UnenrolledCourse(props) {
                   variant="outlined"
                   color="pmsScheme"
                   onClick={() => {
-                    setWarning(null)
+                    setWarning(null);
                     enroll(props.data.id, coursePassword())
                   }}
                 >
@@ -91,7 +93,7 @@ export default function UnenrolledCourse(props) {
 
             <Show when={warning() != null}>
               <p class="text-red-300 flex flex-row items-center justify-center text-lg italic mt-8">
-                Greska: {warning()}
+                Oops! {warning()}
               </p>
             </Show>
           </div>

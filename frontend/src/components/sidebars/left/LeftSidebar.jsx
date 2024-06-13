@@ -14,7 +14,8 @@ export default function LeftSidebar() {
   });
 
   const handleCourseClick = (courseId) => {
-    navigate(`/courses/${courseId}`);
+    window.location.href = `/courses/${courseId}`
+    setTimeout(() => { location.reload() }, 1000)
   };
 
   return (

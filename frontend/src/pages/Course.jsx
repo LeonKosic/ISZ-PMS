@@ -28,6 +28,9 @@ export default function Course(props) {
       >
         <div>
           <Show when={course().isEnrolled == true}>
+            {
+              console.log(course())
+            }
             <EnrolledCourse
               data={course()}
             />
