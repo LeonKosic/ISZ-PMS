@@ -39,8 +39,10 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 		str := strconv.Itoa(i)
 		path = cfg.Dir + strings.Join(multipartFormData.Value[str+"[fieldname]"], "")
 		if i == 0 {
-			_, after, _ := strings.Cut(path, "/")
-			projectId, _, _ := strings.Cut(after, "/")
+			trimmed := strings.TrimPrefix(path, "files/")
+			//fmt.Println(trimmed)
+			projectId, _, _ := strings.Cut(trimmed, "/")
+			//fmt.Println(projectId)
 			res = append(res, projectId)
 		}
 		initialStat, err := os.Stat(path)
