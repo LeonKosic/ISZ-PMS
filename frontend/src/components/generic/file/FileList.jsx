@@ -93,7 +93,7 @@ export default function FileList(props) {
                     updateActiveData(data)
                   }
 
-                  else api.download(`${currentPathStore.path}/${file.name}`)
+                  else api.download({ project: projectStore.id, path: currentPathStore.path + file.name })
                 }}
               />
             </div>

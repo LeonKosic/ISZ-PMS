@@ -110,6 +110,18 @@ const api = {
     } else console.error("Error during login: ", err)
 
     console.log(userDetails)
+  },
+  download: async ({project, path}) => {
+    const token = localStorage.getItem('accessToken');
+
+    return await axios.get("/projects/download/" + project + path,
+      {
+        ...defaultConfig,
+        headers: {
+          ...defaultConfig.headers,
+          Authorization: `Bearer ${token}`
+        }
+      });
   }
 }
 

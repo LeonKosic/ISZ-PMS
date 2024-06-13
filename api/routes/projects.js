@@ -20,6 +20,7 @@ import { users } from '../db/schema/users.js'
 import { comment } from '../db/schema/comment.js'
 import { commit } from '../db/schema/commit.js'
 import { file } from '../db/schema/file.js'
+import axios from 'axios'
 
 router.post('/category', jsonParser, async (req, res) => {
   await db.insert(post_category).values(
