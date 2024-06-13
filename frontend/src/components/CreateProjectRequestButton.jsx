@@ -1,10 +1,10 @@
-import { createSignal, onMount } from "solid-js";
+import { createSignal } from "solid-js";
 import { useNavigate } from "@solidjs/router";
 import api from "../api/api";
 
-export default function CreateProjectButton() {
+export default function CreateProjectRequestButton() {
   const [showModal, setShowModal] = createSignal(false);
-  const [latestProjectId, setLatestProjectId] = createSignal(null);
+  const [latestRequestId, setLatestRequestId] = createSignal(null);
   const [formData, setFormData] = createSignal({ title: "", body: "" });
   const navigate = useNavigate();
 
@@ -13,14 +13,14 @@ export default function CreateProjectButton() {
     const { title, body } = formData();
     
     try {
-      await api.post("/projects", { title, body });
+      await api.post("/request", { title, body });
       setShowModal(false);
-      const response = await api.get("projects/my");
-      const latestProject = response.data.slice(-1)[0]; // Get the latest project
-      setLatestProjectId(latestProject.id);
-      navigate(`/post/${latestProjectId()}`);
+      const response = await api.get("/request/my");
+      const latestRequest = response.data.slice(-1)[0]; 
+      setLatestRequestId(latestRequest.id);
+      navigate(`/post/${latestRequestId()}`);
     } catch (error) {
-      console.error("Error creating project:", error);
+      console.error("Error creating project request:", error);
     }
   };
 
@@ -30,12 +30,12 @@ export default function CreateProjectButton() {
         onClick={() => setShowModal(true)}
         class="bg-accent-700 text-gray-50 px-4 py-2 rounded-xl border border-transparent hover:bg-accent-500 hover:border hover:border-white"
       >
-        Create Project
+        Create Project Request
       </button>
       {showModal() && (
         <div class="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-opacity-50 z-50 bg-primary from-current">
           <div class="bg-primary-400 p-14 rounded-3xl shadow-md w-full max-w-lg">
-            <h2 class="text-2xl font-semibold mb-4 text-gray-50">Create Project</h2>
+            <h2 class="text-2xl font-semibold mb-4 text-gray-50">Create Project Request</h2>
             <form onSubmit={handleSubmit}>
               <div class="mb-4">
                 <input
@@ -44,7 +44,7 @@ export default function CreateProjectButton() {
                   class="form-input mt-1 block w-full border-white rounded-md placeholder-primary-100 text-primary"
                   value={formData().title}
                   onInput={(e) => setFormData({ ...formData(), title: e.target.value })}
-                  placeholder="Project Name"
+                  placeholder="Project Request Name"
                   required
                 />
               </div>
@@ -54,7 +54,7 @@ export default function CreateProjectButton() {
                   class="form-input mt-1 block w-full border-white rounded-md placeholder-primary-100 text-primary"
                   value={formData().body}
                   onInput={(e) => setFormData({ ...formData(), body: e.target.value })}
-                  placeholder="Project Description"
+                  placeholder="Project Request Description"
                   required
                 />
               </div>
@@ -70,7 +70,7 @@ export default function CreateProjectButton() {
                   type="submit"
                   class="bg-accent-700 text-gray-50 px-4 py-2 rounded-xl border border-transparent hover:bg-accent-500 hover:border hover:border-white"
                 >
-                  Create Project
+                  Create Project Request
                 </button>
               </div>
             </form>
@@ -80,3 +80,4 @@ export default function CreateProjectButton() {
     </div>
   );
 }
+

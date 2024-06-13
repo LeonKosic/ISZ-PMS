@@ -2,6 +2,8 @@ import { createResource, Suspense } from "solid-js";
 import ProjectList from "../components/generic/ProjectList";
 import api from "../api/api";
 import Loading from "../components/placeholders/Loading";
+import RightSidebar from "../components/RightSidebar";
+import LeftSidebar from "../components/LeftSidebar";
 
 export default function Projects(props) {
   const [projects] = createResource(async () => {
@@ -27,7 +29,9 @@ export default function Projects(props) {
         {
           console.log(projects())
         }
-        <div class="max-w-screen-2xl mx-auto">
+        <RightSidebar />
+        <LeftSidebar />
+        <div class="w-2/5 mx-auto">
           <ProjectList
             projects={projects()}
             cardClickAction={(id) => { window.location.href = `/project/${id}` }}
