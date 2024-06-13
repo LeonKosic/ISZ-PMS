@@ -159,7 +159,8 @@ router.get('/details', authenticateToken, jsonParser, async (req, res) => {
   return res.status(400).send({ err: "Username does not exist." });
 });
 router.post('/search', jsonParser, async (req, res) => {
-  const existingUser = await db.select().from(users).where(and(like(users.username, `%${req.body.username}%`), eq(users.deleted, 0), eq(users.is_active, 1)));
+  const existingUser = await db.select().from(users).where(like(users.username, `%${req.body.username}%`) && eq(users.deleted, 0) && eq(users.is_active, 1));
+  console.log(existingUser, req.body.username);
   if (existingUser.length > 0) {
     existingUser.map((user) => {
       delete user.password
