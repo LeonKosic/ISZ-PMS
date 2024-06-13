@@ -20,8 +20,8 @@ type myJSON struct {
 	Array []string `json:"arr"`
 }
 type DownloadFile struct {
-	id   string `json:"project_id"`
-	path string `json:"path"`
+	Id   string `json:"project_id"`
+	Path string `json:"path"`
 }
 
 var cfg = config.DefaultConfig()
@@ -125,7 +125,7 @@ func downloadFile(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println("files/" + file.id + "/" + file.path)
+	fmt.Println("files/" + file.Id + "/" + file.Path)
 }
 func RunServer() {
 	mux := http.NewServeMux()
