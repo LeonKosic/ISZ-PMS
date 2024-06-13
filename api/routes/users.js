@@ -156,7 +156,6 @@ router.get('/details', authenticateToken, jsonParser, async (req, res) => {
   res.send(400, { err: "Username does not exist." })
   return
 
-  return res.status(400).send({ err: "Username does not exist." });
 });
 router.post('/search', jsonParser, async (req, res) => {
   const existingUser = await db.select().from(users).where(like(users.username, `%${req.body.username}%`) && eq(users.deleted, 0) && eq(users.is_active, 1));
@@ -176,7 +175,7 @@ router.post('/follow',jsonParser,authenticateToken,async(req,res)=>{
     [{follower_id: req.user.id,
     following_id:followingUser[0].id
   }])
-  res.status(200).send({message:"Following."})
+  res.status(200).send({message:"Following."})})
 
 router.put('/unfollow', jsonParser, authenticateToken, async (req, res) => {s
   await db.delete(follow).where(and(
