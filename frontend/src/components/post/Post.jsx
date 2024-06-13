@@ -34,7 +34,6 @@ export default function Post(props) {
   const [commentValue, setCommentValue] = createSignal('');
 
 
-
   return (
     <Suspense>
       <Show

@@ -4,28 +4,41 @@ import { projectInfo } from "../assets/projectContent";
 import Post from "../components/post/Post";
 import Project from "./Project";
 import { Show, createResource } from "solid-js";
+import api from "../api/api";
 
 const getProjectInfo = async (id) => {
   const response = await api.get(`/projects/${id}`)
   return response.data;
 }
 
+const getPostInfo = async (id) => {
+  const response = await api.get(`/post/${id}`)
+  return response.data
+}
+
 export default function ProjectPage(props) {
   // demo
-  const data = projectInfo();
+  // const data = projectInfo();
 
   setProjectStore("id", useLocation().pathname.split('/')[2]);
-  // const data = createResource(() => getProjectInfo(projectStore.id));
-  console.log(data.loading)
+  const postId = useLocation().pathname.split('/')[2];
+  const [projectData] = createResource(() => getProjectInfo(projectStore.id));
+  const [postData] = createResource(() => getPostInfo(postId));
+
 
   return (
-    <Show when={data.loading == false}>
+    <Show
+      when={projectData.loading == false && postData.loading == false}
+    >
+      {console.log(projectData())}
+      {console.log(postData())}
+
       <Post
-        name={data.name}
-        body={data.body}
-        owner_id={data.owner.id}
+        name={postData.name}
+        body={postData.body}
+        owner_id={postData.owner_id}
       >
-        <Project data={data} />
+        <Project data={projectData} post={postData} />
       </Post>
     </Show>
   )
