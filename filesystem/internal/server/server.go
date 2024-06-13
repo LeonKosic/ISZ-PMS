@@ -33,6 +33,7 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 	var diff []string
 	var res []string
 	var path string
+	var id string
 	numFiles = numFiles + 1
 	for i := 0; i < numFiles; i++ {
 		fileState := 1 //1 unchanged 2 changed 3 new 0 deleted
@@ -41,9 +42,8 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 		if i == 0 {
 			trimmed := strings.TrimPrefix(path, "files/")
 			//fmt.Println(trimmed)
-			projectId, _, _ := strings.Cut(trimmed, "/")
+			id, _, _ = strings.Cut(trimmed, "/")
 			//fmt.Println(projectId)
-			res = append(res, projectId)
 		}
 		initialStat, err := os.Stat(path)
 		if err != nil {
@@ -81,6 +81,8 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	sort.Strings(res)
+
+	res = append([]string{id}, res)
 	fmt.Println(strings.Join(res, "\n"))
 	/*resp, err := json.Marshal(res)
 	if err != nil {
