@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	server.RunServer("PMS", ":7070")
+	server.RunServer()
 }

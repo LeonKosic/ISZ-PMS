@@ -1,5 +1,4 @@
-import { Route, Router } from "@solidjs/router";
-
+import { Route, Router } from "@solidjs/router"
 import Login from "../../pages/Login.jsx";
 import Landing from "../../pages/Landing.jsx"
 import Profile from "../../pages/Profile.jsx";
