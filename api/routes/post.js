@@ -44,7 +44,7 @@ router.get('/my', authenticateToken, jsonParser, async (req, res) => {
 router.get('/following', authenticateToken, jsonParser, async (req, res) => {
   const followingProjectNames = await db.select().from(post).leftJoin(follow, eq(post.owner_id, follow.following_id))
     .where(eq(follow.follower_id, req.user.id))
-  res.status(200).send(followingProjectNames)
+  res.status(200).send(followingProjectNames.map((project) => project.post))
 
 })
 router.post('/like', authenticateToken, jsonParser, async (req, res) => {
