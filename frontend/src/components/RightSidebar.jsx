@@ -14,7 +14,7 @@ export default function RightSidebar() {
   });
 
   const handleProjectClick = (projectId) => {
-    navigate(`/projects/${projectId}`);
+    navigate(`/post/${projectId}`);
   };
 
   return (

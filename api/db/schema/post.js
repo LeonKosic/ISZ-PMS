@@ -15,4 +15,5 @@ export const post = mysqlTable('post', {
   parent_id: bigint('parent_id', { mode: 'number' }).references(() => board.id),
   board_id: bigint('board_id', { mode: 'number' }).references(() => board.id),
   isFeatureRequest: boolean('isFeatureRequest').default(false),
+  likes: bigint('likes', { mode: 'number' }).default(0),
 })

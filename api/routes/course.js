@@ -41,7 +41,7 @@ router.post('/', authenticateToken, authenticateTeacher, jsonParser, async (req,
   const newBoard = await db.insert(board).values({})
   console.log(newBoard)
   const hash = await bcrypt.hash(req.body.password, 10);
-  await db.insert(course).values(
+  const newCourse = await db.insert(course).values(
     [{
       name: req.body.name,
       password: hash,
@@ -50,7 +50,7 @@ router.post('/', authenticateToken, authenticateTeacher, jsonParser, async (req,
       owner_id: req.user.id
     }]
   );
-  res.status(200).send({ message: "Course made." });
+  res.status(200).send({ message: "Course made.", id: newCourse[0].insertId});
 })
 router.put("/", jsonParser, authenticateToken, async (req, res) => {
   const existingCourse = await db.select().from(course).where(eq(course.id, req.body.id));
