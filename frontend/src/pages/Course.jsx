@@ -1,6 +1,6 @@
 import { useLocation } from "@solidjs/router";
 import api from "../api/api";
-import { Show, createResource } from "solid-js";
+import { Show, Switch, createResource } from "solid-js";
 import Loading from "../components/placeholders/Loading"
 import EnrolledCourse from "../components/course/EnrolledCourse";
 import UnenrolledCourse from "../components/course/UnenrolledCourse";
@@ -26,22 +26,11 @@ export default function Course(props) {
         when={course.loading == false}
         fallback={<Loading message={"Loading course details..."} />}
       >
-        <div>
-          <Show when={course().isEnrolled == true}>
-            {
-              console.log(course())
-            }
-            <EnrolledCourse
-              data={course()}
-            />
-          </Show>
-
-          <Show when={course().isEnrolled == false}>
-            <UnenrolledCourse
-              data={course()}
-            />
-          </Show>
-        </div>
+        <Switch fallback={<EnrolledCourse data={course()} />}>
+          <Match when={course().isEnrolled == false}>
+            <UnenrolledCourse data={course()} />
+          </Match>
+        </Switch>
       </Show>
     </>
   )
