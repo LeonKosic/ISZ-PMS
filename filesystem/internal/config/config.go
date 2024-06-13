@@ -4,6 +4,7 @@ type Config struct {
 	Host string
 	Port string
 	Dir  string
+	Commit string
 }
 
 func DefaultConfig() *Config {
@@ -11,5 +12,6 @@ func DefaultConfig() *Config {
 		Host: "localhost",
 		Port: ":7070",
 		Dir:  "files/",
+		Commit: "commits/"
 	}
 }
