@@ -14,7 +14,7 @@ export default function Requests() {
   });
 
   const handleRequestClick = (requestId) => {
-    navigate(`/requests/${requestId}`);
+    navigate(`/post/${requestId}`);
   };
 
   return (
