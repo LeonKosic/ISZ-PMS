@@ -1,6 +1,6 @@
 import { For, createSignal } from "solid-js";
-import { Menu, MenuItem } from "@suid/material";
 import Icon from "./Icon";
+import { Menu, MenuItem } from "@suid/material";
 import api from "../../api/api";
 
 const searchUsers = async (name) => {
@@ -14,14 +14,13 @@ const searchProjects = async (name) => {
   // return response.data
 }
 
-const searchCourses = async (name) => {
-  const response = await api.post(`/course/search`, { name: name})
+const searchCourses = async (id) => {
+  const response = await api.get(`/course/${id}`)
   return response.data
 }
 
-export default function Searchbar(props){
+export default function SearchBar(props) {
   const [anchorEl, setAnchorEl] = createSignal(null);
-  const [query, setQuery] = createSignal(null);
   const open = () => Boolean(anchorEl())
 
   let searchResults = []
@@ -57,7 +56,7 @@ export default function Searchbar(props){
 
   searchResults = process(searchResults)
 
-  const handleSearch = (ev) => {  
+  const handleSearch = (ev) => {
     const text = document.querySelector("#searchbar").value
 
     searchResults = []
@@ -71,14 +70,13 @@ export default function Searchbar(props){
     if (searchResults.length == 0)
       setAnchorEl(null)
   }
-    
-    return(
-      <div class="relative w-full ml-10 mr-10 ">
-      <input 
+
+  return (
+    <div class="relative w-full ml-10 mr-10 ">
+      <input
         id="searchbar"
         type="text"
         class="h-12 w-full rounded-full bg-primary-600 border-2 border-opacity-25 border-accent-600 pl-4"
-        onInput={(e) => setQuery(e.target.value)}
         onKeyDown={(ev) => {
           if (ev.key === 'Enter') {
             setAnchorEl(ev.currentTarget)
@@ -88,13 +86,11 @@ export default function Searchbar(props){
       />
 
       <div onClick={(evt) => { setAnchorEl(evt.currentTarget) }}>
-        <button onClick={() => { window.location.href = `/search/${query()}` }}>
-        <Icon 
+        <Icon
           iconID="fa-solid fa-search"
-          clickAction={() => {handleSearch()}}
+          clickAction={() => { handleSearch() }}
           iconClass={"cursor-pointer text-xl text-accent-300 top-0 right-0 absolute mr-3 pt-2 pl-2 pr-2"}
         />
-        </button>
 
         <Menu
           id="search-dropdown"
@@ -105,25 +101,25 @@ export default function Searchbar(props){
         >
           <For each={searchResults}>
             {
-              (entry) => {                
+              (entry) => {
                 return (
-                    <MenuItem class="h-8">
-                      {
-                        /* TODO: kad se navigira na rutu koristi se trenutna (relativno) - ne moze se sa jedne putanje otici na istu - pukne,
-                        a redirect() i navigate() ne rade uopste */
-                      }
-                      <a href={`http://localhost:3000${entry.url}`}>
-                        {entry.name}
-                        {console.log(entry.url)}
-                        <span class="text-sm italic"> in {entry.type}</span>
-                      </a>
-                    </MenuItem>
-                )  
+                  <MenuItem class="h-8">
+                    {
+                      /* TODO: kad se navigira na rutu koristi se trenutna (relativno) - ne moze se sa jedne putanje otici na istu - pukne,
+                      a redirect() i navigate() ne rade uopste */
+                    }
+                    <a href={`http://localhost:3000${entry.url}`}>
+                      {entry.name}
+                      {console.log(entry.url)}
+                      <span class="text-sm italic"> in {entry.type}</span>
+                    </a>
+                  </MenuItem>
+                )
               }
             }
           </For>
         </Menu>
       </div>
     </div>
-    )
+  )
 }

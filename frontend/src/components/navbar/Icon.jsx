@@ -6,7 +6,7 @@ export default function Icon(props) {
     iconClass: "",
     iconID: ""
   }, props)
-
+  
   return (
     <div
       onClick={() => { merged.clickAction() }}

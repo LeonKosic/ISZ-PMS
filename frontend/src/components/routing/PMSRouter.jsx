@@ -28,6 +28,8 @@ export default function PMSRouter() {
       <Route path="/search/:query" component={Search} />
       <Route path="/requests" component={Requests} />
 
+      {/* <Route path="/project/:id" element={<p>project page</p>} /> */}
+
       <Route path="*" component={NotFound} />
     </Router>
   )

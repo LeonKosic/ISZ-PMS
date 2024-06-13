@@ -5,6 +5,7 @@ import api from "../../api/api"
 
 const unenrollCourse = async (id) => {
   const response = await api.delete(`/courses/unenroll/${id}`)
+  window.location.href = `/courses`
   return response.data;
 }
 

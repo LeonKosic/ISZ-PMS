@@ -1,6 +1,6 @@
 import { createSignal, onMount } from "solid-js";
 import { useNavigate } from "@solidjs/router";
-import api from "../api/api";
+import api from "../../../api/api";
 
 export default function CreateProjectButton() {
   const [showModal, setShowModal] = createSignal(false);
@@ -11,7 +11,7 @@ export default function CreateProjectButton() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const { title, body } = formData();
-    
+
     try {
       await api.post("/projects", { title, body });
       setShowModal(false);
