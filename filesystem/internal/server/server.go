@@ -38,6 +38,11 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 		fileState := 1 //1 unchanged 2 changed 3 new 0 deleted
 		str := strconv.Itoa(i)
 		path = cfg.Dir + strings.Join(multipartFormData.Value[str+"[fieldname]"], "")
+		if i == 0 {
+			_, after, _ := strings.Cut(path, "/")
+			projectId, _, _ := strings.Cut(after, "/")
+			res = append(res, projectId)
+		}
 		initialStat, err := os.Stat(path)
 		if err != nil {
 			if os.IsNotExist(err) {
