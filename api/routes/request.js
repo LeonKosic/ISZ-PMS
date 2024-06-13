@@ -56,7 +56,7 @@ router.post('/', authenticateToken, jsonParser, async (req, res) => {
       deleted: 0,
       category_id:1,
       owner_id: req.user.id,
-      type:1,
+      type:2,
     }]
   );
   await db.insert(request).values([{id:newPost[0].insertId}])
