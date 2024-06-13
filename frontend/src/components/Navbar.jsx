@@ -15,6 +15,10 @@ export default function Navbar(props) {
     }
   };
 
+  const navigateToProjects = () => {
+    window.location.href = "/projects";
+  };
+
   return (
     <div class="sticky top-0 bg-primary-800 pb-0 z-50">
       <div class="pl-3 pt-3 pr-3 h-full">
@@ -36,7 +40,7 @@ export default function Navbar(props) {
             placeholder="Search ..."
           />
           
-          <div class="minibar-wrapper grid grid-flow-row grid-cols-2 gap-2 ml-4">
+          <div class="minibar-wrapper grid grid-flow-row grid-cols-3 gap-2 ml-4">
             <div
               class="bg-accent-800 rounded-full flex items-center justify-center cursor-pointer"
               onClick={navigateToProfile}
@@ -49,6 +53,12 @@ export default function Navbar(props) {
             >
               <span class="text-white text-center">Project Requests</span>
             </div>
+            <div
+              class="bg-accent-800 rounded-full flex items-center justify-center cursor-pointer"
+              onClick={navigateToProjects}
+            >
+              <span class="text-white text-center">My Projects</span>
+            </div>
           </div>
         </div>
         <hr class="mt-4 pb-0 w-full text-accent" />
@@ -56,4 +66,5 @@ export default function Navbar(props) {
     </div>
   );
 }
+
 
