@@ -2,7 +2,7 @@
 export default function Navbar(props) {
   
   return (
-    <div class="sticky bottom-0 bg-primary-800 pb-0 z-50">
+    <div class="absolute bottom-0 bg-primary-800 pb-0 z-50">
       <hr class="mt-4 pb-0 w-full text-accent-700" />
         <div class="grid grid-rows-1 grid-cols-3 text-center">
             <div>
