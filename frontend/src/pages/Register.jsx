@@ -18,11 +18,13 @@ export default function RegisterPage() {
       <div class="bg-primary-400 p-14 rounded-3xl shadow-md">
         <h2 class="text-2xl font-semibold mb-4 text-gray-50">Register</h2>
         <form onSubmit={handleSubmit}>
-        <div class="mb-4">
+          <div class="mb-4">
             <input
               type="text"
               id="name"
-              class="form-input mt-1 block w-full border-white rounded-md placeholder-primary-100 text-primary"
+              class="mt-1 p-2 block w-full border-accent-600 rounded-lg placeholder-primary-100 text-primary text-lg 
+                bg-accent-100
+                bg-opacity-50 hover:bg-opacity-75 focus:bg-opacity-100"
               value={formData().name}
               onInput={(e) => setFormData({ ...formData(), name: e.target.value })}
               placeholder="Name"
@@ -33,7 +35,9 @@ export default function RegisterPage() {
             <input
               type="text"
               id="username"
-              class="form-input mt-1 block w-full border-white rounded-md placeholder-primary-100 text-primary"
+              class="mt-1 p-2 block w-full border-accent-600 rounded-lg placeholder-primary-100 text-primary text-lg 
+                bg-accent-100
+                bg-opacity-50 hover:bg-opacity-75 focus:bg-opacity-100"
               value={formData().username}
               onInput={(e) => setFormData({ ...formData(), username: e.target.value })}
               placeholder="Username"
@@ -44,7 +48,9 @@ export default function RegisterPage() {
             <input
               type="email"
               id="email"
-              class="form-input mt-1 block w-full border-white rounded-md placeholder-primary-100 text-primary"
+              class="mt-1 p-2 block w-full border-accent-600 rounded-lg placeholder-primary-100 text-primary text-lg 
+                bg-accent-100
+                bg-opacity-50 hover:bg-opacity-75 focus:bg-opacity-100"
               value={formData().email}
               onInput={(e) => setFormData({ ...formData(), email: e.target.value })}
               placeholder="Email"
@@ -55,18 +61,22 @@ export default function RegisterPage() {
             <input
               type="password"
               id="password"
-              class="form-input mt-1 block w-full border-white rounded-md placeholder-primary-100 text-primary"
-              value={formData().password}
-              onInput={(e) => setFormData({ ...formData(), password: e.target.value })}
-              placeholder="Password"
-              required
+              class="mt-1 p-2 block w-full border-accent-600 rounded-lg placeholder-primary-100 text-primary text-lg 
+                bg-accent-100
+                bg-opacity-50 hover:bg-opacity-75 focus:bg-opacity-100"
+            value={formData().password}
+            onInput={(e) => setFormData({ ...formData(), password: e.target.value })}
+            placeholder="Password"
+            required
             />
           </div>
           <div class="mb-4">
             <input
               type="password"
               id="password"
-              class="form-input mt-1 block w-full border-white rounded-md placeholder-primary-100 text-primary"
+              class="mt-1 p-2 block w-full border-accent-600 rounded-lg placeholder-primary-100 text-primary text-lg 
+                bg-accent-100
+                bg-opacity-50 hover:bg-opacity-75 focus:bg-opacity-100"
               value={formData().password2}
               onInput={(e) => setFormData({ ...formData(), password2: e.target.value })}
               placeholder="Repeat password"
