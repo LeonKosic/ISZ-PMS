@@ -174,8 +174,10 @@ router.post('/search', jsonParser, async (req, res) => {
 router.post("/download",jsonParser, authenticateToken, async (req, res) => {
   const {project_id, path} = req.body
   axios.post(`http://filesystem:7070/files/`, {project_id, path}).then((response) => {
-
-    res.send(response.data)
+    console.log(response.data)
+    res.setHeader('Content-disposition', 'attachment; filename=download');
+    res.setHeader("Content-Type", "application/octet-stream")
+    res.download(response.data)
   
 })})
 router.get("/:id", authenticateToken, async (req, res) => {

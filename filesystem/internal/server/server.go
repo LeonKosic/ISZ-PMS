@@ -121,7 +121,7 @@ func downloadFile(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	w.Header().Set("Content-Disposition", "attachment; filename=\""+file.Path+"\"")
+	w.Header().Set("Content-Disposition", "attachment; filename=downloadFile")
 	w.Header().Set("Content-Type", "application/octet-stream")
 	fmt.Println("files/" + file.Id + file.Path)
 	http.ServeFile(w, r, "files/"+file.Id+file.Path)
