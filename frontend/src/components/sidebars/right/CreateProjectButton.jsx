@@ -41,7 +41,9 @@ export default function CreateProjectButton() {
                 <input
                   type="text"
                   id="title"
-                  class="form-input mt-1 block w-full border-white rounded-md placeholder-primary-100 text-primary"
+                  class="mt-1 p-2 block w-full border-accent-600 rounded-lg placeholder-primary-100 text-primary text-lg 
+                bg-accent-100
+                bg-opacity-50 hover:bg-opacity-75 focus:bg-opacity-100 transition-all duration-500"
                   value={formData().title}
                   onInput={(e) => setFormData({ ...formData(), title: e.target.value })}
                   placeholder="Project Name"
@@ -51,7 +53,9 @@ export default function CreateProjectButton() {
               <div class="mb-4">
                 <textarea
                   id="body"
-                  class="form-input mt-1 block w-full border-white rounded-md placeholder-primary-100 text-primary"
+                  class="mt-1 p-2 block w-full border-accent-600 rounded-lg placeholder-primary-100 text-primary text-lg 
+                bg-accent-100
+                bg-opacity-50 hover:bg-opacity-75 focus:bg-opacity-100 transition-all duration-500"
                   value={formData().body}
                   onInput={(e) => setFormData({ ...formData(), body: e.target.value })}
                   placeholder="Project Description"
