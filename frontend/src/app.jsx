@@ -8,6 +8,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <Navbar />
       <PMSRouter />
+      <Footer />
     </ThemeProvider>
   );
 }
