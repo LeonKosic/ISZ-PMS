@@ -25,6 +25,7 @@ export default function PostPage(props) {
         owner_id={post().owner_id}
         body={post().body}
         comments={post().comments}
+        isFeatureRequest={post().isFeatureRequest}
       />
     </Show>
   )
