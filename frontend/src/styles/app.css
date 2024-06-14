@@ -209,6 +209,14 @@ body {
   }
 }
 
+.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: rgba(235, 235, 235, 0.85);
+}
+
+.MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline {
+  @apply rounded-lg border-2;
+    border-color: rgba(235, 235, 235, 0.35);
+}
 
 ::-webkit-scrollbar {
   @apply rounded-xl pr-4 right-4 py-2;

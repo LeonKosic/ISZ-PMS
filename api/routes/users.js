@@ -37,7 +37,7 @@ router.post('/login', jsonParser, async (req, res) => {
 
   if (passwordMatch) {
     const accessToken = generateAccessToken(existingUser[0]);
-    return res.status(200).json({ accessToken: accessToken, username: existingUser[0].username, role_id: existingUser[0].role_id, name: existingUser[0].name, id: existingUser[0].id});
+    return res.status(200).json({ accessToken: accessToken, username: existingUser[0].username, role_id: existingUser[0].role_id, name: existingUser[0].name, id: existingUser[0].id });
   }
 
   return res.status(401).json({ err: "Wrong password." });
@@ -170,19 +170,21 @@ router.post('/search', jsonParser, async (req, res) => {
 })
 
 
-router.put('/unfollow', jsonParser, authenticateToken, async (req, res) => {s
+router.put('/unfollow', jsonParser, authenticateToken, async (req, res) => {
+  s
   await db.delete(follow).where(and(
     eq(follow.follower_id, req.user.id),
     eq(follow.following_id, req.body.id)))
   res.status(200).send({ message: "Unfollow." })
 })
 
-router.post('/follow',jsonParser,authenticateToken,async(req,res)=>{
+router.post('/follow', jsonParser, authenticateToken, async (req, res) => {
   await db.insert(follow).values(
-    [{follower_id: req.user.id,
-    following_id:req.body.id
-  }])
-  res.status(200).send({message:"Following."})
+    [{
+      follower_id: req.user.id,
+      following_id: req.body.id
+    }])
+  res.status(200).send({ message: "Following." })
 
 })
 
@@ -199,7 +201,7 @@ router.get('/following/:id', authenticateToken, async (req, res) => {
   res.status(200).send(followers)
 })
 router.get('/projects/:id', authenticateToken, async (req, res) => {
-  const projects = await db.select().from(post).where(and(eq(post.owner_id, req.params.id), eq(post.type, 1),eq(post.deleted, 0)));
+  const projects = await db.select().from(post).where(and(eq(post.owner_id, req.params.id), eq(post.type, 1), eq(post.deleted, 0)));
 
   res.status(200).json(projects)
 })
@@ -211,7 +213,7 @@ router.get("/:id", authenticateToken, async (req, res) => {
   }
   delete user[0].password
   const follows = await db.select().from(follow).where(and(eq(follow.following_id, req.params.id), eq(follow.follower_id, req.user.id)));
-  res.status(200).send({...user[0], follows:(follows.length > 0)})
+  res.status(200).send({ ...user[0], follows: (follows.length > 0) })
 });
 
 
