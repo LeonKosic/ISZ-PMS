@@ -1,9 +1,8 @@
 package server
 
 import (
-	"fmt"
-	//"io"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -13,6 +12,14 @@ import (
 	"strings"
 	// "pms/filesystem/internal/models"
 )
+
+type myJSON struct {
+	Array []string `json:"arr"`
+}
+type DownloadFile struct {
+	Id   string `json:"project_id"`
+	Path string `json:"path"`
+}
 
 var cfg = config.DefaultConfig()
 
@@ -27,14 +34,23 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 	var diff []string
 	var res []string
 	var path string
+	var id string
 	numFiles = numFiles + 1
 	for i := 0; i < numFiles; i++ {
 		fileState := 1 //1 unchanged 2 changed 3 new 0 deleted
 		str := strconv.Itoa(i)
 		path = cfg.Dir + strings.Join(multipartFormData.Value[str+"[fieldname]"], "")
+		if i == 0 {
+			trimmed := strings.TrimPrefix(path, "files/")
+			//fmt.Println(trimmed)
+			id, _, _ = strings.Cut(trimmed, "/")
+			//fmt.Println(projectId)
+		}
 		initialStat, err := os.Stat(path)
 		if err != nil {
-			fileState = 3
+			if os.IsNotExist(err) {
+				fileState = 3
+			}
 		}
 		os.MkdirAll(filepath.Dir(path), os.ModePerm)
 		f, err := os.Create(path)
@@ -55,17 +71,27 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		switch fileState {
+		case 3:
+			_, after, _ := strings.Cut(path, "/")
+			_, final, _ := strings.Cut(after, "/")
+			res = append(res, final)
+			diff = append(diff, path+" new")
 		case 2:
 			diff = append(diff, path+" changed")
-			res = append(res, path)
-		case 3:
-			res = append(res, path)
-			diff = append(diff, path+" new")
 		default:
 		}
 	}
 	sort.Strings(res)
-	resp, err := json.Marshal(res)
+
+	res = append([]string{id}, res...)
+	fmt.Println(strings.Join(res, "\n"))
+	/*resp, err := json.Marshal(res)
+	if err != nil {
+		fmt.Println(err)
+	}*/
+	jsondat := &myJSON{Array: res}
+	encjson, _ := json.Marshal(jsondat)
+	fmt.Println(string(encjson))
 	commit := cfg.Commit + r.PathValue("commit")
 	os.MkdirAll(cfg.Commit, os.ModePerm)
 	f, err := os.Create(commit)
@@ -79,7 +105,7 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 	f.Close()
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	fmt.Fprint(w, resp)
+	w.Write(encjson)
 }
 func commitSearch(w http.ResponseWriter, r *http.Request) {
 	commit := cfg.Commit + r.PathValue("id")
@@ -89,11 +115,21 @@ func commitSearch(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Fprintf(w, string(diff))
 }
+func downloadFile(w http.ResponseWriter, r *http.Request) {
+	var file DownloadFile
+	err := json.NewDecoder(r.Body).Decode(&file)
+	if err != nil {
+		fmt.Println(err)
+	}
+	w.Header().Set("Content-Disposition", "attachment; filename=downloadFile")
+	w.Header().Set("Content-Type", "application/octet-stream")
+	fmt.Println("files/" + file.Id + file.Path)
+	http.ServeFile(w, r, "files/"+file.Id+file.Path)
+}
 func RunServer() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("POST /upload/{commit}", uploadFile)
-	fs := http.FileServer(http.Dir(cfg.Dir))
-	mux.Handle("/files", http.StripPrefix("/files", fs))
+	mux.HandleFunc("POST /files/", downloadFile)
 	mux.HandleFunc("GET /commit/{id}", commitSearch)
 	//c := cors.New(cors.Options{
 	//	AllowedOrigins:   []string{"*"},

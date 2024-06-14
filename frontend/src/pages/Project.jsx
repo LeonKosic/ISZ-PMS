@@ -2,7 +2,7 @@ import { useLocation } from "@solidjs/router"
 import { createDropzone } from "@soorria/solid-dropzone"
 
 import FileList from "../components/generic/file/FileList"
-import ProjectMaintainers from "../components/project/ProjectMaintainers"
+import ProjectMaintainers from "../components/project/ProjectTeam"
 import ProjectOwner from "../components/project/ProjectOwner"
 import CommitDropdown from "../components/project/CommitDropdown"
 
@@ -12,6 +12,9 @@ import { currentPathStore, selectedFile, setSelectedFile, fileList, setFileList,
 
 // mock/test data
 import { projectInfo } from "../assets/projectContent"
+import ProjectTeam from "../components/project/ProjectTeam"
+import { Show, createResource, createSignal } from "solid-js"
+import Loading from "../components/placeholders/Loading"
 
 const getCommitVersion = async (commitID) => {
   // ENDPOINT?
@@ -25,9 +28,17 @@ const getCommitVersion = async (commitID) => {
   return response.data
 }
 
+async function getProjectFiles() { 
+  const response = await api.post("/projects/directory/structure", {path: "/", project_id: projectStore.id });
+  console.log(response.data)
+  return response.data; 
+ }
+
 export default function Project(props) {
   setFileList("files", sortFiles(projectInfo().files))
-
+  console.log("id ", projectStore.id)
+  const [fileInfo] = createResource(getProjectFiles)
+  console.log("file info: ", fileInfo())
   const onDrop = async (acceptedFiles) => {
     // TODO: ovaj endpoint?
     // TODO return await api.upload(`/upload/projects/${projectStore.id}`,
@@ -80,39 +91,21 @@ export default function Project(props) {
 
           {/* project files */}
           <div class="h-auto border-2 border-accent-600 rounded-xl p-4">
-            <FileList
-              data={fileList.files}
+            <Show when={fileInfo.loading == false}
+            fallback={Loading}>
+            <FileList 
+              data={fileInfo().files}
             />
+            </Show>
           </div>
         </div>
 
         {/* right panel */}
         <div class="w-1/3">
-          <ProjectOwner
-            owner={props.data.owner}
+          <ProjectTeam
+            team={props.data.team}
           />
 
-          <ProjectMaintainers
-            maintainers={props.data.collaborators}
-          />
-
-          <CommitDropdown
-            commits={props.data.commits}
-            commitID={props.data.commits[props.data.commits.length - 1]}
-            callback={async (commitID) => {
-              /* 
-                - set current commit, 
-                - get commit-based files 
-                - set virtual path to root 
-              */
-              setFileList("commitID", commitID)
-              setFileList("files", getCommitVersion(commitID))
-
-              // TODO (vidjeti sa leonom):
-              // './' ili '' kao root path?
-              setCurrentPathStore("path",)
-            }}
-          />
         </div>
       </div>
 

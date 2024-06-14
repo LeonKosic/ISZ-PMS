@@ -20,6 +20,7 @@ import { users } from '../db/schema/users.js'
 import { comment } from '../db/schema/comment.js'
 import { commit } from '../db/schema/commit.js'
 import { file } from '../db/schema/file.js'
+import axios from 'axios'
 
 router.post('/category', jsonParser, async (req, res) => {
   await db.insert(post_category).values(
@@ -133,15 +134,31 @@ router.post('/register', authenticateToken, jsonParser, checkIfTeamMember, async
   })
 })
 
-router.post('/directory/structure', jsonParser, authenticateToken, async (req, res) => {
-  const { commit, project_id, path } = req.body;
-  console.log(req.body)
-  const parentFile = await db.select().from(file).where(and(eq(file.path, path), eq(file.project, project_id)));
-  if (parentFile.length < 0) {
-    res.status(400).send({ message: "File does not exist." })
+const getDirectoryContentPatch = async (dirpath, project) => {
+  const files = await db.select().from(file).where(and(like(file.path, `${dirpath}%`), eq(file.project, project)));
+  let result = {}
+  for (let i = 0; i < files.length; i++) {
+    let name = files[i].path.slice(dirpath.length)
+    console.log(name)
+    console.log(name.split('/').length)
+    result[name.split('/')[0]] = {name:"/"+name.split('/')[0], isDirectory: name.split('/').length > 1}
   }
-  const files = await db.execute(sql`select id, path from file join commited_files on file.id = commited_files.fileId where commitId = (select max(commitId) from commited_files where fileId = file.id group by fileId ) and project = ${project_id} and parent = ${parentFile[0].id}`)
-  res.status(200).send(files[0]);
+  console.log(result)
+  return result
+}
+
+router.post('/directory/structure', jsonParser, authenticateToken, async (req, res) => {
+  const { project_id, path } = req.body;
+  console.log(req.body)
+  const result = await getDirectoryContentPatch(path, project_id)
+  console.log(result)
+  // const parentFile = await db.select().from(file).where(and(eq(file.path, path), eq(file.project, project_id)));
+  // if (parentFile.length < 0) {
+  //   res.status(400).send({ message: "File does not exist." })
+  // }
+  // const files = await db.execute(sql`select id, path from file join commited_files on file.id = commited_files.fileId where commitId = (select max(commitId) from commited_files where fileId = file.id group by fileId ) and project = ${project_id} and parent = ${parentFile[0].id}`)
+  // res.status(200).send(files[0]);
+  res.status(200).send({files:Object.values(result)})
 }
 
 )
@@ -154,6 +171,15 @@ router.post('/search', jsonParser, async (req, res) => {
 
   return res.send(200, existingProject)
 })
+router.post("/download",jsonParser, authenticateToken, async (req, res) => {
+  const {project_id, path} = req.body
+  axios.post(`http://filesystem:7070/files/`, {project_id, path}).then((response) => {
+    console.log(response.data)
+    res.setHeader('Content-disposition', 'attachment; filename=download');
+    res.setHeader("Content-Type", "application/octet-stream")
+    res.download(response.data)
+  
+})})
 router.get("/:id", authenticateToken, async (req, res) => {
   const existingProject = await db.select().from(project).where(eq(project.id, req.params.id));
   // const comments = await db.select().from(comment).where(eq(comment.post, req.params.id));

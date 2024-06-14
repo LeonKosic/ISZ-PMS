@@ -110,6 +110,39 @@ const api = {
     } else console.error("Error during login: ", err)
   },
 
+  download: async ({project, path}) => {
+    const token = localStorage.getItem('accessToken');
+
+    return await axios.post("/projects/download/", {project_id: project, path},
+      {
+        ...defaultConfig,
+        headers: {
+          ...defaultConfig.headers,
+          Authorization: `Bearer ${token}`
+        }
+      })
+      .then((response)=>response.blob())
+      .then((blob)=>{
+          // Create blob link to download
+            const url = window.URL.createObjectURL(
+              new Blob([blob]),
+            );
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute(
+              'download',
+              `download.txt`,
+            );
+
+            // Append to html link element page
+            document.body.appendChild(link);
+
+            // Start download
+            link.click();
+
+            // Clean up and remove the link
+            link.parentNode.removeChild(link);
+      })},
   logout: async (payload) => {
     localStorage.removeItem('accessToken')
     window.location.href = '/login'

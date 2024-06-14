@@ -13,7 +13,6 @@ export default function FileCard(props) {
     iconType = "fa-solid fa-folder"
   else
     iconType = "fa-solid fa-file"
-
   return (
     <div>
       <div onClick={merged.onClick} class="flex flex-row justify-start gap-2 items-center flex-nowrap overflow-clip text-xl hover:bg-accent-900 duration-300 py-1 pl-2">

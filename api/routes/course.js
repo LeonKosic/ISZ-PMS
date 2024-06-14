@@ -172,8 +172,8 @@ router.post('/teacher', authenticateToken, jsonParser, async (req, res) => {
       }])
   res.status(200).send({ message: "Teacher added." });
 })
-router.delete('/teacher/:id', authenticateToken, async (req, res) => {
-  await db.delete(course_teachers).where(and(eq(course_teachers.teacher_id, req.params.id), eq(course_teachers.course_id, req.body.course_id)))
+router.post('/teacher/', authenticateToken, async (req, res) => {
+  await db.delete(course_teachers).where(and(eq(course_teachers.teacher_id, req.body.teacher_id), eq(course_teachers.course_id, req.body.course_id)))
   res.status(200).send({ message: "Teacher removed." })
 
 })

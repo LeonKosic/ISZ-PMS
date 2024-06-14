@@ -4,6 +4,8 @@ import api from "../../api/api";
 import { userDetails } from "../../api/stores";
 import UpvoteButton from "./UpvoteButton";
 import DownvoteButton from "./DownvoteButton";
+import LeftSideBar from "./../../components/sidebars/left/LeftSidebar"
+import RightSideBar from "./../../components/sidebars/right/RightSidebar"
 import PostComments from "./PostComments";
 import { Show } from "solid-js"
 import Loading from "../placeholders/Loading"
@@ -58,8 +60,8 @@ const getSolutions = async (id) => {
 
 export default function Post(props) {
   const postID = useLocation().pathname.split('/')[2]
-
-  const [author] = createResource(() => getAuthor(props.data.owner_id))
+  
+  const [author] = createResource(() => getAuthor(props.owner_id))
   const [ownProjects] = createResource(() => getOwnProjects())
   const [solutions] = createResource(() => getSolutions(postID))
 
@@ -70,6 +72,9 @@ export default function Post(props) {
   console.log(props)
 
   return (
+    <>
+    <LeftSideBar></LeftSideBar>
+    <RightSideBar></RightSideBar>
     <Suspense>
       <Show
         when={author.loading == false}
@@ -77,7 +82,7 @@ export default function Post(props) {
       >
         <div class="items-center justify-center p-2 my-2 mt-20 border-2 border-accent-600 rounded-lg w-2/5 mx-auto text-accent-100">
           {/* Title */}
-          <p class="text-4xl py-2 pl-1">{props.data.title}</p>
+          <p class="text-4xl py-2 pl-1">{props.title}</p>
           <hr class="border-2 border-accent-800 rounded-lg my-1" />
 
           {/* Body */}
@@ -90,8 +95,8 @@ export default function Post(props) {
 
           <div class="flex flex-row justify-between items-stretch gap-2 py-2">
             {/* Ratings */}
-            <UpvoteButton id={props.data.id} />
-            <DownvoteButton id={props.data.id} />
+            <UpvoteButton id={props.id} />
+            <DownvoteButton id={props.id} />
 
             {/* Comment */}
             <Button
@@ -103,7 +108,7 @@ export default function Post(props) {
             </Button>
 
             {/* Submit solution dialog */}
-            <Show when={props.data.isFeatureRequest == true}>
+            <Show when={props.isFeatureRequest == true}>
               <Button
                 variant="outlined"
                 color="pmsScheme"
@@ -128,7 +133,7 @@ export default function Post(props) {
                 color="pmsScheme"
                 variant="outlined"
                 onClick={() => {
-                  comment(commentValue(), props.data.id);
+                  comment(commentValue(), props.id);
                   setTimeout(() => { location.reload() }, 500)
                 }}
               >
@@ -142,7 +147,7 @@ export default function Post(props) {
               <div class="bg-primary-400 pl-14 pr-14 pb-4 rounded-3xl shadow-md w-full max-w-lg">
                 <div class="flex flex-col items-center justify-center mt-14 mb-2">
                   <p class="text-2xl">
-                    Submit a solution for {props.data.title}
+                    Submit a solution for {props.title}
                   </p>
 
                   <Show
@@ -154,7 +159,7 @@ export default function Post(props) {
                       style={"flex flex-col items-center justify-center w-full w-max"}
                       cardStyle={"w-full border-2 border-accent-600 rounded-lg p-2 text-lg hover:bg-accent-600 hover:cursor-pointer duration-300 transition-all mt-2"}
                       cardClickAction={(id) => {
-                        submitSolution(props.data.id, id);
+                        submitSolution(props.id, id);
                         setSolutionDialog(null);
                         setTimeout(() => { location.reload() }, 500)
                       }}
@@ -189,9 +194,9 @@ export default function Post(props) {
           </Show>
 
           {/* Solutions */}
-          <Show when={props.data.isFeatureRequest == true}>
+          <Show when={props.isFeatureRequest == true}>
             <Show
-              when={solutions.loading == false && props.data.isFeatureRequest == true}
+              when={solutions.loading == false && props.isFeatureRequest == true}
               fallback={<p class="text-xl italic">Loading solutions, please wait...</p>}
             >
               <hr class="border-2 border-accent-600 my-2" />
@@ -222,7 +227,7 @@ export default function Post(props) {
           </Show>
 
           {/* Comments */}
-          <PostComments data={props.data.comments} />
+          <PostComments data={props.comments} />
 
           <div class="children">
             {props.children}
@@ -230,5 +235,6 @@ export default function Post(props) {
         </div>
       </Show >
     </Suspense >
+    </>
   )
 }
