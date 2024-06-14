@@ -10,6 +10,7 @@ import Admin from "../../pages/Admin.jsx"
 import PostPage from "../../pages/PostPage.jsx";
 import ProjectPage from "../../pages/ProjectPage.jsx";
 import Projects from "../../pages/Projects.jsx";
+import Search from "../../pages/Search.jsx";
 import Requests from "../../pages/Requests.jsx";
 
 export default function PMSRouter() {
@@ -26,7 +27,10 @@ export default function PMSRouter() {
       <Route path="/project/:id" component={ProjectPage} />
       <Route path="/post/:id" component={PostPage} />
       <Route path="/projects" component={Projects} />
+      <Route path="/search/:query" component={Search} />
       <Route path="/requests" component={Requests} />
+
+      {/* <Route path="/project/:id" element={<p>project page</p>} /> */}
 
       <Route path="*" component={NotFound} />
     </Router>

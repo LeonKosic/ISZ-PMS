@@ -9,7 +9,7 @@ export default function Login() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const { username, password } = formData();
-    api.login( { username, password });
+    api.login({ username, password });
     navigate('/');
   };
 
@@ -22,7 +22,7 @@ export default function Login() {
             <input
               type="text"
               id="username"
-              class="form-input mt-1 block w-full border-white rounded-md placeholder-primary-100 text-primary"
+              class="form-input mt-1 p-2 block w-full border-white rounded-md placeholder-primary text-primary bg-accent-200 bg-opacity-50 hover:bg-opacity-75 focus:bg-opacity-100 duration-300 transition-all"
               value={formData().username}
               onInput={(e) => setFormData({ ...formData(), username: e.target.value })}
               placeholder="Username"
@@ -33,20 +33,20 @@ export default function Login() {
             <input
               type="password"
               id="password"
-              class="form-input mt-1 block w-full border-white rounded-md placeholder-primary-100 text-primary"
+              class="form-input mt-1 p-2 block w-full border-white rounded-md placeholder-primary text-primary bg-accent-200 bg-opacity-50 hover:bg-opacity-75 focus:bg-opacity-100 duration-300 transition-all"
               value={formData().password}
               onInput={(e) => setFormData({ ...formData(), password: e.target.value })}
               placeholder="Password"
               required
             />
           </div>
-          <div>
-            <button type="submit" class="bg-accent-700 text-gray-50 px-4 py-2 rounded-xl border border-transparent hover:bg-accent-500 hover:border hover:border-white">
+          <div class="flex flex-row items-center justify-center">
+            <button type="submit" class="bg-accent-700 text-gray-50 px-4 py-2 rounded-xl border border-transparent hover:bg-accent-500 hover:border hover:border-white transition-all duration-300 w-full">
               Login
             </button>
           </div>
-          <div>
-            <A href="/register" class="text-xs text-accent-400 hover:underline">Don't have an account? Register here!</A>
+          <div class="pt-2">
+            <A href="/register" class="text-md text-accent-400 hover:text-accent duration-300">Don't have an account? Register here!</A>
           </div>
         </form>
       </div>

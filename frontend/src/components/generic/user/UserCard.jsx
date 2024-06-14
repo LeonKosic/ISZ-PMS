@@ -5,7 +5,7 @@ export default function UserCard(props) {
     clickAction: () => { },
     showUsername: false
   }, props)
-  
+
   return (
     <div
       class={props.cardStyle}

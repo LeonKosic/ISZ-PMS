@@ -108,9 +108,8 @@ const api = {
       setUserDetails("name", response.data.name)
       setUserDetails("username", response.data.username)
     } else console.error("Error during login: ", err)
-
-    console.log(userDetails)
   },
+
   download: async ({project, path}) => {
     const token = localStorage.getItem('accessToken');
 
@@ -143,8 +142,10 @@ const api = {
 
             // Clean up and remove the link
             link.parentNode.removeChild(link);
-      })
-      ;
+      })},
+  logout: async (payload) => {
+    localStorage.removeItem('accessToken')
+    window.location.href = '/login'
   }
 }
 

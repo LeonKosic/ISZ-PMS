@@ -1,8 +1,8 @@
 import { createSignal, onMount } from "solid-js";
 import { useNavigate } from "@solidjs/router";
 import api from "../api/api";
-import RightSidebar from "../components/RightSidebar";
-import LeftSidebar from "../components/LeftSidebar"
+import RightSidebar from "../components/sidebars/right/RightSidebar";
+import LeftSidebar from "../components/sidebars/left/LeftSidebar"
 
 export default function Requests() {
   const [requests, setRequests] = createSignal([]);
