@@ -13,6 +13,8 @@ import ProjectPage from "../../pages/ProjectPage.jsx";
 import Projects from "../../pages/Projects.jsx";
 import Search from "../../pages/Search.jsx";
 import Requests from "../../pages/Requests.jsx";
+import Report from "../../pages/Report.jsx";
+import About from "../../pages/About.jsx";
 
 export default function PMSRouter() {
   return (
@@ -32,6 +34,8 @@ export default function PMSRouter() {
       <Route path="/projects" component={Projects} />
       <Route path="/search/:query" component={Search} />
       <Route path="/requests" component={Requests} />
+      <Route path="/report" component={Report} />
+      <Route path="/about" component={About} />
 
       {/* <Route path="/project/:id" element={<p>project page</p>} /> */}
 
