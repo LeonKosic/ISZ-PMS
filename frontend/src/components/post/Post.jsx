@@ -4,6 +4,8 @@ import api from "../../api/api";
 import { userDetails } from "../../api/stores";
 import UpvoteButton from "./UpvoteButton";
 import DownvoteButton from "./DownvoteButton";
+import LeftSideBar from "./../../components/sidebars/left/LeftSidebar"
+import RightSideBar from "./../../components/sidebars/right/RightSidebar"
 import PostComments from "./PostComments";
 import { Show } from "solid-js"
 import Loading from "../placeholders/Loading"
@@ -70,6 +72,9 @@ export default function Post(props) {
   console.log(props)
 
   return (
+    <>
+    <LeftSideBar></LeftSideBar>
+    <RightSideBar></RightSideBar>
     <Suspense>
       <Show
         when={author.loading == false}
@@ -230,5 +235,6 @@ export default function Post(props) {
         </div>
       </Show >
     </Suspense >
+    </>
   )
 }
