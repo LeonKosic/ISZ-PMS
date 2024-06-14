@@ -26,6 +26,7 @@ export default function PMSRouter() {
       <Route path="/admin" component={Admin} />
       <Route path="/courses" component={Courses} />
       <Route path="/courses/:id" component={Course} />
+      <Route path="/course/:id" component={Course} />
       <Route path="/project/:id" component={ProjectPage} />
       <Route path="/post/:id" component={PostPage} />
       <Route path="/projects" component={Projects} />
